@@ -16,6 +16,7 @@ import {
   SelectValue
 } from "@/components/ui/select"
 import { cn } from "@/lib/utils"
+import teamData from "@/data/team.json"
 
 interface TeamMember {
   name: string
@@ -25,203 +26,40 @@ interface TeamMember {
   linkedin?: string
   twitter?: string
   github?: string
-  year?: string
-  board?: string
+  years?: string[]
+  previousRoles?: string[]
 }
 
-const allTeamMembers: TeamMember[] = [
-  // Current Executive Board - 2024
-  {
-    name: "Jane Smith",
-    role: "President",
-    image: "/team/jane-smith.jpg",
-    bio: "Jane is passionate about making coding education accessible to all. She has been with FirstByte since its founding.",
-    linkedin: "https://linkedin.com/in/jane-smith",
-    twitter: "https://twitter.com/janesmith",
-    year: "2024",
-    board: "Executive"
-  },
-  {
-    name: "John Doe",
-    role: "Vice President",
-    image: "/team/john-doe.jpg",
-    bio: "John oversees curriculum development and volunteer coordination at FirstByte.",
-    linkedin: "https://linkedin.com/in/john-doe",
-    github: "https://github.com/johndoe",
-    year: "2024",
-    board: "Executive"
-  },
-  {
-    name: "Emily Johnson",
-    role: "Treasurer",
-    image: "/team/emily-johnson.jpg",
-    bio: "Emily manages FirstByte's finances and helps secure funding for our programs.",
-    linkedin: "https://linkedin.com/in/emily-johnson",
-    year: "2024",
-    board: "Executive"
-  },
-  {
-    name: "Michael Brown",
-    role: "Secretary",
-    image: "/team/michael-brown.jpg",
-    bio: "Michael handles administrative tasks and ensures smooth operations for all FirstByte programs.",
-    linkedin: "https://linkedin.com/in/michael-brown",
-    github: "https://github.com/michaelbrown",
-    year: "2024",
-    board: "Executive"
-  },
-  {
-    name: "Tyler Wilson",
-    role: "Technical Director",
-    image: "/team/tyler-wilson.jpg",
-    bio: "Tyler manages our technical infrastructure and develops tools for our coding workshops.",
-    linkedin: "https://linkedin.com/in/tyler-wilson",
-    github: "https://github.com/tylerwilson",
-    year: "2024",
-    board: "Executive"
-  },
-  {
-    name: "Olivia Martinez",
-    role: "Creative Director",
-    image: "/team/olivia-martinez.jpg",
-    bio: "Olivia designs educational materials and leads our branding efforts.",
-    linkedin: "https://linkedin.com/in/olivia-martinez",
-    twitter: "https://twitter.com/oliviamartinez",
-    year: "2024",
-    board: "Executive"
-  },
-  {
-    name: "Daniel Kim",
-    role: "Outreach Coordinator",
-    image: "/team/daniel-kim.jpg",
-    bio: "Daniel builds relationships with schools and community organizations to expand FirstByte's reach.",
-    linkedin: "https://linkedin.com/in/daniel-kim",
-    year: "2024",
-    board: "Executive"
-  },
-  {
-    name: "Sophie Chen",
-    role: "Events Manager",
-    image: "/team/sophie-chen.jpg",
-    bio: "Sophie organizes workshops, hackathons, and other events to bring coding education to more students.",
-    linkedin: "https://linkedin.com/in/sophie-chen",
-    twitter: "https://twitter.com/sophiechen",
-    year: "2024",
-    board: "Executive"
-  },
-  {
-    name: "Marcus Johnson",
-    role: "Curriculum Lead",
-    image: "/team/marcus-johnson.jpg",
-    bio: "Marcus develops coding curricula tailored to different age groups and skill levels.",
-    linkedin: "https://linkedin.com/in/marcus-johnson",
-    github: "https://github.com/marcusjohnson",
-    year: "2024",
-    board: "Executive"
-  },
-  {
-    name: "Priya Patel",
-    role: "Partnerships Director",
-    image: "/team/priya-patel.jpg",
-    bio: "Priya establishes partnerships with tech companies and educational institutions to support our mission.",
-    linkedin: "https://linkedin.com/in/priya-patel",
-    year: "2024",
-    board: "Executive"
-  },
-  {
-    name: "Jason Rodriguez",
-    role: "Technology Lead",
-    image: "/team/jason-rodriguez.jpg",
-    bio: "Jason oversees our technology stack and ensures our teaching tools are effective and reliable.",
-    linkedin: "https://linkedin.com/in/jason-rodriguez",
-    github: "https://github.com/jasonrodriguez",
-    year: "2024",
-    board: "Executive"
-  },
-  {
-    name: "Leila Nguyen",
-    role: "Community Manager",
-    image: "/team/leila-nguyen.jpg",
-    bio: "Leila builds and nurtures our community of students, volunteers, and supporters.",
-    linkedin: "https://linkedin.com/in/leila-nguyen",
-    twitter: "https://twitter.com/leilanguyen",
-    year: "2024",
-    board: "Executive"
-  },
-  
-  // Founding Executive Board - 2023
-  {
-    name: "Sarah Wilson",
-    role: "Founding President",
-    image: "/team/sarah-wilson.jpg",
-    bio: "Sarah founded FirstByte with a vision to make coding accessible to all young learners.",
-    linkedin: "https://linkedin.com/in/sarah-wilson",
-    twitter: "https://twitter.com/sarahwilson",
-    year: "2023",
-    board: "Founding Executive"
-  },
-  {
-    name: "David Lee",
-    role: "Founding Vice President",
-    image: "/team/david-lee.jpg",
-    bio: "David helped establish FirstByte's core programs and operational structure.",
-    linkedin: "https://linkedin.com/in/david-lee",
-    github: "https://github.com/davidlee",
-    year: "2023",
-    board: "Founding Executive"
-  },
-  {
-    name: "Alex Taylor",
-    role: "Founding Treasurer",
-    image: "/team/alex-taylor.jpg",
-    bio: "Alex set up FirstByte's financial systems and secured our initial funding.",
-    linkedin: "https://linkedin.com/in/alex-taylor",
-    year: "2023",
-    board: "Founding Executive"
-  },
-  {
-    name: "Rachel Chen",
-    role: "Founding Secretary",
-    image: "/team/rachel-chen.jpg",
-    bio: "Rachel established FirstByte's administrative processes and documentation systems.",
-    linkedin: "https://linkedin.com/in/rachel-chen",
-    github: "https://github.com/rachelchen",
-    year: "2023",
-    board: "Founding Executive"
-  },
-  {
-    name: "James Park",
-    role: "Founding Technical Director",
-    image: "/team/james-park.jpg",
-    bio: "James created FirstByte's initial technical curriculum and teaching methodology.",
-    linkedin: "https://linkedin.com/in/james-park",
-    github: "https://github.com/jamespark",
-    year: "2023",
-    board: "Founding Executive"
-  },
-  {
-    name: "Zoe Adams",
-    role: "Founding Outreach Coordinator",
-    image: "/team/zoe-adams.jpg",
-    bio: "Zoe built the first partnerships with schools and community organizations.",
-    linkedin: "https://linkedin.com/in/zoe-adams",
-    twitter: "https://twitter.com/zoeadams",
-    year: "2023",
-    board: "Founding Executive"
-  },
-  
-  // Add volunteers, advisors, and other team members as needed
-]
+// Transform team data for display in the directory page
+const formatTeamMembersForDisplay = () => {
+  return teamData.allTeamMembers.map(member => {
+    const latestYear = member.years?.sort((a, b) => b.localeCompare(a))[0] || '';
+    const isFounder = member.years?.includes("2022") || false;
+    const isCurrent = member.years?.includes("2024") || member.years?.includes("2025") || false;
+    
+    let board = "";
+    if (isFounder) board = "Founding Team";
+    else if (isCurrent) board = "Current E-Board";
+    
+    return {
+      ...member,
+      year: latestYear,
+      board: board
+    };
+  });
+};
+
+const allTeamMembers = formatTeamMembersForDisplay();
 
 export default function TeamPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [filterYear, setFilterYear] = useState<string>("all")
   const [filterBoard, setFilterBoard] = useState<string>("all")
-  const [filteredMembers, setFilteredMembers] = useState<TeamMember[]>(allTeamMembers)
+  const [filteredMembers, setFilteredMembers] = useState<any[]>(allTeamMembers)
   
   // Get unique years and boards for filter options
-  const years = ["all", ...new Set(allTeamMembers.map(member => member.year).filter(Boolean) as string[])]
-  const boards = ["all", ...new Set(allTeamMembers.map(member => member.board).filter(Boolean) as string[])]
+  const years = ["all", ...new Set(allTeamMembers.flatMap(member => member.years || []).sort((a, b) => b.localeCompare(a)))]
+  const boards = ["all", ...new Set(allTeamMembers.map(member => member.board).filter(Boolean))]
   
   // Apply filters and search
   useEffect(() => {
@@ -237,7 +75,7 @@ export default function TeamPage() {
     }
     
     if (filterYear !== "all") {
-      results = results.filter(member => member.year === filterYear)
+      results = results.filter(member => member.years?.includes(filterYear))
     }
     
     if (filterBoard !== "all") {
@@ -370,7 +208,9 @@ export default function TeamPage() {
                           <AvatarImage src={member.image} alt={member.name} />
                         ) : (
                           <AvatarFallback className="text-lg">
-                            {member.name.split(" ").map(n => n[0]).join("")}
+                            {member.name.split(" ").reduce((initials: string, namePart: string) => 
+                              initials + (namePart.length > 0 ? namePart[0] : ''), 
+                            '')}
                           </AvatarFallback>
                         )}
                       </Avatar>
@@ -379,11 +219,18 @@ export default function TeamPage() {
                         <h3 className="font-semibold text-lg">{member.name}</h3>
                         <p className="text-muted-foreground">{member.role}</p>
                         
-                        <div className="flex items-center gap-2 mt-2">
-                          {member.year && (
-                            <span className="inline-flex items-center rounded-full bg-muted px-2 py-1 text-xs font-medium">
-                              {member.year}
-                            </span>
+                        <div className="flex flex-wrap items-center gap-2 mt-2">
+                          {member.years && (
+                            <div className="flex flex-wrap gap-1">
+                              {[...member.years].sort((a, b) => b.localeCompare(a)).map(year => (
+                                <span 
+                                  key={year}
+                                  className="inline-flex items-center rounded-full bg-muted px-2 py-1 text-xs font-medium"
+                                >
+                                  {year}
+                                </span>
+                              ))}
+                            </div>
                           )}
                           {member.board && (
                             <span className="inline-flex items-center rounded-full bg-primary/10 text-primary px-2 py-1 text-xs font-medium">
@@ -391,6 +238,12 @@ export default function TeamPage() {
                             </span>
                           )}
                         </div>
+                        
+                        {member.previousRoles && member.previousRoles.length > 0 && (
+                          <div className="mt-1 text-xs text-muted-foreground">
+                            Previous roles: {member.previousRoles.join(", ")}
+                          </div>
+                        )}
                       </div>
                     </div>
                     

@@ -71,18 +71,38 @@ export const ProgramsSection = forwardRef<HTMLElement>((props, ref) => {
           </p>
         </motion.div>
 
-        <BentoGrid className="md:auto-rows-[16rem] grid-cols-1 md:grid-cols-3 gap-4">
+        <BentoGrid className="md:auto-rows-[16rem] grid-cols-1 md:grid-cols-4 gap-4">
           {programs.map((program, index) => {
             const Icon = program.icon;
-            const span = index === 0 ? "md:col-span-2 md:row-span-2" : 
-                         index === 1 ? "md:col-span-1 md:row-span-1" : 
-                         index === 2 ? "md:col-span-1 md:row-span-1" : "";
+            
+            // Create more bento-box like layout
+            let customClassName = "";
+            
+            if (index === 0) {
+              // First card is large feature card
+              customClassName = "md:col-span-2 md:row-span-2";
+            } else if (index === 1) {
+              // Second card is a vertical rectangle
+              customClassName = "md:col-span-1 md:row-span-1";
+            } else if (index === 2) {
+              // Third card is a vertical rectangle
+              customClassName = "md:col-span-1 md:row-span-1";
+            } else if (index === 3) {
+              // Fourth card spans horizontally (bento style)
+              customClassName = "md:col-span-2 md:row-span-1";
+            } else if (index === 4) {
+              // Fifth card is a square
+              customClassName = "md:col-span-1 md:row-span-1";
+            } else if (index === 5) {
+              // Sixth card is a square
+              customClassName = "md:col-span-1 md:row-span-1";
+            }
             
             return (
               <BentoCard
                 key={program.title}
                 name={program.title}
-                className={span}
+                className={customClassName}
                 Icon={Icon}
                 description={program.description}
                 href="#"

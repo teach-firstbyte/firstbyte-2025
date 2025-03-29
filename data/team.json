@@ -1,0 +1,106 @@
+{
+  "allTeamMembers": [
+    {
+      "name": "Landyn Sparacino",
+      "role": "President",
+      "image": "/team/landyn-sparacino.jpg",
+      "bio": "Hi everyone! My name is Landyn Sparacino and I am a fourth year studying Cybersecurity and Criminal Justice. Once I graduate in May 2025, I will be joining Blackstone as a Cybersecurity Analyst. I have loved being a part of FirstByte and growing the club.",
+      "linkedin": "https://www.linkedin.com/in/landynsparacino",
+      "years": ["2022", "2023", "2024", "2025"],
+      "previousRoles": ["Software Team Lead"]
+    },
+    {
+      "name": "Caleb Lee",
+      "role": "Vice President",
+      "image": "/team/caleb-lee.jpg",
+      "bio": "Hi I'm Caleb, and I've had the pleasure of being involved with firstbyte for most of my college years. It's been such a rewarding experience to see this club grow and change, and It's come to be my second home. After I graduate, I'm heading to Chewy to work full time as a software engineer!",
+      "linkedin": "https://linkedin.com/in/caleb-lee",
+      "github": "https://github.com/caleblee12694",
+      "years": ["2022", "2023", "2024", "2025"],
+      "previousRoles": ["CHV Lead"]
+    },
+    {
+      "name": "Win Tongtawee",
+      "role": "CS Curricula Lead, Brand & Marketing Lead",
+      "image": "/team/win-tongtawee.jpg",
+      "bio": "Hello! I'm Win Tongtawee, serving as both the CS Curricula Lead and Brand Marketing Lead for FirstByte.",
+      "linkedin": "https://linkedin.com/in/win-tongtawee",
+      "github": "https://github.com/win-tongtawee",
+      "years": ["2022", "2023", "2024", "2025"],
+      "previousRoles": []
+    },
+    {
+      "name": "Cynthia Chen",
+      "role": "CS Curricula Co-lead",
+      "image": "/team/cynthia-chen.jpg",
+      "bio": "Hey everyone! I'm Cynthia, a graduating fourth year CS + Fintech student at Northeastern University. I've been enamored by technology since a young age, and I feel very privileged to be able to study and pursue my interests at university. I believe that computer science education and other STEM curricula should be accessible to everyone, and FirstByte is such a wonderful community that shares the same values. I hope students are able to learn and have fun through our hosted events! I'm also available to work starting summer of 2025, so please reach out if you're interested in connecting!",
+      "linkedin": "https://linkedin.com/in/chenxcynthia/",
+      "github": "https://github.com/cynthiachenn",
+      "years": ["2023", "2024", "2025"],
+      "previousRoles": []
+    },
+    {
+      "name": "Alastaire Balin",
+      "role": "Brand & Marketing Lead",
+      "image": "/team/alastaire-balin.jpg",
+      "bio": "My name is Alastaire Balin and I am first-year studying CS and Business. I love ABGs.",
+      "linkedin": "https://www.linkedin.com/in/alastaire-balin",
+      "github": "https://github.com/al4stur",
+      "years": ["2024", "2025"],
+      "previousRoles": []
+    },
+    {
+      "name": "Shreesh Dassarkar",
+      "role": "Software Events Lead",
+      "image": "/team/shreesh-dassarkar.jpg",
+      "bio": "Hi! I'm Shreesh and I'm a third year DS + Business major and I love playing basketball and fishing.",
+      "linkedin": "https://www.linkedin.com/in/shreesh-dassarkar/",
+      "github": "https://github.com/sdassarkar",
+      "years": ["2023", "2024", "2025"],
+      "previousRoles": []
+    },
+    {
+      "name": "Jaden Zhou",
+      "role": "Treasurer",
+      "image": "/team/jaden-zhou.jpg",
+      "bio": "I'm Jaden and I'm a third year CS major.",
+      "linkedin": "https://www.linkedin.com/in/jadenzhou/",
+      "github": "https://www.github.com/JadenZhou",
+      "years": ["2023", "2024", "2025"],
+      "previousRoles": []
+    },
+    {
+      "name": "Shreyashi Kalakuntla",
+      "role": "Stem Curricula Team Lead",
+      "image": "/team/shreyashi-kalakuntla.jpg",
+      "bio": "Hey Everyone! My name is Shreyashi Kalakuntla and I am a second year studying Business Administration and Data Science with a concentration in finance.",
+      "linkedin": "https://www.linkedin.com/in/shreyashi-kalakuntla",
+      "years": ["2023", "2024", "2025"],
+      "previousRoles": []
+    },
+    {
+      "name": "Andy Ge",
+      "role": "President",
+      "image": "/team/andy-ge.jpg",
+      "linkedin": "https://linkedin.com/in/andy-ge",
+      "years": ["2022", "2023"],
+      "previousRoles": []
+    },
+    {
+      "name": "Jennifer Esfahany",
+      "role": "Logistics Coordinator",
+      "image": "/team/jennifer-esfahany.jpg",
+      "linkedin": "https://linkedin.com/in/jennifer-esfahany",
+      "years": ["2022", "2023", "2024"],
+      "previousRoles": []
+    },
+    {
+      "name": "Srikar Ananthoju",
+      "role": "Curricula Lead",
+      "image": "/team/srikar-ananthoju.jpg",
+      "linkedin": "https://linkedin.com/in/srikar-ananthoju",
+      "years": ["2022", "2023"],
+      "previousRoles": []
+    }
+  ]
+} 
