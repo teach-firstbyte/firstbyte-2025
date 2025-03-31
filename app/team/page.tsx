@@ -27,7 +27,7 @@ interface TeamMember {
   twitter?: string
   github?: string
   years?: string[]
-  previousRoles?: string[]
+  previousRoles?: { role: string; year: string }[]
 }
 
 // Transform team data for display in the directory page
@@ -241,7 +241,7 @@ export default function TeamPage() {
                         
                         {member.previousRoles && member.previousRoles.length > 0 && (
                           <div className="mt-1 text-xs text-muted-foreground">
-                            Previous roles: {member.previousRoles.join(", ")}
+                            Previous roles: {member.previousRoles.map((roleObj: { role: string; year: string }) => `${roleObj.role} (${roleObj.year})`).join(", ")}
                           </div>
                         )}
                       </div>

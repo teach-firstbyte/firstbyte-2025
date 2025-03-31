@@ -15,13 +15,13 @@ import teamData from "@/data/team.json"
 interface TeamMember {
   name: string
   role: string
-  image?: string
+  image?: string | null
   bio?: string
   linkedin?: string
   twitter?: string
   github?: string
   years?: string[] // List of years with FirstByte (e.g. ["2022", "2023", "2024"])
-  previousRoles?: string[] // Optional: previous roles they've held
+  previousRoles?: { role: string; year: string }[] // Previous roles with years
 }
 
 interface PastBoard {
@@ -36,24 +36,96 @@ interface TeamSectionProps {
 
 // Get all team members from the JSON data
 const allTeamMembers: TeamMember[] = teamData.allTeamMembers;
+// Get team photos if available
+const teamPhotos = teamData.teamPhotos || [];
 
-// Filter for current executive board (members with 2024 or 2025 in their years)
+// Helper function to get the correct role for a specific year
+const getRoleForYear = (member: TeamMember, year: string): string => {
+  // If we're looking for the current year (2025) role
+  if (year === "2025") {
+    return member.role;
+  }
+  
+  // If we're looking for a historical role
+  const historicalRole = member.previousRoles?.find(role => role.year === year);
+  return historicalRole ? historicalRole.role : member.role;
+};
+
+// Filter for current executive board (members with 2025 in their years)
 const currentExecutiveBoard = allTeamMembers.filter(member => 
   member.years?.includes("2025")
-);
+).map(member => ({
+  ...member,
+  role: getRoleForYear(member, "2025") // Ensure we display the 2025 role
+}));
 
 // Filter for founding members (members with 2022 in their years)
 const foundingMembers = allTeamMembers.filter(member => 
   member.years?.includes("2022")
-);
+).map(member => {
+  // For past boards, show the member with their role from that year
+  return {
+    ...member,
+    role: getRoleForYear(member, "2022") // Use the 2022 role specifically
+  };
+});
 
+// Helper function to create a past board with members showing their roles from that specific year
+const createPastBoard = (year: string, title: string): PastBoard => {
+  // Get all members who were active in that year
+  const membersFromYear = allTeamMembers.filter(member => 
+    member.years?.includes(year)
+  ).map(member => {
+    // Get the appropriate role for that year
+    return {
+      ...member,
+      role: getRoleForYear(member, year)
+    };
+  });
+  
+  return {
+    year: `${year}-${Number(year) + 1}`, // Format as academic year
+    title: title,
+    members: membersFromYear
+  };
+};
+
+// Define specific order for founding team
+const foundingTeamOrder = ["Andy Ge", "Win Tongtawee", "Caleb Lee", "Landyn Sparacino", "Jennifer Esfahany", "Srikar Ananthoju"];
+
+// Create past board entries with custom ordering for founding team
 const pastBoards: PastBoard[] = [
   {
-    year: "2022-2023",
-    title: "Founding Team",
-    members: foundingMembers
+    ...createPastBoard("2022", "Founding Team"),
+    // Sort members according to the specified order
+    members: createPastBoard("2022", "Founding Team").members.sort((a, b) => {
+      const indexA = foundingTeamOrder.indexOf(a.name);
+      const indexB = foundingTeamOrder.indexOf(b.name);
+      
+      // If both names are in the order list, sort by their position
+      if (indexA !== -1 && indexB !== -1) {
+        return indexA - indexB;
+      }
+      
+      // If only one name is in the list, prioritize it
+      if (indexA !== -1) return -1;
+      if (indexB !== -1) return 1;
+      
+      // If neither name is in the list, maintain alphabetical order
+      return a.name.localeCompare(b.name);
+    })
   }
+  // Add more past boards as needed
+  // createPastBoard("2023", "2023 Leadership"),
+  // createPastBoard("2024", "2024 Leadership"),
 ];
+
+// Tooltip position interface
+interface TooltipPosition {
+  x: number;
+  y: number;
+  width?: number;
+}
 
 // Portal component for tooltips
 function TooltipPortal({ children }: { children: React.ReactNode }) {
@@ -72,15 +144,94 @@ function TooltipPortal({ children }: { children: React.ReactNode }) {
     : null
 }
 
-// Define a tooltip position interface
-interface TooltipPosition {
-  x: number;
-  y: number;
-  width: number;
+// Reusable BlurTooltip component
+interface BlurTooltipProps {
+  position: TooltipPosition;
+  content: string | React.ReactNode;
+  visible: boolean;
+  icon?: React.ReactNode;
+  id?: string;
+}
+
+function BlurTooltip({ position, content, visible, icon, id = "tooltip" }: BlurTooltipProps) {
+  return (
+    <TooltipPortal>
+      <div 
+        className="pointer-events-none fixed left-0 top-0 z-[9999]" 
+        id="STALKER" 
+        style={{ transform: `translate(${position.x}px, ${position.y}px)` }}
+      >
+        <div 
+          id="STALKER_INNER"
+          className="flex items-center space-x-[3px] rounded-xl border border-light/20 bg-dark0/80 p-2 px-3 backdrop-blur-md"
+          style={{ 
+            filter: visible ? "blur(0px)" : "blur(16px)",
+            opacity: visible ? 1 : 0,
+            transitionDuration: "1.2s",
+            transitionTimingFunction: "cubic-bezier(0.32, 0.72, 0, 1)",
+            marginLeft: "-112px" 
+          }}
+        >
+          <span className="text-xs text-white/50">
+            {content}
+          </span>
+          {icon || (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-auto w-4 text-white/50">
+              <path d="M7 7h10v10"></path>
+              <path d="M7 17 17 7"></path>
+            </svg>
+          )}
+        </div>
+      </div>
+    </TooltipPortal>
+  );
+}
+
+// Reusable original style tooltip
+interface ClassicTooltipProps {
+  position: TooltipPosition;
+  title: string;
+  subtitle?: string;
+  visible: boolean;
+  id?: string;
+}
+
+function ClassicTooltip({ position, title, subtitle, visible, id = "tooltip" }: ClassicTooltipProps & { socialUrl?: string | null }) {
+  return (
+    <TooltipPortal>
+      <div 
+        className="pointer-events-none fixed left-0 top-0 z-[9999]" 
+        id={`STALKER-${id}`}
+        style={{ transform: `translate(${position.x}px, ${position.y}px)` }}
+      >
+        <div 
+          className="bg-popover rounded-md shadow-lg px-4 py-2 min-w-[140px] text-center transform -translate-x-1/2"
+          style={{ 
+            filter: visible ? "blur(0px)" : "blur(16px)",
+            opacity: visible ? 1 : 0,
+            transitionDuration: "1.2s",
+            transitionTimingFunction: "cubic-bezier(0.32, 0.72, 0, 1)"
+          }}
+        >
+          <div className="absolute inset-x-10 w-[20%] -bottom-px bg-gradient-to-r from-transparent via-primary to-transparent h-px" />
+          <div className="absolute left-10 w-[40%] z-30 -bottom-px bg-gradient-to-r from-transparent via-primary/70 to-transparent h-px" />
+          <div className="font-bold text-base text-popover-foreground">
+            {title}
+          </div>
+          {subtitle && (
+            <div className="text-xs text-muted-foreground">
+              {subtitle}
+            </div>
+          )}
+        </div>
+      </div>
+    </TooltipPortal>
+  );
 }
 
 function TeamMemberCard({ member, index }: { member: TeamMember; index: number }) {
   const [isHovered, setIsHovered] = useState(false)
+  const [showRoleHistory, setShowRoleHistory] = useState(false)
   
   // Generate year badges for each year with FirstByte
   const renderYearBadges = () => {
@@ -102,6 +253,75 @@ function TeamMemberCard({ member, index }: { member: TeamMember; index: number }
       </div>
     );
   };
+
+  // Create role history display
+  const renderRoleHistory = () => {
+    if (!member.previousRoles || member.previousRoles.length === 0) return null;
+    
+    // Sort roles by year (oldest first)
+    const sortedRoles = [...member.previousRoles].sort((a, b) => 
+      a.year.localeCompare(b.year)
+    );
+    
+    // Group consecutive years with the same role
+    const consolidatedRoles: {startYear: string; endYear: string; role: string}[] = [];
+    let currentGroup: {startYear: string; endYear: string; role: string} | null = null;
+    
+    sortedRoles.forEach((roleObj, index) => {
+      // If this is a new role or first item
+      if (!currentGroup || currentGroup.role !== roleObj.role) {
+        // Add previous group if exists
+        if (currentGroup) {
+          consolidatedRoles.push(currentGroup);
+        }
+        
+        // Start new group
+        currentGroup = {
+          startYear: roleObj.year,
+          endYear: roleObj.year,
+          role: roleObj.role
+        };
+      } else {
+        // Continue current group
+        currentGroup.endYear = roleObj.year;
+      }
+      
+      // If this is the last item, add the current group
+      if (index === sortedRoles.length - 1 && currentGroup) {
+        consolidatedRoles.push(currentGroup);
+      }
+    });
+    
+    return (
+      <motion.div 
+        initial={{ opacity: 0, height: 0 }}
+        animate={{ 
+          opacity: showRoleHistory ? 1 : 0,
+          height: showRoleHistory ? 'auto' : 0
+        }}
+        transition={{ duration: 0.3 }}
+        className="overflow-hidden"
+      >
+        <div className="mt-3 pt-3 border-t border-border">
+          <h4 className="text-xs font-medium mb-1 text-muted-foreground">Previous Roles:</h4>
+          <ul className="space-y-1">
+            {consolidatedRoles.map((roleGroup, idx) => (
+              <li key={idx} className="text-xs flex items-center">
+                <div className="h-1.5 w-1.5 rounded-full bg-primary/70 mr-1.5" />
+                <span>{roleGroup.role}</span>
+                <span className="ml-1 text-muted-foreground">
+                  {roleGroup.startYear === roleGroup.endYear 
+                    ? `(${roleGroup.startYear})` 
+                    : `(${roleGroup.startYear} - ${roleGroup.endYear})`
+                  }
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </motion.div>
+    );
+  };
   
   // Navigate to profile when clicking on the avatar
   const navigateToProfile = () => {
@@ -114,6 +334,9 @@ function TeamMemberCard({ member, index }: { member: TeamMember; index: number }
       window.open(member.twitter, '_blank');
     }
   };
+  
+  // Determine if the member has role history
+  const hasRoleHistory = member.previousRoles && member.previousRoles.length > 0;
   
   return (
     <motion.div
@@ -198,13 +421,33 @@ function TeamMemberCard({ member, index }: { member: TeamMember; index: number }
           <h3 className="text-lg font-semibold">{member.name}</h3>
         </CardHeader>
         <CardContent className="p-4 pt-1 pb-4">
-          <p className="text-sm text-muted-foreground">{member.role}</p>
+          <div className="flex items-start justify-between">
+            <p className="text-sm text-muted-foreground">{member.role}</p>
+            {hasRoleHistory && (
+              <button 
+                onClick={() => setShowRoleHistory(!showRoleHistory)}
+                className="text-xs text-primary flex items-center ml-2 hover:underline"
+              >
+                <ChevronDown className={cn(
+                  "h-3 w-3 transition-transform", 
+                  showRoleHistory ? "rotate-180" : ""
+                )} />
+              </button>
+            )}
+          </div>
           {renderYearBadges()}
+          {renderRoleHistory()}
         </CardContent>
       </Card>
     </motion.div>
   )
 }
+
+// Get team photo for a specific year if available
+const getTeamPhotoForYear = (year: string): { image: string, description: string } | null => {
+  const photo = teamPhotos.find(p => p.year === year);
+  return photo || null;
+};
 
 function CardStack({ board, index }: { board: PastBoard; index: number }) {
   const [isExpanded, setIsExpanded] = useState(false)
@@ -212,6 +455,15 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
   const [hoveredMemberIndex, setHoveredMemberIndex] = useState<number | null>(null)
   const [tooltipRect, setTooltipRect] = useState<TooltipPosition | null>(null)
   const [isTransitioning, setIsTransitioning] = useState(false)
+  
+  // Social media hover states - change to store just the URL
+  const [hoveredSocialUrl, setHoveredSocialUrl] = useState<string | null>(null)
+  
+  // Visibility states for animations
+  const [memberTooltipVisible, setMemberTooltipVisible] = useState(false)
+  
+  // Refs to track tooltip cleanup timers
+  const memberTooltipTimer = React.useRef<NodeJS.Timeout | null>(null)
   
   // Framer Motion values for tooltip animation
   const springConfig = { stiffness: 100, damping: 5 };
@@ -225,28 +477,71 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
     springConfig
   );
   
-  const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
-    const target = event.currentTarget;
-    const halfWidth = target.offsetWidth / 2;
-    x.set(event.nativeEvent.offsetX - halfWidth);
-  };
-  
   // Handle mouse enter on member card
   const handleMouseEnter = (index: number, event: React.MouseEvent<HTMLDivElement>) => {
     if (isTransitioning) return;
     
-    // Get position values for tooltip
-    const card = event.currentTarget;
-    const rect = card.getBoundingClientRect();
+    // Clear any pending timeout for member tooltip cleanup
+    if (memberTooltipTimer.current) {
+      clearTimeout(memberTooltipTimer.current);
+      memberTooltipTimer.current = null;
+    }
     
-    // Set the hovered member index and tooltip position
-    setHoveredMemberIndex(index);
+    // Set position directly from cursor position
     setTooltipRect({
-      x: rect.left,
-      y: rect.top, 
-      width: rect.width
+      x: event.clientX,
+      y: event.clientY
     });
+    
+    // Reset any social URL
+    setHoveredSocialUrl(null);
+    
+    // Set the hovered member index and make tooltip visible
+    setHoveredMemberIndex(index);
+    setMemberTooltipVisible(true);
   };
+  
+  // Handle mouse leave from member card
+  const handleMouseLeave = () => {
+    // Reset any social URL
+    setHoveredSocialUrl(null);
+    setMemberTooltipVisible(false);
+    
+    // Schedule cleanup after animation completes
+    memberTooltipTimer.current = setTimeout(() => {
+      if (!memberTooltipVisible) {
+        setHoveredMemberIndex(null);
+      }
+      memberTooltipTimer.current = null;
+    }, 1200); // Match exit animation duration
+  };
+  
+  // Handle social icon hover
+  const handleSocialHover = (
+    type: 'linkedin' | 'github' | 'twitter',
+    url: string, 
+    event: React.MouseEvent<HTMLElement>
+  ) => {
+    // Set the social URL to show
+    setHoveredSocialUrl(url);
+    
+    // Prevent parent tooltip from showing
+    event.stopPropagation();
+  };
+  
+  // Handle mouse leave from social icon
+  const handleSocialLeave = () => {
+    setHoveredSocialUrl(null);
+  };
+  
+  // Clean up timeouts on unmount
+  React.useEffect(() => {
+    return () => {
+      if (memberTooltipTimer.current) {
+        clearTimeout(memberTooltipTimer.current);
+      }
+    };
+  }, []);
   
   // Format board members for AnimatedTooltip
   const tooltipMembers = board.members.map((member, idx) => ({
@@ -283,6 +578,163 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
       setIsTransitioning(false);
     }, 300);
   };
+  
+  // Handle mouse move to update tooltip position
+  const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (hoveredMemberIndex === null) return;
+    
+    setTooltipRect({
+      x: event.clientX,
+      y: event.clientY
+    });
+  };
+  
+  // New helper function to display role history for focused member
+  const renderFocusedMemberRoleHistory = (member: TeamMember) => {
+    if (!member.previousRoles || member.previousRoles.length === 0) return null;
+    
+    // IMPORTANT: When showing the member details, we need the original complete member data
+    // Find the original member data from allTeamMembers to ensure we show accurate roles
+    const originalMember = allTeamMembers.find(m => m.name === member.name) || member;
+    
+    // Create a comprehensive role history by year
+    // First, gather all years the member has been active
+    const activeYears = originalMember.years || [];
+    
+    // Get the current board year to highlight
+    const boardYear = board.year.split('-')[0];
+    
+    // Check if this member is active in the current year (2025)
+    const isActiveCurrently = activeYears.includes("2025");
+    const mostRecentYear = activeYears.length > 0 ? [...activeYears].sort((a, b) => b.localeCompare(a))[0] : "";
+    
+    // Make sure we get the correct roles for the display
+    const boardYearRole = getRoleForYear(originalMember, boardYear);
+    const currentRole = originalMember.role; // Always use the full role for current year
+    
+    // Manually create the timeline for better control
+    const roleTimeline: {year: string; role: string; isCurrent: boolean; isHighlighted: boolean; isLastRole: boolean}[] = [];
+    
+    // Add previous roles from the member's history
+    if (originalMember.previousRoles) {
+      // Sort to ensure chronological order
+      const sortedPreviousRoles = [...originalMember.previousRoles].sort((a, b) => 
+        a.year.localeCompare(b.year)
+      );
+      
+      // Create a timeline entry for each previous role
+      sortedPreviousRoles.forEach(prevRole => {
+        // Check if this is their last/final role (most recent year if not active in 2025)
+        const isLastRole = !isActiveCurrently && prevRole.year === mostRecentYear;
+        
+        roleTimeline.push({
+          year: prevRole.year,
+          role: prevRole.role,
+          isCurrent: false, // Never mark past roles as "current"
+          isHighlighted: prevRole.year === boardYear,
+          isLastRole: isLastRole // Flag for final role
+        });
+      });
+    }
+    
+    // Add the current role specifically only if the member is active in 2025
+    if (isActiveCurrently && mostRecentYear === "2025") {
+      roleTimeline.push({
+        year: "2025",
+        role: currentRole,
+        isCurrent: true,
+        isHighlighted: boardYear === "2025",
+        isLastRole: false // Not needed since isCurrent already marks this
+      });
+    }
+    
+    // Sort the complete timeline chronologically
+    const sortedTimeline = roleTimeline.sort((a, b) => a.year.localeCompare(b.year));
+    
+    // Now group consecutive years with the same role for display
+    const consolidatedRoles: {startYear: string; endYear: string; role: string; isCurrent: boolean; isHighlighted: boolean; isLastRole: boolean}[] = [];
+    let currentGroup: {startYear: string; endYear: string; role: string; isCurrent: boolean; isHighlighted: boolean; isLastRole: boolean} | null = null;
+    
+    sortedTimeline.forEach((item, index) => {
+      // Start a new group if: 
+      // - this is the first item
+      // - the role is different from the current group
+      // - this item needs special styling (highlighted, current, or last role)
+      const isSpecialItem = item.isHighlighted || item.isCurrent || item.isLastRole;
+      
+      if (!currentGroup || currentGroup.role !== item.role || isSpecialItem) {
+        // Add previous group if exists
+        if (currentGroup) {
+          consolidatedRoles.push(currentGroup);
+        }
+        
+        // Start new group
+        currentGroup = {
+          startYear: item.year,
+          endYear: item.year,
+          role: item.role,
+          isCurrent: item.isCurrent,
+          isHighlighted: item.isHighlighted,
+          isLastRole: item.isLastRole
+        };
+      } else {
+        // Continue current group for non-special items with same role
+        currentGroup.endYear = item.year;
+      }
+      
+      // If this is the last item, add the current group
+      if (index === sortedTimeline.length - 1 && currentGroup) {
+        consolidatedRoles.push(currentGroup);
+      }
+    });
+    
+    return (
+      <div className="mt-4 pt-3 border-t border-border/30">
+        <h4 className="text-sm font-medium mb-2 text-foreground flex items-center">
+          <Clock className="h-3.5 w-3.5 mr-1.5 text-primary" />
+          Role Progression:
+        </h4>
+        <div className="relative pl-6 pt-1">
+          {/* Timeline line */}
+          <div className="absolute left-2 top-2 bottom-0 w-0.5 bg-gradient-to-b from-muted-foreground/30 to-primary" />
+          
+          {/* Display consolidated roles in chronological order */}
+          {consolidatedRoles.map((item, idx) => (
+            <div key={idx} className="mb-3 relative">
+              <div className={cn(
+                "absolute left-[-18px] top-0.5 h-3 w-3 rounded-full ring-2 ring-background",
+                item.isHighlighted ? "bg-primary" : // Highlighted year gets primary/green color
+                item.isCurrent || item.isLastRole ? "bg-foreground" : // Current role or last role gets black dot
+                "bg-muted-foreground" // Past role gets gray dot
+              )} />
+              <div className="flex flex-col">
+                <span className={cn(
+                  "text-sm",
+                  item.isHighlighted ? "font-semibold text-primary" : // Highlighted year gets primary color
+                  (item.isCurrent || item.isLastRole) ? "font-semibold" : "" // Current or last role gets bold
+                )}>
+                  {item.role}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  {item.startYear === item.endYear 
+                    ? item.startYear // Single year
+                    : `${item.startYear} - ${item.endYear}` // Year range
+                  }
+                  {item.isHighlighted && ' • Currently viewing'}
+                  {item.isCurrent && ' • Current'}
+                  {item.isLastRole && ' • Final role'}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+  
+  // Get team photo if available for this board's year
+  const boardYear = board.year.split('-')[0];
+  const teamPhoto = getTeamPhotoForYear(boardYear);
   
   return (
     <motion.div 
@@ -467,20 +919,33 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
                                 <h4 className="text-xl font-semibold">{board.members[focusedMember].name}</h4>
                                 <p className="text-sm text-muted-foreground mb-3">{board.members[focusedMember].role}</p>
                                 
-                                {board.members[focusedMember].bio && (
-                                  <p className="text-sm mb-4">{board.members[focusedMember].bio}</p>
-                                )}
+                                {/* Find the original member data to get the full, accurate bio */}
+                                {(() => {
+                                  const originalMember = allTeamMembers.find(m => 
+                                    m.name === board.members[focusedMember].name
+                                  );
+                                  return originalMember?.bio ? (
+                                    <p className="text-sm mb-4">{originalMember.bio}</p>
+                                  ) : board.members[focusedMember].bio ? (
+                                    <p className="text-sm mb-4">{board.members[focusedMember].bio}</p>
+                                  ) : null;
+                                })()}
                                 
-                                <div className="flex gap-2">
+                                {renderFocusedMemberRoleHistory(board.members[focusedMember])}
+                                
+                                <div className="flex gap-2 mt-3">
                                   {board.members[focusedMember].linkedin && (
-                                    <Link href={board.members[focusedMember].linkedin!} target="_blank" rel="noopener noreferrer">
-                                      <motion.div 
-                                        whileHover={{ scale: 1.1 }}
-                                        whileTap={{ scale: 0.95 }}
-                                        className="bg-primary/10 text-primary p-2 rounded-full"
-                                      >
-                                        <Linkedin className="h-4 w-4" />
-                                      </motion.div>
+                                    <Link 
+                                      href={board.members[focusedMember].linkedin!} 
+                                      target="_blank" 
+                                      rel="noopener noreferrer"
+                                      onClick={(e) => e.stopPropagation()}
+                                      onMouseEnter={(e) => handleSocialHover('linkedin', board.members[focusedMember].linkedin!, e)}
+                                      onMouseLeave={handleSocialLeave}
+                                    >
+                                      <div className="p-1 text-muted-foreground hover:text-primary">
+                                        <Linkedin className="h-3 w-3" />
+                                      </div>
                                     </Link>
                                   )}
                                   {board.members[focusedMember].twitter && (
@@ -495,14 +960,17 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
                                     </Link>
                                   )}
                                   {board.members[focusedMember].github && (
-                                    <Link href={board.members[focusedMember].github!} target="_blank" rel="noopener noreferrer">
-                                      <motion.div 
-                                        whileHover={{ scale: 1.1 }}
-                                        whileTap={{ scale: 0.95 }}
-                                        className="bg-primary/10 text-primary p-2 rounded-full"
-                                      >
-                                        <Github className="h-4 w-4" />
-                                      </motion.div>
+                                    <Link 
+                                      href={board.members[focusedMember].github!} 
+                                      target="_blank" 
+                                      rel="noopener noreferrer"
+                                      onClick={(e) => e.stopPropagation()}
+                                      onMouseEnter={(e) => handleSocialHover('github', board.members[focusedMember].github!, e)}
+                                      onMouseLeave={handleSocialLeave}
+                                    >
+                                      <div className="p-1 text-muted-foreground hover:text-primary">
+                                        <Github className="h-3 w-3" />
+                                      </div>
                                     </Link>
                                   )}
                                 </div>
@@ -511,6 +979,27 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
                           </motion.div>
                         )}
                       </AnimatePresence>
+
+                      {/* Team photo if available */}
+                      {teamPhoto && focusedMember === null && (
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0.98 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ duration: 0.3 }}
+                          className="mb-6"
+                        >
+                          <div className="relative aspect-video overflow-hidden rounded-lg border mb-2">
+                            <img 
+                              src={teamPhoto.image} 
+                              alt={teamPhoto.description} 
+                              className="object-cover w-full h-full"
+                            />
+                          </div>
+                          <p className="text-sm text-center text-muted-foreground">
+                            {teamPhoto.description}
+                          </p>
+                        </motion.div>
+                      )}
 
                       {/* Show all members with AnimatedTooltip hover effect */}
                       <div className="mt-4">
@@ -537,7 +1026,8 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
                                 focusedMember === i ? "opacity-70" : "opacity-100"
                               )}
                               onMouseEnter={(e) => handleMouseEnter(i, e)}
-                              onMouseLeave={() => setHoveredMemberIndex(null)}
+                              onMouseLeave={handleMouseLeave}
+                              onMouseMove={handleMouseMove}
                             >
                               <Card 
                                 className="overflow-hidden shadow-sm hover:shadow-md hover:border-primary/20 cursor-pointer transition-all duration-200"
@@ -573,6 +1063,8 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
                                         target="_blank" 
                                         rel="noopener noreferrer"
                                         onClick={(e) => e.stopPropagation()}
+                                        onMouseEnter={(e) => handleSocialHover('linkedin', member.linkedin!, e)}
+                                        onMouseLeave={handleSocialLeave}
                                       >
                                         <div className="p-1 text-muted-foreground hover:text-primary">
                                           <Linkedin className="h-3 w-3" />
@@ -585,6 +1077,8 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
                                         target="_blank" 
                                         rel="noopener noreferrer"
                                         onClick={(e) => e.stopPropagation()}
+                                        onMouseEnter={(e) => handleSocialHover('github', member.github!, e)}
+                                        onMouseLeave={handleSocialLeave}
                                       >
                                         <div className="p-1 text-muted-foreground hover:text-primary">
                                           <Github className="h-3 w-3" />
@@ -613,28 +1107,17 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
         </div>
       </div>
       
-      {/* Render tooltip through portal when hovering */}
+      {/* Member tooltip using ClassicTooltip */}
       {hoveredMemberIndex !== null && tooltipRect && isExpanded && (
-        <TooltipPortal>
-          <div 
-            className="fixed z-[9999] bg-popover rounded-md shadow-lg px-4 py-2 min-w-[140px] text-center transform -translate-x-1/2"
-            style={{
-              left: tooltipRect.x + (tooltipRect.width / 2), 
-              top: tooltipRect.y - 70,
-              pointerEvents: 'none'
-            }}
-          >
-            <div className="absolute inset-x-10 w-[20%] -bottom-px bg-gradient-to-r from-transparent via-primary to-transparent h-px" />
-            <div className="absolute left-10 w-[40%] z-30 -bottom-px bg-gradient-to-r from-transparent via-primary/70 to-transparent h-px" />
-            <div className="absolute bottom-[-8px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-popover" />
-            <div className="font-bold text-base text-popover-foreground">
-              {board.members[hoveredMemberIndex]?.name}
-            </div>
-            <div className="text-xs text-muted-foreground">
-              {board.members[hoveredMemberIndex]?.role}
-            </div>
-          </div>
-        </TooltipPortal>
+        <div>
+          <ClassicTooltip
+            position={tooltipRect}
+            title={board.members[hoveredMemberIndex]?.name}
+            subtitle={hoveredSocialUrl || board.members[hoveredMemberIndex]?.role}
+            visible={memberTooltipVisible}
+            id={`member-${hoveredMemberIndex}`}
+          />
+        </div>
       )}
     </motion.div>
   )
