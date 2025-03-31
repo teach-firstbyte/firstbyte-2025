@@ -37,10 +37,10 @@
     {
       "name": "Win Tongtawee",
       "role": "CS Curricula Lead, React Team Lead, Brand & Marketing Lead",
-      "image": null,
+      "image": "/teamMemberPhotos/Win Tongtawee.jpg",
       "bio": "Hello! I'm Win Tongtawee, serving as the CS Curricula Lead, React Team Lead, and Brand & Marketing Lead for FirstByte.",
-      "linkedin": "https://linkedin.com/in/win-tongtawee",
-      "github": "https://github.com/win-tongtawee",
+      "linkedin": "https://linkedin.com/in/tunwa-tongtawee"
+      "github": "https://github.com/nohaxsjustasian",
       "years": ["2022", "2023", "2024", "2025"],
       "previousRoles": [
         {"role": "Brand & Marketing Lead", "year": "2022"},
@@ -115,7 +115,7 @@
       "name": "Andy Ge",
       "role": "President",
       "image": null,
-      "linkedin": "https://linkedin.com/in/andy-ge",
+      "linkedin": "https://www.linkedin.com/in/andy-ge-codeman/",
       "years": ["2022", "2023"],
       "previousRoles": [
         {"role": "President", "year": "2022"},
@@ -126,7 +126,7 @@
       "name": "Jennifer Esfahany",
       "role": "Logistics Coordinator",
       "image": null,
-      "linkedin": "https://linkedin.com/in/jennifer-esfahany",
+      "linkedin": "https://www.linkedin.com/in/jesfahany/",
       "years": ["2022", "2023", "2024"],
       "previousRoles": [
         {"role": "Logistics Coordinator", "year": "2022"},
@@ -154,6 +154,17 @@
       "previousRoles": [
         {"role": "Treasurer", "year": "2022"},
         {"role": "Treasurer", "year": "2023"}
+      ]
+    },
+    {
+      "name": "Inesh Parikh",
+      "role": "SSYP Team Lead",
+      "image": null,
+      "bio": "Hi everyone, I am Inesh and I am a second year Behavioral Neuroscience student with a minor in Data Science!",
+      "linkedin": "https://www.linkedin.com/in/inesh-parikh/",
+      "years": ["2024", "2025"],
+      "previousRoles": [
+        {"role": "SSYP Team Lead", "year": "2024"}
       ]
     }
   ]

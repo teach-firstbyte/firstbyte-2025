@@ -422,7 +422,9 @@ function TeamMemberCard({ member, index }: { member: TeamMember; index: number }
         </CardHeader>
         <CardContent className="p-4 pt-1 pb-4">
           <div className="flex items-start justify-between">
-            <p className="text-sm text-muted-foreground">{member.role}</p>
+            <div className="min-h-[40px] flex-1">
+              <p className="text-sm text-muted-foreground line-clamp-2">{member.role}</p>
+            </div>
             {hasRoleHistory && (
               <button 
                 onClick={() => setShowRoleHistory(!showRoleHistory)}

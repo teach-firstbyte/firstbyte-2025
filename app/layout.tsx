@@ -1,6 +1,7 @@
 import type React from "react"
 import "@/app/globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
+import { CommandMenu } from "@/components/command-menu"
 
 export const metadata = {
   title: "FirstByte - CS & STEM Education",
@@ -16,7 +17,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+        <ThemeProvider attribute="class" defaultTheme="dark" disableTransitionOnChange>
+          <CommandMenu />
           {children}
         </ThemeProvider>
       </body>
