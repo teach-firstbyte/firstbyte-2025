@@ -992,10 +992,9 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
                           className="mb-6"
                         >
                           <div className="relative aspect-video overflow-hidden rounded-lg border mb-2">
-                            <Image 
+                            <img 
                               src={teamPhoto.image} 
-                              alt={teamPhoto.description} 
-                              fill
+                              alt={teamPhoto.description}
                               className="object-cover"
                             />
                           </div>
