@@ -25,7 +25,7 @@
       "role": "Vice President",
       "image": "/teamMemberPhotos/Caleb Lee.jpeg",
       "bio": "Hi I'm Caleb, and I've had the pleasure of being involved with firstbyte for most of my college years. It's been such a rewarding experience to see this club grow and change, and It's come to be my second home. After I graduate, I'm heading to Chewy to work full time as a software engineer!",
-      "linkedin": "https://linkedin.com/in/caleb-lee",
+      "linkedin": "https://www.linkedin.com/in/caleblee123/",
       "github": "https://github.com/caleblee12694",
       "years": ["2022", "2023", "2024", "2025"],
       "previousRoles": [
@@ -38,7 +38,8 @@
       "name": "Win Tongtawee",
       "role": "CS Curricula Lead, React Team Lead, Brand & Marketing Lead",
       "image": "/teamMemberPhotos/Win Tongtawee.jpg",
-      "bio": "Hello! I'm Win Tongtawee, serving as the CS Curricula Lead, React Team Lead, and Brand & Marketing Lead for FirstByte.",
+      "circularImage": "/teamMemberPhotos/WinAlt.JPEG",
+      "bio": "Hello! I'm Win, I've had the honor of being a part of FirstByte when we only had 7 members. The club holds a special place in my heart and I'm looking forward to seeing what the future holds for FirstByte and its members. Currently Founding Engineer at Delve, Founding Engineer at Pagent, and publishing a paper on how we can use ML to predict depression.",
       "linkedin": "https://linkedin.com/in/tunwa-tongtawee",
       "github": "https://github.com/nohaxsjustasian",
       "years": ["2022", "2023", "2024", "2025"],
@@ -166,6 +167,18 @@
       "previousRoles": [
         {"role": "SSYP Team Lead", "year": "2024"}
       ]
+    }
+  ],
+  "incomingEboard": [
+    {
+      "name": "Amoli Patel",
+      "role": "CS Curricula Team Co-Lead",
+      "image": null,
+      "bio": "Hi! I'm Amoli Patel, a combined Computer Science and Business Administration major. I first joined FirstByte because I enjoy helping others learn and was drawn to FirstByte's mission of making STEM education more accessible to all students. Ever since joining, I've enjoyed fruthering my own education while also meaningfully supporting others on their learning journey.",
+      "linkedin": "www.linkedin.com/in/amoli-patel",
+      "github": "https://github.com/amolipatel05",
+      "years": ["2025"],
+      "previousRoles": []
     }
   ]
 } 

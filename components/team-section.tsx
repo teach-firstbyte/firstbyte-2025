@@ -16,6 +16,7 @@ interface TeamMember {
   name: string
   role: string
   image?: string | null
+  circularImage?: string | null
   bio?: string
   linkedin?: string
   twitter?: string
@@ -550,7 +551,7 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
     id: idx,
     name: member.name,
     designation: member.role,
-    image: member.image || ""
+    image: member.circularImage || member.image || ""
   }))
   
   // Navigate to profile when clicking on social media links
@@ -900,9 +901,9 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
                                 <Avatar className="h-full w-full aspect-square">
                                   {board.members[focusedMember].image ? (
                                     <AvatarImage 
-                                      src={board.members[focusedMember].image} 
+                                      src={board.members[focusedMember].circularImage || board.members[focusedMember].image} 
                                       alt={board.members[focusedMember].name}
-                                      className="object-cover"
+                                      className="object-cover object-center"
                                     />
                                   ) : (
                                     <AvatarFallback className="text-4xl">
@@ -1047,7 +1048,7 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
                                     }}
                                   >
                                     {member.image ? (
-                                      <AvatarImage src={member.image} alt={member.name} />
+                                      <AvatarImage src={member.circularImage || member.image} alt={member.name} className="object-cover object-center" />
                                     ) : (
                                       <AvatarFallback>
                                         {member.name.split(" ").map(n => n[0]).join("")}

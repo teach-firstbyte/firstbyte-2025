@@ -22,6 +22,7 @@ interface TeamMember {
   name: string
   role: string
   image?: string
+  circularImage?: string
   bio?: string
   linkedin?: string
   twitter?: string
@@ -205,7 +206,7 @@ export default function TeamPage() {
                     <div className="flex p-6 gap-4">
                       <Avatar className="h-16 w-16 rounded-full border-2 border-primary/10">
                         {member.image ? (
-                          <AvatarImage src={member.image} alt={member.name} />
+                          <AvatarImage src={member.circularImage || member.image} alt={member.name} className="object-cover object-center" />
                         ) : (
                           <AvatarFallback className="text-lg">
                             {member.name.split(" ").reduce((initials: string, namePart: string) => 
