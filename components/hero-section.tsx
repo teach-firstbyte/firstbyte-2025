@@ -8,6 +8,7 @@ import { Particles } from "@/hooks/use-mouse-position"
 import dynamic from 'next/dynamic'
 import { forwardRef, useEffect, useState } from "react"
 import { cn } from "@/lib/utils"
+import { useTheme } from "next-themes"
 
 // Dynamically import ThreeModel with ssr disabled
 const ThreeModel = dynamic(() => import('@/components/three-model').then(mod => mod.ThreeModel), {
@@ -33,6 +34,9 @@ const GreenLampContainer = ({
   children: React.ReactNode;
   className?: string;
 }) => {
+  const { theme } = useTheme()
+  const isDarkMode = theme === "dark"
+
   return (
     <div
       className={cn(
@@ -42,61 +46,77 @@ const GreenLampContainer = ({
     >
       {/* Background lamp effect (lower z-index) */}
       <div className="absolute -translate-y-[-5rem] -translate-x-16 inset-0 flex w-full items-center justify-center isolate z-0">
-        <motion.div
-          initial={{ opacity: 0.3, width: "5rem" }}
-          whileInView={{ opacity: 0.6, width: "26rem" }}
-          transition={{
-            delay: 0.3,
-            duration: 0.8,
-            ease: "easeInOut",
-          }}
-          style={{
-            backgroundImage: `conic-gradient(var(--conic-position), var(--tw-gradient-stops))`,
-          }}
-          className="absolute inset-auto right-1/2 h-[30rem] overflow-visible w-[26rem] bg-gradient-conic from-green-500 via-transparent to-transparent text-white [--conic-position:from_70deg_at_center_top]"
-        >
-          <div className="absolute w-[100%] left-0 bg-background h-40 bottom-0 z-20 [mask-image:linear-gradient(to_top,white,transparent)]" />
-          <div className="absolute w-40 h-[100%] left-0 bg-background bottom-0 z-20 [mask-image:linear-gradient(to_right,white,transparent)]" />
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0.3, width: "5rem" }}
-          whileInView={{ opacity: 0.6, width: "26rem" }}
-          transition={{
-            delay: 0.3,
-            duration: 0.8,
-            ease: "easeInOut",
-          }}
-          style={{
-            backgroundImage: `conic-gradient(var(--conic-position), var(--tw-gradient-stops))`,
-          }}
-          className="absolute inset-auto left-1/2 h-[30rem] w-[26rem] bg-gradient-conic from-transparent via-transparent to-green-500 text-white [--conic-position:from_290deg_at_center_top]"
-        >
-          <div className="absolute w-40 h-[100%] right-0 bg-background bottom-0 z-20 [mask-image:linear-gradient(to_left,white,transparent)]" />
-          <div className="absolute w-[100%] right-0 bg-background h-40 bottom-0 z-20 [mask-image:linear-gradient(to_top,white,transparent)]" />
-        </motion.div>
-        <div className="absolute top-1/2 h-48 w-full translate-y-12 scale-x-150 bg-background blur-2xl"></div>
-        <div className="absolute top-1/2 z-0 h-48 w-full bg-transparent opacity-10 backdrop-blur-md"></div>
-        <div className="absolute inset-auto z-0 h-36 w-[28rem] -translate-y-[15rem] rounded-full bg-green-500 opacity-30 blur-3xl"></div>
-        <motion.div
-          initial={{ width: "5rem" }}
-          whileInView={{ width: "26rem" }}
-          transition={{
-            delay: 0.3,
-            duration: 0.8,
-            ease: "easeInOut",
-          }}
-          className="absolute inset-auto z-0 h-28 w-64 -translate-y-[15rem] rounded-full bg-green-400 opacity-30 blur-2xl"
-        ></motion.div>
-        <motion.div
-          initial={{ width: "6rem" }}
-          whileInView={{ width: "26rem" }}
-          transition={{
-            delay: 0.3,
-            duration: 0.8,
-            ease: "easeInOut",
-          }}
-          className="absolute inset-auto z-0 h-0.5 w-[26rem] -translate-y-[15rem] bg-green-400 opacity-70"
-        ></motion.div>
+        {isDarkMode ? (
+          <>
+            <motion.div
+              initial={{ opacity: 0.3, width: "5rem" }}
+              whileInView={{ opacity: 0.6, width: "26rem" }}
+              transition={{
+                delay: 0.3,
+                duration: 0.8,
+                ease: "easeInOut",
+              }}
+              style={{
+                backgroundImage: `conic-gradient(var(--conic-position), var(--tw-gradient-stops))`,
+              }}
+              className="absolute inset-auto right-1/2 h-[30rem] overflow-visible w-[26rem] bg-gradient-conic from-green-800 via-transparent to-transparent text-white [--conic-position:from_70deg_at_center_top]"
+            >
+              <div className="absolute w-[100%] left-0 bg-background h-40 bottom-0 z-20 [mask-image:linear-gradient(to_top,white,transparent)]" />
+              <div className="absolute w-40 h-[100%] left-0 bg-background bottom-0 z-20 [mask-image:linear-gradient(to_right,white,transparent)]" />
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0.3, width: "5rem" }}
+              whileInView={{ opacity: 0.6, width: "26rem" }}
+              transition={{
+                delay: 0.3,
+                duration: 0.8,
+                ease: "easeInOut",
+              }}
+              style={{
+                backgroundImage: `conic-gradient(var(--conic-position), var(--tw-gradient-stops))`,
+              }}
+              className="absolute inset-auto left-1/2 h-[30rem] w-[26rem] bg-gradient-conic from-transparent via-transparent to-green-800 text-white [--conic-position:from_290deg_at_center_top]"
+            >
+              <div className="absolute w-40 h-[100%] right-0 bg-background bottom-0 z-20 [mask-image:linear-gradient(to_left,white,transparent)]" />
+              <div className="absolute w-[100%] right-0 bg-background h-40 bottom-0 z-20 [mask-image:linear-gradient(to_top,white,transparent)]" />
+            </motion.div>
+            <div className="absolute top-1/2 h-48 w-full translate-y-12 scale-x-150 bg-background blur-2xl"></div>
+            <div className="absolute top-1/2 z-0 h-48 w-full bg-transparent opacity-10 backdrop-blur-md"></div>
+            <div className="absolute inset-auto z-0 h-36 w-[28rem] -translate-y-[15rem] rounded-full bg-green-600 opacity-30 blur-3xl"></div>
+            <motion.div
+              initial={{ width: "5rem" }}
+              whileInView={{ width: "26rem" }}
+              transition={{
+                delay: 0.3,
+                duration: 0.8,
+                ease: "easeInOut",
+              }}
+              className="absolute inset-auto z-0 h-28 w-64 -translate-y-[15rem] rounded-full bg-green-700 opacity-30 blur-2xl"
+            ></motion.div>
+            <motion.div
+              initial={{ width: "6rem" }}
+              whileInView={{ width: "26rem" }}
+              transition={{
+                delay: 0.3,
+                duration: 0.8,
+                ease: "easeInOut",
+              }}
+              className="absolute inset-auto z-0 h-0.5 w-[26rem] -translate-y-[15rem] bg-green-400 opacity-70"
+            >
+            </motion.div>
+          </>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0.3, width: "5rem" }}
+            whileInView={{ opacity: 0.8, width: "26rem" }}
+            transition={{
+              delay: 0.3,
+              duration: 0.8,
+              ease: "easeInOut",
+            }}
+            className="absolute inset-auto h-0.5 w-[26rem] -translate-y-[15rem] bg-green-800"
+          />
+        )}
       </div>
 
       {/* Content (higher z-index) */}
@@ -126,8 +146,8 @@ export const HeroSection = forwardRef<HTMLElement, HeroSectionProps>(
         {isClient && (
           <Particles
             className="absolute inset-0 z-0"
-            quantity={100}
-            color={mousePosition ? "#22c55e" : "#ffffff"}
+            quantity={120}
+            color={mousePosition ? "#0a8a3a" : "#1a8a3a"}
             staticity={30}
           />
         )}
