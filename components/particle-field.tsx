@@ -3,8 +3,17 @@
 import { useRef, useEffect } from "react"
 import { useTheme } from "next-themes"
 
+interface Particle {
+  x: number
+  y: number
+  radius: number
+  vx: number
+  vy: number
+  opacity: number
+}
+
 export function ParticleField() {
-  const canvasRef = useRef(null)
+  const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const { theme } = useTheme()
 
   useEffect(() => {
@@ -12,8 +21,10 @@ export function ParticleField() {
     if (!canvas) return
 
     const ctx = canvas.getContext("2d")
-    let animationFrameId
-    let particles = []
+    if (!ctx) return
+
+    let animationFrameId: number
+    let particles: Particle[] = []
 
     const resizeCanvas = () => {
       canvas.width = window.innerWidth

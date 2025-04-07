@@ -551,7 +551,7 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
     id: idx,
     name: member.name,
     designation: member.role,
-    image: member.circularImage || member.image || ""
+    image: member.circularImage || member.image || "/placeholder.svg"
   }))
   
   // Navigate to profile when clicking on social media links
@@ -994,8 +994,8 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
                           <div className="relative aspect-video overflow-hidden rounded-lg border mb-2">
                             <img 
                               src={teamPhoto.image} 
-                              alt={teamPhoto.description} 
-                              className="object-cover w-full h-full"
+                              alt={teamPhoto.description}
+                              className="object-cover"
                             />
                           </div>
                           <p className="text-sm text-center text-muted-foreground">
