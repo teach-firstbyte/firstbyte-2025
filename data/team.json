@@ -167,6 +167,28 @@
       "previousRoles": [
         {"role": "SSYP Team Lead", "year": "2024"}
       ]
+    },
+    {
+      "name": "Ireh Hong",
+      "role": "Software Events Lead",
+      "image": null,
+      "bio": "Hi! I'm Ireh, a second-year computer science and computer engineering student.",
+      "linkedin": "https://www.linkedin.com/in/ireh-hong-441b2b243",
+      "years": ["2024", "2025"],
+      "previousRoles": [
+        {"role": "Software Events Lead", "year": "2024"}
+      ]
+    },
+    {
+      "name": "Anna Higgins",
+      "role": "Software Events Lead",
+      "image": null,
+      "bio": "Third-year computer science and math student at Northeastern University.",
+      "linkedin": "https://www.linkedin.com/in/anna-higgins1/",
+      "years": ["2024", "2025"],
+      "previousRoles": [
+        {"role": "Software Events Lead", "year": "2024"}
+      ]
     }
   ],
   "incomingEboard": [

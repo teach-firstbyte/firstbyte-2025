@@ -6,6 +6,7 @@ import { StarBorder } from "@/components/ui/star-border"
 import { forwardRef, useState } from "react"
 import { BentoGrid, BentoCard } from "@/components/ui/bento-grid"
 import Image from "next/image"
+import Link from "next/link"
 
 interface ProgramFeature {
   title: string;
@@ -130,7 +131,7 @@ export const ProgramsSection = forwardRef<HTMLElement>((props, ref) => {
           transition={{ duration: 0.5 }}
           viewport={{ once: true }}
         >
-          <StarBorder className="group">
+          <StarBorder className="group" as={Link} href="/programs">
             Explore All Programs{" "}
             <ChevronRight className="ml-2 h-4 w-4 inline-block group-hover:translate-x-1 transition-transform" />
           </StarBorder>
