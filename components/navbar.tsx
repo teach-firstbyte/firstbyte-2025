@@ -378,11 +378,10 @@ export function Navbar({ activeSection }: NavbarProps) {
                 ))}
                 
                 <div className="flex items-center gap-2 px-1">
-                  <div className="flex items-center overflow-hidden" style={{ width: menuOpen ? '140px' : '0px', transition: 'width 0.3s ease-in-out' }}>
-                    <div className="flex items-center gap-4 min-w-[140px]">
-                      <div style={{ opacity: menuOpen ? 1 : 0, transition: 'opacity 0.3s ease-in-out' }}>
-                        <ThemeToggle />
-                      </div>
+                  <div className="flex items-center overflow-hidden" style={{ transition: 'width 0.3s ease-in-out' }}>
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-cetner gap-1">
+                      <div className="flex items-center gap-2">
                       <a
                         href="https://www.instagram.com/teach_firstbyte"
                         target="_blank"
@@ -405,7 +404,7 @@ export function Navbar({ activeSection }: NavbarProps) {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-foreground/80 hover:text-primary transition-colors"
-                        style={{ opacity: menuOpen ? 1 : 0, transition: 'opacity 0.3s ease-in-out' }}
+                        style={{ opacity: 1, transition: 'opacity 0.3s ease-in-out' }}
                         onMouseEnter={(e) => handleTooltipShow("LinkedIn", e)}
                         onMouseLeave={handleTooltipHide}
                       >
@@ -417,12 +416,13 @@ export function Navbar({ activeSection }: NavbarProps) {
                           <Linkedin className="h-5 w-5" />
                         </motion.div>
                       </a>
+                      </div>
                       <a
                         href="https://linktr.ee/firstbyte"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-foreground/80 hover:text-primary transition-colors"
-                        style={{ opacity: menuOpen ? 1 : 0, transition: 'opacity 0.3s ease-in-out' }}
+                        style={{ opacity: 1, transition: 'opacity 0.3s ease-in-out' }}
                         onMouseEnter={(e) => handleTooltipShow("Linktree", e)}
                         onMouseLeave={handleTooltipHide}
                       >
@@ -434,29 +434,10 @@ export function Navbar({ activeSection }: NavbarProps) {
                           <LinktreeIcon className="h-5 w-5" />
                         </motion.div>
                       </a>
+                      </div>
                     </div>
                   </div>
-                  
-                  <HighlighterItem>
-                    <motion.div
-                      className="cursor-pointer text-foreground/80 hover:text-primary transition-colors"
-                      onClick={() => setMenuOpen(!menuOpen)}
-                    >
-                      <motion.div
-                        animate={{ 
-                          rotate: menuOpen ? 270 : 0,
-                          transition: {
-                            duration: 0.4,
-                            ease: [0.22, 1, 0.36, 1]
-                          }
-                        }}
-                      >
-                        <ChevronUp className="h-5 w-5" />
-                      </motion.div>
-                    </motion.div>
-                  </HighlighterItem>
                 </div>
-
                 <div className="ml-3 flex items-center gap-3">
                   {/* Command Menu Button */}
                   <HighlighterItem>
@@ -490,6 +471,11 @@ export function Navbar({ activeSection }: NavbarProps) {
                   >
                     <StarBorder className="text-sm">Get Involved</StarBorder>
                   </motion.div>
+
+                  {/* Theme Toggle */}
+                  <HighlighterItem>
+                    <ThemeToggle />
+                  </HighlighterItem>
                 </div>
               </HighlightGroup>
 
@@ -582,11 +568,10 @@ export function Navbar({ activeSection }: NavbarProps) {
                       document.dispatchEvent(event);
                     }}
                   >
-                    <Search className="h-4 w-4" />
+                  <Search className="h-4 w-4" />
                   </motion.button>
                 </div>
                 <div className="flex items-center gap-3">
-                  <ThemeToggle />
                   <a
                     href="https://www.instagram.com/firstbytedotorg"
                     target="_blank"
