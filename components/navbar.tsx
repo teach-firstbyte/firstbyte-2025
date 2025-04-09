@@ -443,9 +443,7 @@ export function Navbar({ activeSection }: NavbarProps) {
                   {/* Command Menu Button */}
                   <HighlighterItem>
                     <motion.button
-                      whileHover="hover"
-                      whileTap="tap"
-                      variants={linkVariants}
+                      whileTap={{ scale: 0.97 }}
                       className="flex items-center gap-1.5 px-2.5 py-1.5 text-sm text-muted-foreground hover:text-foreground border border-border/50 rounded-md"
                       onClick={() => {
                         // This will trigger the actual command menu through the global keyboard shortcut
@@ -557,7 +555,7 @@ export function Navbar({ activeSection }: NavbarProps) {
                   
                   {/* Mobile Search Button */}
                   <motion.button
-                    whileTap={{ scale: 0.95 }}
+                    whileTap={{ scale: 0.97 }}
                     className="flex items-center gap-1.5 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground"
                     onClick={() => {
                       setIsMenuOpen(false)

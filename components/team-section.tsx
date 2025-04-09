@@ -754,7 +754,10 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
       >
         {/* Year Badge */}
         <div className="absolute -left-4 -top-4 z-30 bg-primary text-primary-foreground rounded-full w-12 h-12 flex items-center justify-center font-bold shadow-md">
-          {board.year}
+          <ChevronDown className={cn(
+            "h-5 w-5 transition-transform duration-300",
+            isExpanded ? "rotate-180" : ""
+          )} />
         </div>
         
         {/* Card Stack */}

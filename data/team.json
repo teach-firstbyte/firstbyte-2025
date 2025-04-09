@@ -65,8 +65,8 @@
     {
       "name": "Alastaire Balin",
       "role": "Brand & Marketing Lead",
-      "image": null,
-      "bio": "My name is Alastaire Balin and I am first-year studying CS and Business. I love ABGs.",
+      "image": "/teamMemberPhotos/Alastaire Balin.jpg",
+      "bio": "My name is Alastaire Balin and I am first-year studying CS and Business.",
       "linkedin": "https://www.linkedin.com/in/alastaire-balin",
       "github": "https://github.com/al4stur",
       "years": ["2024", "2025"],
@@ -88,34 +88,22 @@
       ]
     },
     {
-      "name": "Jaden Zhou",
-      "role": "Treasurer",
-      "image": null,
-      "bio": "I'm Jaden and I'm a third year CS major.",
-      "linkedin": "https://www.linkedin.com/in/jadenzhou/",
-      "github": "https://www.github.com/JadenZhou",
-      "years": ["2023", "2024", "2025"],
-      "previousRoles": [
-        {"role": "Treasurer", "year": "2023"},
-        {"role": "Treasurer", "year": "2024"}
-      ]
-    },
-    {
       "name": "Shreyashi Kalakuntla",
-      "role": "Stem Curricula Team Lead",
+      "role": "STEM Curricula Team Lead",
       "image": "/teamMemberPhotos/Shreyashi Kalakuntla.jpg",
       "bio": "Hey Everyone! My name is Shreyashi Kalakuntla and I am a second year studying Business Administration and Data Science with a concentration in finance.",
       "linkedin": "https://www.linkedin.com/in/shreyashi-kalakuntla",
       "years": ["2023", "2024", "2025"],
       "previousRoles": [
-        {"role": "Stem Curricula Team Lead", "year": "2023"},
-        {"role": "Stem Curricula Team Lead", "year": "2024"}
+        {"role": "STEM Curricula Team Lead", "year": "2023"},
+        {"role": "STEM Curricula Team Lead", "year": "2024"}
       ]
     },
     {
       "name": "Andy Ge",
       "role": "President",
-      "image": null,
+      "image": "/teamMemberPhotos/Andy Ge.jpeg",
+      "bio": "Previous President of FirstByte.",
       "linkedin": "https://www.linkedin.com/in/andy-ge-codeman/",
       "years": ["2022", "2023"],
       "previousRoles": [
@@ -126,6 +114,7 @@
     {
       "name": "Jennifer Esfahany",
       "role": "Logistics Coordinator",
+      "bio": "Previous Logistics Coordinator of FirstByte.",
       "image": null,
       "linkedin": "https://www.linkedin.com/in/jesfahany/",
       "years": ["2022", "2023", "2024"],
@@ -138,6 +127,7 @@
     {
       "name": "Srikar Ananthoju",
       "role": "Curricula Lead",
+      "bio": "Previous Curricula Lead of FirstByte.",
       "image": null,
       "linkedin": "https://linkedin.com/in/srikar-ananthoju",
       "years": ["2022", "2023"],
@@ -149,6 +139,7 @@
     {
       "name": "Darren Chen",
       "role": "Treasurer",
+      "bio": "Previous Treasurer of FirstByte.",
       "image": null,
       "linkedin": "https://www.linkedin.com/in/darrenqchen",
       "years": ["2022", "2023"],
@@ -159,13 +150,26 @@
     },
     {
       "name": "Inesh Parikh",
-      "role": "SSYP Team Lead",
+      "role": "STEM Curricula Team Lead",
       "image": null,
       "bio": "Hi everyone, I am Inesh and I am a second year Behavioral Neuroscience student with a minor in Data Science!",
       "linkedin": "https://www.linkedin.com/in/inesh-parikh/",
       "years": ["2024", "2025"],
       "previousRoles": [
-        {"role": "SSYP Team Lead", "year": "2024"}
+        {"role": "STEM Curricula Team Lead", "year": "2024"}
+      ]
+    },
+    {
+      "name": "Jaden Zhou",
+      "role": "Treasurer",
+      "image": null,
+      "bio": "I'm Jaden and I'm a third year CS major.",
+      "linkedin": "https://www.linkedin.com/in/jadenzhou/",
+      "github": "https://www.github.com/JadenZhou",
+      "years": ["2023", "2024", "2025"],
+      "previousRoles": [
+        {"role": "Treasurer", "year": "2023"},
+        {"role": "Treasurer", "year": "2024"}
       ]
     },
     {
