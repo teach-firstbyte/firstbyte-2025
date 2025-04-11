@@ -19,8 +19,27 @@ export const AboutSection = forwardRef<HTMLElement>((props, ref) => {
         >
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Our Story</h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            FirstByte was founded with a simple mission: to make computer science and STEM education accessible to all
-            students, regardless of their background.
+            <motion.span
+              initial={{ opacity: 1 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              className="inline-block"
+            >
+              {Array.from("FirstByte was founded with a simple mission: to make computer science and STEM education accessible to all students, regardless of their background.").map((char, index) => (
+                <motion.span
+                  key={index}
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  transition={{
+                    duration: 0.1,
+                    delay: index * 0.03,
+                  }}
+                  viewport={{ once: true }}
+                >
+                  {char}
+                </motion.span>
+              ))}
+            </motion.span>
           </p>
         </motion.div>
 

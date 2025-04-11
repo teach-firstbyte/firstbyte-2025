@@ -5,6 +5,8 @@ import { ChevronRight, Code, Laptop, GraduationCap, Lightbulb, Users } from "luc
 import { StarBorder } from "@/components/ui/star-border"
 import { forwardRef, useState } from "react"
 import { BentoGrid, BentoCard } from "@/components/ui/bento-grid"
+import { ImageCarousel } from "@/components/ui/image-carousel"
+// import { Slideshow } from "@/components/ui/slideshow" // Import the Slideshow component
 import Image from "next/image"
 import Link from "next/link"
 
@@ -12,7 +14,7 @@ interface ProgramFeature {
   title: string;
   icon: React.FC<{ size?: number }>;
   description: string;
-  image: string;
+  images: string[];
 }
 
 const programs: ProgramFeature[] = [
@@ -20,84 +22,98 @@ const programs: ProgramFeature[] = [
     title: "CS Education",
     icon: Laptop,
     description: "We provide accessible computer science education to students of all backgrounds, focusing on practical skills and creative problem-solving.",
-    image: "/placeholder/workshop-1.jpg"
+    images: [
+      "/cs-team/CS-workshop-1.jpeg",
+      "/cs-team/CS-workshop-2.jpeg",
+      "/cs-team/CS-workshop-3.jpeg",
+      "/cs-team/CS-workshop-4.jpeg"
+    ]
   },
   {
-    title: "STEM Workshops",
+    title: "Professional Development",
+    icon: Code,
+    description: "Intensive, project-based learning experiences where students build real applications while learning fundamental programming concepts.",
+    images: ["/professional-development"]
+  },
+  {
+    title: "STEM Education",
     icon: Lightbulb,
     description: "Our hands-on workshops introduce students to various STEM fields, making complex concepts approachable and engaging through interactive activities.",
-    image: "/placeholder/workshop-2.jpg"
+    images: [
+      "/stem-team/STEM-workshop-1.jpeg", 
+      "/stem-team/STEM-workshop-2.jpeg", 
+      "/stem-team/STEM-workshop-3.jpeg", 
+      "/stem-team/STEM-workshop-4.jpeg"]
   },
   {
     title: "Community Building",
     icon: Users,
     description: "We foster a supportive community where students can collaborate, learn from each other, and grow their technical and soft skills.",
-    image: "/placeholder/workshop-3.jpg"
-  },
-  {
-    title: "Coding Camps",
-    icon: Code,
-    description: "Intensive, project-based learning experiences where students build real applications while learning fundamental programming concepts.",
-    image: "/placeholder/workshop-4.jpg"
-  },
-  {
-    title: "Mentorship",
-    icon: GraduationCap,
-    description: "We connect students with industry professionals who provide guidance, support, and real-world insights into tech careers.",
-    image: "/placeholder/workshop-5.jpg"
-  },
-  {
-    title: "Innovation Challenges",
-    icon: Lightbulb,
-    description: "Competitive events that challenge students to apply their skills to solve real-world problems through technology and teamwork.",
-    image: "/placeholder/workshop-6.jpg"
+    images: ["/gm-pictures"]
   }
 ];
 
 export const ProgramsSection = forwardRef<HTMLElement>((props, ref) => {
+  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
+
+  // Function to determine which component to render based on program title
+  const renderBackgroundComponent = (program: ProgramFeature, isHovered: boolean) => {
+    // Use ImageCarousel for CS Education and STEM Education
+    if ((program.title === "CS Education" || program.title === "STEM Education") && isHovered) {
+      return (
+        <ImageCarousel
+          images={program.images}
+          className="absolute inset-0 h-full w-full"
+          isHovered={isHovered}
+        />
+      );
+    }
+    
+    // Use SOME OTHER COMPONENT for Professional Development and Community Building
+    else if ((program.title === "Professional Development" || program.title === "Community Building") && isHovered) {
+      return (
+        <Image
+          src={"/professional-development/github.png"}
+          alt={"REPLACE THIS"}
+          fill
+        />
+      );
+    }
+    
+    // Default to static image
+    else {
+      return (
+        <Image
+          src={program.images[0]}
+          alt={program.title}
+          fill
+          className="object-cover object-center"
+        />
+      );
+    }
+  };
+
   return (
-    <section ref={ref} id="programs" className="py-20 px-4 md:px-6 lg:px-8 bg-muted/30">
-      <div className="max-w-7xl mx-auto">
-        <motion.div
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
-        >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">What We Do</h2>
+    <section ref={ref} className="py-24">
+      <div className="container mx-auto px-4 md:px-6 lg:px-8">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold mb-4">Our Programs</h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Our programs are designed to inspire curiosity, build confidence, and develop critical thinking skills
-            through hands-on learning experiences.
+            We offer a variety of programs designed to introduce students to computer science and STEM fields.
           </p>
-        </motion.div>
+        </div>
 
         <BentoGrid className="md:auto-rows-[16rem] grid-cols-1 md:grid-cols-4 gap-4">
           {programs.map((program, index) => {
             const Icon = program.icon;
             
-            // Create more bento-box like layout
             let customClassName = "";
+            if (index === 0) customClassName = "md:col-span-2 md:row-span-2";
+            else if (index === 1) customClassName = "md:col-span-2 md:row-span-1";
+            else if (index === 2) customClassName = "md:col-span-2 md:row-span-2";
+            else if (index === 3) customClassName = "md:col-span-2 md:row-span-1";
             
-            if (index === 0) {
-              // First card is large feature card
-              customClassName = "md:col-span-2 md:row-span-2";
-            } else if (index === 1) {
-              // Second card is a vertical rectangle
-              customClassName = "md:col-span-1 md:row-span-1";
-            } else if (index === 2) {
-              // Third card is a vertical rectangle
-              customClassName = "md:col-span-1 md:row-span-1";
-            } else if (index === 3) {
-              // Fourth card spans horizontally (bento style)
-              customClassName = "md:col-span-2 md:row-span-1";
-            } else if (index === 4) {
-              // Fifth card is a square
-              customClassName = "md:col-span-1 md:row-span-1";
-            } else if (index === 5) {
-              // Sixth card is a square
-              customClassName = "md:col-span-1 md:row-span-1";
-            }
+            const isHovered = hoveredCard === program.title;
             
             return (
               <BentoCard
@@ -108,15 +124,12 @@ export const ProgramsSection = forwardRef<HTMLElement>((props, ref) => {
                 description={program.description}
                 href="#"
                 cta="Learn more"
+                onMouseEnter={() => setHoveredCard(program.title)}
+                onMouseLeave={() => setHoveredCard(null)}
                 background={
                   <div className="absolute inset-0 h-full w-full">
                     <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/70 z-10" />
-                    <Image
-                      src={program.image}
-                      alt={program.title}
-                      fill
-                      className="object-cover object-center"
-                    />
+                    {renderBackgroundComponent(program, isHovered)}
                   </div>
                 }
               />
@@ -141,4 +154,4 @@ export const ProgramsSection = forwardRef<HTMLElement>((props, ref) => {
   );
 });
 
-ProgramsSection.displayName = "ProgramsSection"; 
+ProgramsSection.displayName = "ProgramsSection";

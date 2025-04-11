@@ -31,6 +31,8 @@ const BentoCard = ({
   description,
   href,
   cta,
+  onMouseEnter,
+  onMouseLeave,
 }: {
   name: string;
   className: string;
@@ -39,6 +41,8 @@ const BentoCard = ({
   description: string;
   href: string;
   cta: string;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
 }) => (
   <div
     key={name}
@@ -50,11 +54,13 @@ const BentoCard = ({
       "transform-gpu dark:bg-black dark:[border:1px_solid_rgba(255,255,255,.1)] dark:[box-shadow:0_-20px_80px_-20px_#ffffff1f_inset]",
       className,
     )}
+    onMouseEnter={onMouseEnter}
+    onMouseLeave={onMouseLeave}
   >
     <div>{background}</div>
     <div className="pointer-events-none z-10 flex transform-gpu flex-col gap-1 p-5 transition-all duration-300 group-hover:-translate-y-8">
-      <Icon className="h-10 w-10 origin-left transform-gpu text-neutral-700 transition-all duration-300 ease-in-out group-hover:scale-75" />
-      <h3 className="text-lg font-semibold text-neutral-700 dark:text-neutral-300">
+      <Icon className="h-10 w-10 origin-left transform-gpu text-neutral-300 transition-all duration-300 ease-in-out group-hover:scale-75" />
+      <h3 className="text-lg font-semibold text-neutral-300 dark:text-neutral-300">
         {name}
       </h3>
       <p className="max-w-lg text-sm text-neutral-400">{description}</p>
