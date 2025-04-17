@@ -56,7 +56,7 @@ const programs: ProgramFeature[] = [
     title: "Engineering Team",
     icon: Users,
     description: "Our student-led engineering team develops and maintains our website and other digital resources, providing hands-on experience in software development.",
-    image: "/placeholder/workshop-6.jpg",
+    image: "/programs/ENGINEERING.png",
     link: "/programs/#engineering-team"
   }
 ];

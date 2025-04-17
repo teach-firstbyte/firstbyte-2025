@@ -26,6 +26,7 @@ const BentoGrid = ({
 };
 
 
+
 const BentoCard = ({
   name,
   className,
@@ -34,6 +35,8 @@ const BentoCard = ({
   description,
   href,
   cta,
+  initialX,
+  initialY,
   initialX,
   initialY,
 }: {
@@ -46,7 +49,10 @@ const BentoCard = ({
   cta: string;
   initialX?: number;
   initialY?: number;
+  initialX?: number;
+  initialY?: number;
 }) => (
+  <motion.div
   <motion.div
     key={name}
     initial={{ opacity: 0, x: initialX, y: initialY }}
@@ -89,6 +95,7 @@ const BentoCard = ({
     </div>
     
     <div className="pointer-events-none absolute inset-0 transform-gpu transition-all duration-300 group-hover:bg-black/[.03] group-hover:dark:bg-neutral-800/10" />
+  </motion.div>
   </motion.div>
 );
 
