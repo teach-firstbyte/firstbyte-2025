@@ -19,37 +19,37 @@ const programs: ProgramFeature[] = [
   {
     title: "CS Education",
     icon: Laptop,
-    description: "We provide accessible computer science education to students of all backgrounds, focusing on practical skills and creative problem-solving.",
-    image: "/placeholder/workshop-1.jpg"
+    description: "We lead various workshops at Camp Harbor View, teaching students web development, Python, Scratch, and more!",
+    image: "/programs/CHV.jpeg"
   },
   {
-    title: "STEM Workshops",
+    title: "STEM Education",
     icon: Lightbulb,
-    description: "Our hands-on workshops introduce students to various STEM fields, making complex concepts approachable and engaging through interactive activities.",
-    image: "/placeholder/workshop-2.jpg"
+    description: "We partner with Saint Stephens Youth Program to deliver engaging STEM activities that make technical concepts accessible and fun for all students.",
+    image: "/programs/SSYP.jpeg"
   },
   {
-    title: "Community Building",
-    icon: Users,
-    description: "We foster a supportive community where students can collaborate, learn from each other, and grow their technical and soft skills.",
-    image: "/placeholder/workshop-3.jpg"
-  },
-  {
-    title: "Coding Camps",
+    title: "Northeastern Workshops",
     icon: Code,
-    description: "Intensive, project-based learning experiences where students build real applications while learning fundamental programming concepts.",
+    description: "We run specialized workshops at Northeastern, for Northeastern students, covering essential developer skills including React, Git, and command-line tools.",
+    image: "/programs/GM.jpg"
+  },
+  {
+    title: "Hackathons",
+    icon: Code,
+    description: "We help organize hackathons in collaboration with HackBeanPot and ViTAL, creating opportunities for students to apply their skills to real-world challenges.",
     image: "/placeholder/workshop-4.jpg"
   },
   {
     title: "Mentorship",
     icon: GraduationCap,
-    description: "We connect students with industry professionals who provide guidance, support, and real-world insights into tech careers.",
+    description: "We provide resume review sessions and presentation practice to help students prepare for technical interviews and professional opportunities.",
     image: "/placeholder/workshop-5.jpg"
   },
   {
-    title: "Innovation Challenges",
-    icon: Lightbulb,
-    description: "Competitive events that challenge students to apply their skills to solve real-world problems through technology and teamwork.",
+    title: "Engineering Team",
+    icon: Users,
+    description: "Our student-led engineering team develops and maintains our website and other digital resources, providing hands-on experience in software development.",
     image: "/placeholder/workshop-6.jpg"
   }
 ];
