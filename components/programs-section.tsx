@@ -21,35 +21,38 @@ const programs: ProgramFeature[] = [
   {
     title: "CS Education",
     icon: Laptop,
-    description: "We provide accessible computer science education to students of all backgrounds, focusing on practical skills and creative problem-solving.",
-    images: [
-      "/cs-team/CS-workshop-1.jpeg",
-      "/cs-team/CS-workshop-2.jpeg",
-      "/cs-team/CS-workshop-3.jpeg",
-      "/cs-team/CS-workshop-4.jpeg"
-    ]
-  },
-  {
-    title: "Professional Development",
-    icon: Code,
-    description: "Intensive, project-based learning experiences where students build real applications while learning fundamental programming concepts.",
-    images: ["/professional-development"]
+    description: "We lead various workshops at Camp Harbor View, teaching students web development, Python, Scratch, and more!",
+    images: ["/programs/CHV.jpeg"]
   },
   {
     title: "STEM Education",
     icon: Lightbulb,
-    description: "Our hands-on workshops introduce students to various STEM fields, making complex concepts approachable and engaging through interactive activities.",
-    images: [
-      "/stem-team/STEM-workshop-1.jpeg", 
-      "/stem-team/STEM-workshop-2.jpeg", 
-      "/stem-team/STEM-workshop-3.jpeg", 
-      "/stem-team/STEM-workshop-4.jpeg"]
+    description: "We partner with Saint Stephens Youth Program to deliver engaging STEM activities that make technical concepts accessible and fun for all students.",
+    images: ["/programs/SSYP.jpeg"]
   },
   {
-    title: "Community Building",
+    title: "Northeastern Workshops",
+    icon: Code,
+    description: "We run specialized workshops at Northeastern, for Northeastern students, covering essential developer skills including React, Git, and command-line tools.",
+    images: ["/programs/GM.jpg"]
+  },
+  {
+    title: "Hackathons",
+    icon: Code,
+    description: "We help organize hackathons in collaboration with HackBeanPot and ViTAL, creating opportunities for students to apply their skills to real-world challenges.",
+    images: ["/placeholder/workshop-4.jpg"]
+  },
+  {
+    title: "Mentorship",
+    icon: GraduationCap,
+    description: "We provide resume review sessions and presentation practice to help students prepare for technical interviews and professional opportunities.",
+    images: ["/programs/CHV2.jpeg"]
+  },
+  {
+    title: "Engineering Team",
     icon: Users,
-    description: "We foster a supportive community where students can collaborate, learn from each other, and grow their technical and soft skills.",
-    images: ["/gm-pictures"]
+    description: "Our student-led engineering team develops and maintains our website and other digital resources, providing hands-on experience in software development.",
+    images: ["/placeholder/workshop-6.jpg"]
   }
 ];
 
