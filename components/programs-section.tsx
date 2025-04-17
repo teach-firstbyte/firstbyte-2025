@@ -44,7 +44,7 @@ const programs: ProgramFeature[] = [
     title: "Mentorship",
     icon: GraduationCap,
     description: "We provide resume review sessions and presentation practice to help students prepare for technical interviews and professional opportunities.",
-    image: "/placeholder/workshop-5.jpg"
+    image: "/programs/CHV2.jpeg"
   },
   {
     title: "Engineering Team",
