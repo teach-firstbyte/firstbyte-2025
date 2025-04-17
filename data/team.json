@@ -39,7 +39,7 @@
       "role": "CS Curricula Lead, React Team Lead, Brand & Marketing Lead",
       "image": "/teamMemberPhotos/Win Tongtawee.jpg",
       "circularImage": "/teamMemberPhotos/WinAlt.JPEG",
-      "bio": "Hello! I'm Win, I've had the honor of being a part of FirstByte when we only had 7 members. The club holds a special place in my heart and I'm looking forward to seeing what the future holds for FirstByte and its members. Currently Founding Engineer at Delve, Founding Engineer at Pagent, and publishing a paper on how we can use ML to predict depression.",
+      "bio": "Hello! I'm Win, I've had the honor of being a part of FirstByte when we only had 7 members. The club holds a special place in my heart and I'm looking forward to seeing what the future holds for FirstByte and its members. Currently Founding Engineer @ Delve, Founding Engineer @ Pagent, and publishing a paper on how we can use ML to predict depression.",
       "linkedin": "https://linkedin.com/in/tunwa-tongtawee",
       "github": "https://github.com/nohaxsjustasian",
       "years": ["2022", "2023", "2024", "2025"],
@@ -115,7 +115,7 @@
       "name": "Jennifer Esfahany",
       "role": "Logistics Coordinator",
       "bio": "Previous Logistics Coordinator of FirstByte.",
-      "image": "/teamMemberPhotos/Jennifer Esfahany.jpg",
+      "image": "/teamMemberPhotos/Jennifer Esfahany.jpeg",
       "linkedin": "https://www.linkedin.com/in/jesfahany/",
       "years": ["2022", "2023", "2024"],
       "previousRoles": [
@@ -128,7 +128,7 @@
       "name": "Srikar Ananthoju",
       "role": "Curricula Lead",
       "bio": "Previous Curricula Lead of FirstByte.",
-      "image": null,
+      "image": "/teamMemberPhotos/Srikar Ananthoju.jpg",
       "linkedin": "https://linkedin.com/in/srikar-ananthoju",
       "years": ["2022", "2023"],
       "previousRoles": [
@@ -140,7 +140,7 @@
       "name": "Darren Chen",
       "role": "Treasurer",
       "bio": "Previous Treasurer of FirstByte, currently SWE at Captial One.",
-      "image": "/teamMemberPhotos/Darren Chen.jpg",
+      "image": "/teamMemberPhotos/Darren Chen.jpeg",
       "linkedin": "https://www.linkedin.com/in/darrenqchen",
       "years": ["2022", "2023"],
       "previousRoles": [
@@ -151,7 +151,7 @@
     {
       "name": "Inesh Parikh",
       "role": "STEM Curricula Team Lead",
-      "image": null,
+      "image": "/teamMemberPhotos/Inesh Parikh.jpg",
       "bio": "Hi everyone, I am Inesh and I am a second year Behavioral Neuroscience student with a minor in Data Science!",
       "linkedin": "https://www.linkedin.com/in/inesh-parikh/",
       "years": ["2024", "2025"],
