@@ -43,8 +43,8 @@ const programsData: Program[] = [
     id: "cs-education",
     title: "CS Education",
     icon: "Laptop",
-    description: "We provide accessible computer science education to students of all backgrounds, focusing on practical skills and creative problem-solving.",
-    image: "/placeholder/workshop-1.jpg",
+    description: "We lead various workshops at Camp Harbor View, teaching students web development, Python, Scratch, and more!",
+    image: "/programs/CHV.jpeg",
     longDescription: "Our comprehensive computer science education program introduces students to the fundamentals of programming, algorithms, and computational thinking. Through hands-on projects and interactive lessons, students develop both technical skills and problem-solving abilities that apply across disciplines. Our curriculum is designed to be accessible to beginners while offering challenges for those with prior experience.",
     details: {
       duration: "10 weeks",
@@ -57,11 +57,11 @@ const programsData: Program[] = [
     category: "Core Program"
   },
   {
-    id: "stem-workshops",
-    title: "STEM Workshops",
-    icon: "Lightbulb",
-    description: "Our hands-on workshops introduce students to various STEM fields, making complex concepts approachable and engaging through interactive activities.",
-    image: "/placeholder/workshop-2.jpg",
+    id: "northeastern-workshops",
+    title: "Northeastern Workshops",
+    icon: "Code",
+    description: "We run specialized workshops at Northeastern, for Northeastern students, covering essential developer skills including React, Git, and command-line tools.",
+    image: "/programs/GM.jpg",
     longDescription: "Our STEM workshops offer immersive, hands-on experiences across science, technology, engineering, and mathematics. Each workshop focuses on a specific topic, from robotics and electronics to 3D modeling and environmental science. Students engage in collaborative projects that demonstrate real-world applications of STEM concepts, fostering curiosity and creativity while building technical skills.",
     details: {
       duration: "Single-day to weekend workshops",
@@ -74,11 +74,11 @@ const programsData: Program[] = [
     category: "Workshop"
   },
   {
-    id: "community-building",
-    title: "Community Building",
-    icon: "Users",
-    description: "We foster a supportive community where students can collaborate, learn from each other, and grow their technical and soft skills.",
-    image: "/placeholder/workshop-3.jpg",
+    id: "hackathons",
+    title: "Hackathons",
+    icon: "Puzzle",
+    description: "We help organize hackathons in collaboration with HackBeanPot and ViTAL, creating opportunities for students to apply their skills to real-world challenges.",
+    image: "/programs/VITAL.jpeg",
     longDescription: "Our community building initiatives create spaces where students connect, collaborate, and support each other's learning journeys. Through meetups, online forums, and collaborative projects, we foster an inclusive environment where diverse perspectives are valued. These community connections extend beyond our formal programs, creating a network of peers who share knowledge and opportunities.",
     details: {
       duration: "Ongoing",
@@ -91,11 +91,11 @@ const programsData: Program[] = [
     category: "Community"
   },
   {
-    id: "coding-camps",
-    title: "Coding Camps",
-    icon: "Code",
-    description: "Intensive, project-based learning experiences where students build real applications while learning fundamental programming concepts.",
-    image: "/placeholder/workshop-4.jpg",
+    id: "stem-education",
+    title: "STEM Education",
+    icon: "Lightbulb",
+    description: "We partner with Saint Stephens Youth Program to deliver engaging STEM activities that make technical concepts accessible and fun for all students.",
+    image: "/programs/SSYP.jpeg",
     longDescription: "Our coding camps provide immersive learning experiences where students develop complete projects from concept to deployment. These intensive programs combine structured learning with creative freedom, allowing students to build games, websites, apps, or other digital products while mastering programming fundamentals. The camp format encourages deep focus and rapid skill development through daily practice and expert guidance.",
     details: {
       duration: "1-2 weeks (summer) or weekend intensives",
@@ -111,8 +111,8 @@ const programsData: Program[] = [
     id: "mentorship",
     title: "Mentorship",
     icon: "GraduationCap",
-    description: "We connect students with industry professionals who provide guidance, support, and real-world insights into tech careers.",
-    image: "/placeholder/workshop-5.jpg",
+    description: "We provide resume review sessions and presentation practice to help students prepare for technical interviews and professional opportunities.",
+    image: "/programs/CHV2.jpeg",
     longDescription: "Our mentorship program connects students with technology professionals who provide personalized guidance and career insights. Through regular one-on-one meetings and small group sessions, mentors help students explore tech pathways, develop professional skills, and navigate educational choices. This program bridges the gap between academic learning and industry realities, helping students build confidence and clarity about their future in technology.",
     details: {
       duration: "3-6 months per mentorship cycle",
@@ -125,10 +125,10 @@ const programsData: Program[] = [
     category: "Support"
   },
   {
-    id: "innovation-challenges",
-    title: "Innovation Challenges",
-    icon: "Lightbulb",
-    description: "Competitive events that challenge students to apply their skills to solve real-world problems through technology and teamwork.",
+    id: "engineering-team",
+    title: "Engineering Team",
+    icon: "Users",
+    description: "Our student-led engineering team develops and maintains our website and other digital resources, providing hands-on experience in software development.",
     image: "/placeholder/workshop-6.jpg",
     longDescription: "Our innovation challenges bring students together to tackle real-world problems using technology and creative thinking. These competitive events combine technical skill application with design thinking methodologies. Working in teams, participants go through the entire process of identifying problems, ideating solutions, and building functional prototypes. These challenges culminate in presentations to panels of industry experts, with recognition for outstanding projects.",
     details: {
