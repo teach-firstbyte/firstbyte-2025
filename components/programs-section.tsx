@@ -128,6 +128,8 @@ export const ProgramsSection = forwardRef<HTMLElement>((props, ref) => {
                 className={customClassName}
                 Icon={Icon}
                 description={program.description}
+                href={program.link}
+                cta="Learn more"
                 initialX={initialX}
                 initialY={initialY}
                 background={

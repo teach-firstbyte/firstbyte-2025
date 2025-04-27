@@ -468,7 +468,11 @@ export function Navbar({ activeSection }: NavbarProps) {
                     whileTap={{ scale: 0.95 }}
                     transition={{ duration: 0.2 }}
                   >
+                    <a
+                    href="https://docs.google.com/forms/d/e/1FAIpQLSf1BCJAfHPWxypcqdFvHBKm5jYJcnTFwrbj2l_RCfskubxOmA/viewform?usp=sharing"
+                    target="_blank">
                     <StarBorder className="text-sm">Get Involved</StarBorder>
+                    </a>
                   </motion.div>
 
                   {/* Theme Toggle */}
