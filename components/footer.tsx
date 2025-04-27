@@ -1,3 +1,21 @@
+"use client"
+
+import { motion } from "framer-motion"
+
+const scrollToSection = (id: string) => {
+  const element = document.getElementById(id)
+  if (element) {
+    const offset = 100 // Adjust this value to change how far below the section it scrolls
+    const elementPosition = element.getBoundingClientRect().top
+    const offsetPosition = elementPosition + window.pageYOffset - offset
+
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: 'smooth'
+    })
+  }
+}
+
 export function Footer() {
   return (
     <footer className="py-12 px-4 border-t">
@@ -10,7 +28,13 @@ export function Footer() {
               education.
             </p>
             <div className="flex space-x-4">
-              <a href="https://www.instagram.com/teach_firstbyte" target="_blank" className="p-2 rounded-full bg-muted hover:bg-muted/80 transition-colors">
+              <motion.a 
+                href="https://www.instagram.com/teach_firstbyte" 
+                target="_blank" 
+                className="p-2 rounded-full bg-muted hover:bg-muted/80 transition-colors"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -27,8 +51,14 @@ export function Footer() {
                   <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
                   <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
                 </svg>
-              </a>
-              <a href="https://www.linkedin.com/company/firstbyte" target="_blank" className="p-2 rounded-full bg-muted hover:bg-muted/80 transition-colors">
+              </motion.a>
+              <motion.a 
+                href="https://www.linkedin.com/company/firstbyte" 
+                target="_blank" 
+                className="p-2 rounded-full bg-muted hover:bg-muted/80 transition-colors"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -45,28 +75,58 @@ export function Footer() {
                   <rect x="2" y="9" width="4" height="12"></rect>
                   <circle cx="4" cy="4" r="2"></circle>
                 </svg>
-              </a>
+              </motion.a>
             </div>
           </div>
 
           <div>
             <h4 className="font-semibold text-lg mb-4">Quick Links</h4>
             <ul className="space-y-2">
-              <li>
-                <a href="/#about" className="text-muted-foreground hover:text-foreground transition-colors">
+              <motion.li
+                whileHover={{ x: 5 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <a 
+                  href="/#about" 
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    scrollToSection('about');
+                  }}
+                >
                   About Us
                 </a>
-              </li>
-              <li>
-                <a href="/#programs" className="text-muted-foreground hover:text-foreground transition-colors">
+              </motion.li>
+              <motion.li
+                whileHover={{ x: 5 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <a 
+                  href="/#programs" 
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    scrollToSection('programs');
+                  }}
+                >
                   Our Programs
                 </a>
-              </li>
-              <li>
-                <a href="/#team" className="text-muted-foreground hover:text-foreground transition-colors">
+              </motion.li>
+              <motion.li
+                whileHover={{ x: 5 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <a 
+                  href="/#team" 
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    scrollToSection('team');
+                  }}
+                >
                   Our Team
                 </a>
-              </li>
+              </motion.li>
             </ul>
           </div>
 

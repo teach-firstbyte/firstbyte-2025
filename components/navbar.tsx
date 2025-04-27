@@ -23,6 +23,21 @@ interface TooltipPosition {
   width?: number;
 }
 
+// Add the scrollToSection function from Footer component
+const scrollToSection = (id: string) => {
+  const element = document.getElementById(id)
+  if (element) {
+    const offset = 100 // Adjust this value to change how far below the section it scrolls
+    const elementPosition = element.getBoundingClientRect().top
+    const offsetPosition = elementPosition + window.pageYOffset - offset
+
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: 'smooth'
+    })
+  }
+}
+
 // Portal component for tooltips
 function TooltipPortal({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false)
@@ -363,6 +378,10 @@ export function Navbar({ activeSection }: NavbarProps) {
                             ? "text-primary" 
                             : "text-foreground/80 hover:text-primary"
                         }`}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          scrollToSection(link.section);
+                        }}
                       >
                         {link.name}
                         {activeSection === link.section && (
@@ -537,7 +556,11 @@ export function Navbar({ activeSection }: NavbarProps) {
                         ? "text-primary" 
                         : "text-foreground/80 hover:text-primary"
                     }`}
-                    onClick={() => setIsMenuOpen(false)}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      scrollToSection(link.section);
+                      setIsMenuOpen(false);
+                    }}
                   >
                     {link.name}
                     {activeSection === link.section && (
@@ -649,4 +672,3 @@ export function Navbar({ activeSection }: NavbarProps) {
     </div>
   )
 }
-
