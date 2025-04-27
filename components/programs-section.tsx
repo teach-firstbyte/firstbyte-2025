@@ -20,7 +20,7 @@ const programs: ProgramFeature[] = [
   {
     title: "CS Education",
     icon: Laptop,
-    description: "We lead various workshops at Camp Harbor View, teaching students web development, Python, Scratch, and more!",
+    description: "We lead various workshops with organizations like Camp Harbor View, teaching students computer science fundamentals like web development, Python, Scratch, and more!",
     image: "/programs/CHV.jpeg",
     link: "/programs/#cs-education"
   },
@@ -34,14 +34,14 @@ const programs: ProgramFeature[] = [
   {
     title: "Hackathons",
     icon: Puzzle,
-    description: "We help organize hackathons in collaboration with HackBeanPot and ViTAL, creating opportunities for students to apply their skills to real-world challenges.",
+    description: "We help organize hackathons in collaboration with student organizations like HackBeanPot and ViTAL, creating opportunities for students to apply their skills to real-world challenges.",
     image: "/programs/VITAL.jpeg",
     link: "/programs/#hackathons"
   },
   {
     title: "STEM Education",
     icon: Lightbulb,
-    description: "We partner with Saint Stephens Youth Program to deliver engaging STEM activities that make technical concepts accessible and fun for all students.",
+    description: "We partner with organizations like Saint Stephens Youth Program to deliver engaging STEM activities that make technical concepts accessible and fun for all students.",
     image: "/programs/SSYP.jpeg",
     link: "/programs/#stem-education"
   },
@@ -128,8 +128,6 @@ export const ProgramsSection = forwardRef<HTMLElement>((props, ref) => {
                 className={customClassName}
                 Icon={Icon}
                 description={program.description}
-                href={program.link}
-                cta="Learn more"
                 initialX={initialX}
                 initialY={initialY}
                 background={
@@ -155,10 +153,6 @@ export const ProgramsSection = forwardRef<HTMLElement>((props, ref) => {
           transition={{ duration: 0.5 }}
           viewport={{ once: true }}
         >
-          <StarBorder className="group" as={Link} href="/programs">
-            Explore All Programs{" "}
-            <ChevronRight className="ml-2 h-4 w-4 inline-block group-hover:translate-x-1 transition-transform" />
-          </StarBorder>
         </motion.div>
       </div>
     </section>
