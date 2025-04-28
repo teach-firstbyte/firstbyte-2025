@@ -10,6 +10,7 @@ import { Menu, Search, X, ChevronUp, Linkedin, Instagram } from "lucide-react"
 import { LinktreeIcon } from "@/components/ui/icons"
 import { HighlightGroup, HighlighterItem } from "@/hooks/use-mouse-position"
 import { createPortal } from "react-dom"
+import { BlurTooltip } from "./ui/blur-tooltip"
 
 // Define TypeScript interface for props
 interface NavbarProps {
@@ -36,66 +37,6 @@ const scrollToSection = (id: string) => {
       behavior: 'smooth'
     })
   }
-}
-
-// Portal component for tooltips
-function TooltipPortal({ children }: { children: React.ReactNode }) {
-  const [mounted, setMounted] = useState(false)
-  
-  useEffect(() => {
-    setMounted(true)
-    return () => setMounted(false)
-  }, [])
-  
-  if (!mounted) return null
-  
-  return typeof window !== 'undefined' 
-    ? createPortal(children, document.body)
-    : null
-}
-
-// BlurTooltip component
-interface BlurTooltipProps {
-  position: TooltipPosition;
-  content: string | React.ReactNode;
-  visible: boolean;
-  icon?: React.ReactNode;
-  id?: string;
-}
-
-function BlurTooltip({ position, content, visible, icon, id = "tooltip" }: BlurTooltipProps) {
-  return (
-    <TooltipPortal>
-      <div 
-        className="pointer-events-none fixed left-0 top-0 z-[9999]" 
-        id="STALKER" 
-        style={{ transform: `translate(${position.x}px, ${position.y}px)` }}
-      >
-        <div 
-          id="STALKER_INNER"
-          className="flex items-center space-x-[3px] rounded-xl border border-border/20 bg-background/80 p-2 px-3 backdrop-blur-md"
-          style={{ 
-            filter: visible ? "blur(0px)" : "blur(16px)",
-            opacity: visible ? 1 : 0,
-            transitionProperty: "filter, opacity",
-            transitionDuration: visible ? "0.3s" : "0.8s", // Moderate blur-in, slow blur-out
-            transitionTimingFunction: "cubic-bezier(0.32, 0.72, 0, 1)",
-            transform: "translate(-50%, 0)" // Center horizontally, don't offset vertically
-          }}
-        >
-          <span className="text-xs text-foreground/50">
-            {content}
-          </span>
-          {icon || (
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-auto w-4 text-foreground/50">
-              <path d="M7 7h10v10"></path>
-              <path d="M7 17 17 7"></path>
-            </svg>
-          )}
-        </div>
-      </div>
-    </TooltipPortal>
-  );
 }
 
 export function Navbar({ activeSection }: NavbarProps) {

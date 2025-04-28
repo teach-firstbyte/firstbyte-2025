@@ -1,11 +1,13 @@
 "use client"
 
 import { motion } from "framer-motion"
+import { BlurTooltip, useTooltip } from "@/components/ui/blur-tooltip"
+import Link from "next/link"
 
 const scrollToSection = (id: string) => {
   const element = document.getElementById(id)
   if (element) {
-    const offset = 100 // Adjust this value to change how far below the section it scrolls
+    const offset = 100
     const elementPosition = element.getBoundingClientRect().top
     const offsetPosition = elementPosition + window.pageYOffset - offset
 
@@ -17,12 +19,18 @@ const scrollToSection = (id: string) => {
 }
 
 export function Footer() {
+  const { tooltipRect, tooltipContent, tooltipVisible, handleTooltipShow, handleTooltipHide } = useTooltip()
+
   return (
     <footer className="py-12 px-4 border-t">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="md:col-span-2">
-            <h3 className="font-bold text-xl mb-4">FirstByte</h3>
+
+            <Link href="/" className="text-xl font-bold flex items-center gap-2 mb-4">
+              <img src="/FirstByteBitex4.png" alt="FirstByte Logo" className="w-8 h-8" />
+              <h3 className="font-bold text-xl">FirstByte</h3>
+            </Link>
             <p className="text-muted-foreground mb-4 max-w-md">
               Empowering the next generation through accessible, engaging, and effective computer science and STEM
               education.
@@ -34,6 +42,8 @@ export function Footer() {
                 className="p-2 rounded-full bg-muted hover:bg-muted/80 transition-colors"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
+                onMouseEnter={(e) => handleTooltipShow("Instagram", e)}
+                onMouseLeave={handleTooltipHide}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -58,6 +68,8 @@ export function Footer() {
                 className="p-2 rounded-full bg-muted hover:bg-muted/80 transition-colors"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
+                onMouseEnter={(e) => handleTooltipShow("LinkedIn", e)}
+                onMouseLeave={handleTooltipHide}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -133,7 +145,11 @@ export function Footer() {
           <div>
             <h4 className="font-semibold text-lg mb-4">Contact Us</h4>
             <ul className="space-y-2">
-              <li className="flex items-start gap-2">
+              <motion.li
+                className="flex items-start gap-2"
+                whileHover={{ x: 5 }}
+                whileTap={{ scale: 0.95 }}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -149,9 +165,23 @@ export function Footer() {
                   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
                   <polyline points="22,6 12,13 2,6"></polyline>
                 </svg>
-                <span className="text-muted-foreground">teachfirstbyte@gmail.com</span>
-              </li>
-              <li className="flex items-start gap-2">
+                <a 
+                  href="https://mail.google.com/mail/u/0/?fs=1&tf=cm&source=mailto&to=info@firstbyte.org" 
+                  target="_blank"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    scrollToSection('programs');
+                  }}
+                >
+                  <span className="text-muted-foreground">teachfirstbyte@gmail.com</span>
+                </a>
+              </motion.li>
+              <motion.li
+                className="flex items-start gap-2"
+                whileHover={{ x: 5 }}
+                whileTap={{ scale: 0.95 }}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -167,8 +197,19 @@ export function Footer() {
                   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                   <circle cx="12" cy="10" r="3"></circle>
                 </svg>
-                <span className="text-muted-foreground">Northeastern University</span>
-              </li>
+                <a 
+                  href="https://www.google.com/maps/dir//Northeastern+University,+360+Huntington+Ave,+Boston,+MA+02115/" 
+                  target="_blank"
+                  className="text-muted-foreground hover:text-foreground transition-colors flex flex-col"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    scrollToSection('programs');
+                  }}
+                >
+                  <p className="text-muted-foreground">Northeastern University</p>
+                  <p className="text-muted-foreground">360 Huntington Ave, Boston, MA 02115</p>
+                </a>
+              </motion.li>
             </ul>
           </div>
         </div>
@@ -179,6 +220,16 @@ export function Footer() {
           </div>
         </div>
       </div>
+
+      {/* Render the tooltip */}
+      {tooltipRect && (
+        <BlurTooltip
+          position={tooltipRect}
+          content={tooltipContent}
+          visible={tooltipVisible}
+          id="social-tooltip"
+        />
+      )}
     </footer>
   )
 } 
