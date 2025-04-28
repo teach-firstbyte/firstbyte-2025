@@ -43,45 +43,45 @@ const programsData: Program[] = [
     id: "cs-education",
     title: "CS Education",
     icon: "Laptop",
-    description: "We lead various workshops at Camp Harbor View, teaching students web development, Python, Scratch, and more!",
+    description: "We lead various workshops with organizations like Camp Harbor View, teaching students computer science fundamentals like web development, Python, Scratch, and more!",
     image: "/programs/CHV.jpeg",
-    longDescription: "Our comprehensive computer science education program introduces students to the fundamentals of programming, algorithms, and computational thinking. Through hands-on projects and interactive lessons, students develop both technical skills and problem-solving abilities that apply across disciplines. Our curriculum is designed to be accessible to beginners while offering challenges for those with prior experience.",
+    longDescription: "Our comprehensive computer science education program introduces students to the fundamentals of computer science. Exploring programming and computational thinking through fun hands-on projects and interactive lessons. Our curriculum, spanning web development, robotics, and artificial intelligence is designed to be accessible to both beginners and those with prior experience.",
     details: {
       duration: "10 weeks",
       ageRange: "12-18 years",
       capacity: "25 students per class",
-      location: "In-person and virtual options available",
-      schedule: "Weekly sessions, 2 hours each"
+      location: "Partner schools and community centers",
+      schedule: "Monthly"
     },
-    tags: ["Programming", "Algorithms", "Web Development", "App Development"],
+    tags: ["Programming", "Web Development", "Robotics"],
     category: "Core Program"
   },
   {
     id: "northeastern-workshops",
     title: "Northeastern Workshops",
     icon: "Code",
-    description: "We run specialized workshops at Northeastern, for Northeastern students, covering essential developer skills including React, Git, and command-line tools.",
+    description: "We run specialized workshops at Northeastern, for Northeastern students, covering essential developer skills such as React, Git, and command-line tools.",
     image: "/programs/GM.jpg",
-    longDescription: "Our STEM workshops offer immersive, hands-on experiences across science, technology, engineering, and mathematics. Each workshop focuses on a specific topic, from robotics and electronics to 3D modeling and environmental science. Students engage in collaborative projects that demonstrate real-world applications of STEM concepts, fostering curiosity and creativity while building technical skills.",
+    longDescription: "Our on-campus workshops, led by Northeastern students and taught to Northeastern students, provide in-depth lessons that build skills in software development through hands-on experience with industry-standard tools. Our experienced team seeks to share their knowledge and experience with with the greater Northeastern community through workshops like how to build your own full stack web app!",
     details: {
       duration: "Single-day to weekend workshops",
-      ageRange: "10-18 years",
+      ageRange: "17-23 years",
       capacity: "20 students per workshop",
-      location: "Partner schools and community centers",
-      schedule: "Monthly offerings with seasonal intensives"
+      location: "On campus with online offerings available",
+      schedule: "Monthly"
     },
-    tags: ["Robotics", "Electronics", "3D Modeling", "Environmental Science"],
+    tags: ["Career Development", "React", "Git"],
     category: "Workshop"
   },
   {
     id: "hackathons",
     title: "Hackathons",
     icon: "Puzzle",
-    description: "We help organize hackathons in collaboration with HackBeanPot and ViTAL, creating opportunities for students to apply their skills to real-world challenges.",
+    description: "We help organize hackathons in collaboration with student organizations like HackBeanPot and ViTAL, creating opportunities for students to apply their skills to real-world challenges.",
     image: "/programs/VITAL.jpeg",
-    longDescription: "Our community building initiatives create spaces where students connect, collaborate, and support each other's learning journeys. Through meetups, online forums, and collaborative projects, we foster an inclusive environment where diverse perspectives are valued. These community connections extend beyond our formal programs, creating a network of peers who share knowledge and opportunities.",
+    longDescription: "In partnership with on-campus organizations like HackBeanPot and ViTAL, our team helps design and run immersive hackathon experiences that bring together students from all disciplines. We coordinate with partner organizations to host hackathon events from networking to technical workshops—most recently hosting a frontend development session for ViTAL using Vite, React, Supabase, and Node.js. Throughout each event, we provide hands-on mentorship, project-structure best practices, and peer learning opportunities, empowering participants to prototype innovative solutions to pressing real-world problems.",
     details: {
-      duration: "Ongoing",
+      duration: "Single-day to weekend workshops",
       ageRange: "All ages",
       capacity: "Unlimited",
       location: "Virtual and in-person community spaces",
@@ -94,18 +94,18 @@ const programsData: Program[] = [
     id: "stem-education",
     title: "STEM Education",
     icon: "Lightbulb",
-    description: "We partner with Saint Stephens Youth Program to deliver engaging STEM activities that make technical concepts accessible and fun for all students.",
+    description: "We partner with organizations like Saint Stephens Youth Program to deliver engaging STEM activities that make technical concepts accessible and fun for all students.",
     image: "/programs/SSYP.jpeg",
-    longDescription: "Our coding camps provide immersive learning experiences where students develop complete projects from concept to deployment. These intensive programs combine structured learning with creative freedom, allowing students to build games, websites, apps, or other digital products while mastering programming fundamentals. The camp format encourages deep focus and rapid skill development through daily practice and expert guidance.",
+    longDescription: "Our STEM workshops offer immersive, hands-on experiences across science, technology, engineering, and mathematics. Each workshop focuses on a specific topic, from robotics and electronics to 3D modeling and environmental science. Students engage in collaborative projects that demonstrate real-world applications of STEM concepts, fostering curiosity and creativity while building technical skills.",
     details: {
-      duration: "1-2 weeks (summer) or weekend intensives",
+      duration: "10 weeks",
       ageRange: "12-18 years",
-      capacity: "30 students per camp",
-      location: "College campuses and tech spaces",
+      capacity: "15 students per class",
+      location: "Partner schools and community centers",
       schedule: "Daily sessions during summer; weekend options during school year"
     },
     tags: ["Project-Based Learning", "Game Development", "Web Apps", "Mobile Apps"],
-    category: "Intensive"
+    category: "Core Program"
   },
   {
     id: "mentorship",
@@ -129,13 +129,13 @@ const programsData: Program[] = [
     title: "Engineering Team",
     icon: "Users",
     description: "Our student-led engineering team develops and maintains our website and other digital resources, providing hands-on experience in software development.",
-    image: "/placeholder/workshop-6.jpg",
+    image: "/programs/ENGINEERING.png",
     longDescription: "Our innovation challenges bring students together to tackle real-world problems using technology and creative thinking. These competitive events combine technical skill application with design thinking methodologies. Working in teams, participants go through the entire process of identifying problems, ideating solutions, and building functional prototypes. These challenges culminate in presentations to panels of industry experts, with recognition for outstanding projects.",
     details: {
       duration: "1-day sprints to 6-week challenges",
-      ageRange: "13-18 years",
-      capacity: "Teams of 3-5 students",
-      location: "Online and in-person formats available",
+      ageRange: "18-21 years",
+      capacity: "Teams of 5-6 students",
+      location: "Online and in-person collaboration",
       schedule: "Quarterly challenges with annual showcase"
     },
     tags: ["Problem Solving", "Teamwork", "Design Thinking", "Prototyping"],
