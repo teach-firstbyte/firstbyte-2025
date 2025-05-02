@@ -95,30 +95,35 @@ export function CodeAnimation() {
   const [text, setText] = useState("")
   const [cursorPosition, setCursorPosition] = useState(0)
 
-  useEffect(() => {
-    const snippet = codeSnippets[currentSnippet].code
+  //  typing animation 
+useEffect(() => {
+  if (!typing) return;                             // stop when paused
 
-    if (typing) {
-      if (cursorPosition < snippet.length) {
-        const timer = setTimeout(() => {
-          setText(text + snippet.charAt(cursorPosition))
-          setCursorPosition(cursorPosition + 1)
-        }, 30)
+  const snippet = codeSnippets[currentSnippet].code;
+  if (cursorPosition < snippet.length) {
+    const id = setTimeout(() => {
+      setText(prev => prev + snippet.charAt(cursorPosition));
+      setCursorPosition(prev => prev + 1);
+    }, 30);
+    return () => clearTimeout(id);
+  } else {
+    setTyping(false);                              // finished this snippet
+  }
+}, [typing, cursorPosition, currentSnippet]);
 
-        return () => clearTimeout(timer)
-      } else {
-        setTyping(false)
-        const timer = setTimeout(() => {
-          setTyping(true)
-          setText("")
-          setCursorPosition(0)
-          setCurrentSnippet((currentSnippet + 1) % codeSnippets.length)
-        }, 3000)
+//  pause between snippets & advance 
+useEffect(() => {
+  if (typing) return;                              // only run while paused
 
-        return () => clearTimeout(timer)
-      }
-    }
-  }, [typing, text, cursorPosition, currentSnippet])
+  const id = setTimeout(() => {
+    setText("");
+    setCursorPosition(0);
+    setCurrentSnippet(prev => (prev + 1) % codeSnippets.length);
+    setTyping(true);                               // start typing next snippet
+  }, 5000);
+
+  return () => clearTimeout(id);                   
+}, [typing]);
 
   return (
     <div className="w-full h-full bg-zinc-900 rounded-lg overflow-hidden shadow-xl">
