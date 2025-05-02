@@ -8,6 +8,7 @@
   ],
   "allTeamMembers": [
     {
+      "active": false,
       "name": "Landyn Sparacino",
       "role": "President",
       "image": "/teamMemberPhotos/Landyn Sparacino.png",
@@ -21,6 +22,7 @@
       ]
     },
     {
+      "active": false,
       "name": "Caleb Lee",
       "role": "Vice President",
       "image": "/teamMemberPhotos/Caleb Lee.jpeg",
@@ -35,6 +37,7 @@
       ]
     },
     {
+      "active": false,
       "name": "Win Tongtawee",
       "role": "CS Curricula Lead, React Team Lead, Brand & Marketing Lead",
       "image": "/teamMemberPhotos/Win Tongtawee.jpg",
@@ -50,6 +53,7 @@
       ]
     },
     {
+      "active": false,
       "name": "Cynthia Chen",
       "role": "CS Curricula Lead",
       "image": "/teamMemberPhotos/Cynthia Chen.jpg",
@@ -63,6 +67,7 @@
       ]
     },
     {
+      "active": true,
       "name": "Alastaire Balin",
       "role": "Brand & Marketing Lead",
       "image": "/teamMemberPhotos/Alastaire Balin.jpg",
@@ -75,6 +80,7 @@
       ]
     },
     {
+      "active": true,
       "name": "Shreesh Dassarkar",
       "role": "Software Events Lead",
       "image": "/teamMemberPhotos/Shreesh Dassarkar.jpg",
@@ -88,6 +94,7 @@
       ]
     },
     {
+      "active": true,
       "name": "Shreyashi Kalakuntla",
       "role": "STEM Curricula Team Lead",
       "image": "/teamMemberPhotos/Shreyashi Kalakuntla.jpg",
@@ -100,6 +107,7 @@
       ]
     },
     {
+      "active": false,
       "name": "Andy Ge",
       "role": "President",
       "image": "/teamMemberPhotos/Andy Ge.jpeg",
@@ -112,6 +120,7 @@
       ]
     },
     {
+      "active": false,
       "name": "Jennifer Esfahany",
       "role": "Logistics Coordinator",
       "bio": "Previous Logistics Coordinator of FirstByte.",
@@ -125,6 +134,7 @@
       ]
     },
     {
+      "active": false,
       "name": "Srikar Ananthoju",
       "role": "Curricula Lead",
       "bio": "Previous Curricula Lead of FirstByte.",
@@ -137,6 +147,7 @@
       ]
     },
     {
+      "active": false,
       "name": "Darren Chen",
       "role": "Treasurer",
       "bio": "Previous Treasurer of FirstByte, currently SWE at Captial One.",
@@ -149,6 +160,7 @@
       ]
     },
     {
+      "active": true,
       "name": "Inesh Parikh",
       "role": "STEM Curricula Team Lead",
       "image": "/teamMemberPhotos/Inesh Parikh.jpg",
@@ -160,6 +172,7 @@
       ]
     },
     {
+      "active": true,
       "name": "Jaden Zhou",
       "role": "Treasurer",
       "image": null,
@@ -173,6 +186,7 @@
       ]
     },
     {
+      "active": false,
       "name": "Ireh Hong",
       "role": "Software Events Lead",
       "image": null,
@@ -184,6 +198,7 @@
       ]
     },
     {
+      "active": false,
       "name": "Anna Higgins",
       "role": "Software Events Lead",
       "image": null,
@@ -193,18 +208,76 @@
       "previousRoles": [
         {"role": "Software Events Lead", "year": "2024"}
       ]
-    }
-  ],
-  "incomingEboard": [
+    },
     {
+      "active": true,
       "name": "Amoli Patel",
-      "role": "CS Curricula Team Co-Lead",
+      "role": "CS Curricula Team Lead",
       "image": null,
       "bio": "Hi! I'm Amoli Patel, a combined Computer Science and Business Administration major. I first joined FirstByte because I enjoy helping others learn and was drawn to FirstByte's mission of making STEM education more accessible to all students. Ever since joining, I've enjoyed fruthering my own education while also meaningfully supporting others on their learning journey.",
       "linkedin": "www.linkedin.com/in/amoli-patel",
       "github": "https://github.com/amolipatel05",
       "years": ["2025"],
       "previousRoles": []
+    },
+    {
+      "active": true,
+      "name": "Gavin Normand",
+      "role": "CS Curricula Team Lead",
+      "image": null,
+      "bio": "ADD NEW BIO",
+      "linkedin": null,
+      "github": null,
+      "years": ["2025"],
+      "previousRoles": []
+    },
+    {
+      "active": true,
+      "name": "Ameeka Patel",
+      "role": "Software Team Lead",
+      "image": null,
+      "bio": null,
+      "linkedin": null,
+      "github": null,
+      "years": ["2025"],
+      "previousRoles": []
+    },
+    {
+      "active": true,
+      "name": "Gina Hong",
+      "role": "Software Events Lead",
+      "image": null,
+      "bio": null,
+      "linkedin": null,
+      "github": null,
+      "years": ["2025"],
+      "previousRoles": []
+    },
+    {
+      "active": true,
+      "name": "Alex Wright",
+      "role": "Vice President",
+      "image": "/teamMemberPhotos/Alexandria Wright.jpg",
+      "bio": null,
+      "linkedin": null,
+      "github": null,
+      "years": ["2024, 2025"],
+      "previousRoles": [
+        {"role": "React Team Member", "year": "2024"}]
+    },
+    {
+      "active": true,
+      "name": "Nick Chen",
+      "role": "President",
+      "image": null,
+      "bio": null,
+      "linkedin": null,
+      "github": null,
+      "years": ["2024, 2025"],
+      "previousRoles": [
+        {"role": "CS Curricula Team Member", "year": "2024"},
+        {"role": "Software Team Member", "year": "2024"},
+        {"role": "React Team Member", "year": "2024"}]
     }
   ]
 } 

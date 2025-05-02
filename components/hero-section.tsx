@@ -1,6 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
+import Link from "next/link"
 import { ChevronDown, ChevronRight, Code } from "lucide-react"
 import { StarBorder } from "@/components/ui/star-border"
 import { Highlighter } from "@/components/ui/highlighter"
@@ -25,6 +26,21 @@ const ThreeModel = dynamic(() => import('@/components/three-model').then(mod => 
     </div>
   )
 })
+
+
+const scrollToSection = (id: string) => {
+  const element = document.getElementById(id)
+  if (element) {
+    const offset = 100 // Adjust this value to change how far below the section it scrolls
+    const elementPosition = element.getBoundingClientRect().top
+    const offsetPosition = elementPosition + window.pageYOffset - offset
+
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: 'smooth'
+    })
+  }
+}
 
 // Custom GreenLamp component
 const GreenLampContainer = ({
@@ -158,13 +174,38 @@ export const HeroSection = forwardRef<HTMLElement, HeroSectionProps>(
                       Empowering the next generation through CS & STEM education
                     </p>
                     <div className="flex flex-wrap gap-4 justify-center">
-                      <StarBorder className="group text-sm">
-                        Join Us{" "}
-                        <ChevronRight className="ml-2 h-4 w-4 inline-block group-hover:translate-x-1 transition-transform" />
-                      </StarBorder>
-                      <StarBorder as="div" className="border border-primary/20 bg-background hover:bg-muted/50 text-sm">
-                        Learn More
-                      </StarBorder>
+                      <motion.div
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <Link
+                          href="https://docs.google.com/forms/d/e/1FAIpQLScwDqGMrnM-M2-3MiaBXQQLhIusP1nk6izdAieHM-qmiyhqAQ/viewform?usp=dialog"
+                          target="_blank"
+                        >
+                        <StarBorder className="group text-sm group-hover:">
+                          Partnerships{" "}
+                          <ChevronRight className="ml-2 h-4 w-4 inline-block group-hover:translate-x-1 transition-transform" />
+                        </StarBorder>
+                        </Link>
+                      </motion.div>
+                      <motion.div
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <Link
+                          href="#about"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            scrollToSection("about");
+                          }}
+                        >
+                          <StarBorder className="group text-sm group-hover:">
+                            Learn More
+                          </StarBorder>
+                        </Link>
+                      </motion.div>
                     </div>
                   </div>
                 </GreenLampContainer>

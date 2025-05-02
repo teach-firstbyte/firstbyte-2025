@@ -100,9 +100,6 @@ export const ContactSection = forwardRef<HTMLElement>((props, ref) => {
                   <p className="text-muted-foreground mb-2">
                     Join our programs and start your journey in computer science and STEM.
                   </p>
-                  <Button variant="link" className="p-0 h-auto font-semibold">
-                    Apply Now <ChevronRight className="ml-1 h-4 w-4" />
-                  </Button>
                 </div>
               </div>
 

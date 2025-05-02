@@ -13,14 +13,15 @@ import { AnimatedTooltip } from "@/components/ui/animated-tooltip"
 import teamData from "@/data/team.json"
 
 interface TeamMember {
+  active: boolean
   name: string
   role: string
   image?: string | null
   circularImage?: string | null
-  bio?: string
-  linkedin?: string
-  twitter?: string
-  github?: string
+  bio?: string | null
+  linkedin?: string | null
+  twitter?: string | null
+  github?: string | null
   years?: string[] // List of years with FirstByte (e.g. ["2022", "2023", "2024"])
   previousRoles?: { role: string; year: string }[] // Previous roles with years
 }
@@ -54,7 +55,7 @@ const getRoleForYear = (member: TeamMember, year: string): string => {
 
 // Filter for current executive board (members with 2025 in their years)
 const currentExecutiveBoard = allTeamMembers.filter(member => 
-  member.years?.includes("2025")
+  member.active === true
 ).map(member => ({
   ...member,
   role: getRoleForYear(member, "2025") // Ensure we display the 2025 role
@@ -72,17 +73,17 @@ const foundingMembers = allTeamMembers.filter(member =>
 });
 
 // Helper function to create a past board with members showing their roles from that specific year
-const createPastBoard = (year: string, title: string): PastBoard => {
-  // Get all members who were active in that year
-  const membersFromYear = allTeamMembers.filter(member => 
-    member.years?.includes(year)
-  ).map(member => {
-    // Get the appropriate role for that year
-    return {
+const createPastBoard = (year: string, title: string, orderArray: string[]): PastBoard => {
+  // Get all members who were active in that year and are in the order array
+  const membersFromYear = allTeamMembers
+    .filter(member => 
+      member.years?.includes(year) && 
+      orderArray.includes(member.name)
+    )
+    .map(member => ({
       ...member,
       role: getRoleForYear(member, year)
-    };
-  });
+    }));
   
   return {
     year: `${year}-${Number(year) + 1}`, // Format as academic year
@@ -93,33 +94,30 @@ const createPastBoard = (year: string, title: string): PastBoard => {
 
 // Define specific order for founding team
 const foundingTeamOrder = ["Andy Ge", "Win Tongtawee", "Caleb Lee", "Landyn Sparacino", "Jennifer Esfahany", "Srikar Ananthoju"];
+const TeamOrder2024_2025 = ["Landyn Sparacino", "Caleb Lee", "Win Tongtawee", "Cynthia Chen", "Shreyashi Kalakuntla", "Inesh Parikh", "Ireh Hong", "Shreesh Dassarkar", "Anna Higgins", "Alastaire Balin"];
 
 // Create past board entries with custom ordering for founding team
 const pastBoards: PastBoard[] = [
   {
-    ...createPastBoard("2022", "Founding Team"),
-    // Sort members according to the specified order
-    members: createPastBoard("2022", "Founding Team").members.sort((a, b) => {
+    ...createPastBoard("2024", "2024-2025 Leadership", TeamOrder2024_2025),
+    members: createPastBoard("2024", "2024-2025 Leadership", TeamOrder2024_2025).members.sort((a, b) => {
+      const indexA = TeamOrder2024_2025.indexOf(a.name);
+      const indexB = TeamOrder2024_2025.indexOf(b.name);
+      return indexA - indexB;
+    })
+  },
+  {
+    ...createPastBoard("2022", "Founding Team", foundingTeamOrder),
+    members: createPastBoard("2022", "Founding Team", foundingTeamOrder).members.sort((a, b) => {
       const indexA = foundingTeamOrder.indexOf(a.name);
       const indexB = foundingTeamOrder.indexOf(b.name);
-      
-      // If both names are in the order list, sort by their position
-      if (indexA !== -1 && indexB !== -1) {
-        return indexA - indexB;
-      }
-      
-      // If only one name is in the list, prioritize it
-      if (indexA !== -1) return -1;
-      if (indexB !== -1) return 1;
-      
-      // If neither name is in the list, maintain alphabetical order
-      return a.name.localeCompare(b.name);
+      return indexA - indexB;
     })
   }
   // Add more past boards as needed
   // createPastBoard("2023", "2023 Leadership"),
   // createPastBoard("2024", "2024 Leadership"),
-];
+]
 
 // Tooltip position interface
 interface TooltipPosition {
@@ -869,6 +867,27 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
                       }}
                       className="overflow-hidden"
                     >
+                      {/* Team photo if available */}
+                      {teamPhoto && focusedMember === null && (
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0.98 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ duration: 0.3 }}
+                          className="mb-6"
+                        >
+                          <div className="relative aspect-video overflow-hidden rounded-lg border mb-2">
+                            <img 
+                              src={teamPhoto.image} 
+                              alt={teamPhoto.description}
+                              className="object-cover"
+                            />
+                          </div>
+                          <p className="text-sm text-center text-muted-foreground">
+                            {teamPhoto.description}
+                          </p>
+                        </motion.div>
+                      )}
+                      
                       {/* Focused member detail view */}
                       <AnimatePresence mode="wait">
                         {focusedMember !== null && (
@@ -985,27 +1004,6 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
                           </motion.div>
                         )}
                       </AnimatePresence>
-
-                      {/* Team photo if available */}
-                      {teamPhoto && focusedMember === null && (
-                        <motion.div
-                          initial={{ opacity: 0, scale: 0.98 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          transition={{ duration: 0.3 }}
-                          className="mb-6"
-                        >
-                          <div className="relative aspect-video overflow-hidden rounded-lg border mb-2">
-                            <img 
-                              src={teamPhoto.image} 
-                              alt={teamPhoto.description}
-                              className="object-cover"
-                            />
-                          </div>
-                          <p className="text-sm text-center text-muted-foreground">
-                            {teamPhoto.description}
-                          </p>
-                        </motion.div>
-                      )}
 
                       {/* Show all members with AnimatedTooltip hover effect */}
                       <div className="mt-4">
@@ -1168,7 +1166,7 @@ export const TeamSection = forwardRef<HTMLElement, TeamSectionProps>(({ classNam
             className="flex justify-between items-end mb-8"
           >
             <h3 className="text-2xl font-semibold">Current Executive Board</h3>
-            <div className="text-sm text-muted-foreground">2024-2025</div>
+            <div className="text-sm text-muted-foreground">2025-2026</div>
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
@@ -1226,7 +1224,7 @@ export const TeamSection = forwardRef<HTMLElement, TeamSectionProps>(({ classNam
         </div>
 
         {/* Call to action */}
-        <motion.div 
+        {/* <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -1242,7 +1240,7 @@ export const TeamSection = forwardRef<HTMLElement, TeamSectionProps>(({ classNam
               <span className="absolute inset-0 bg-primary opacity-80 group-hover:opacity-100 transition-opacity duration-300" />
             </Button>
           </Link>
-        </motion.div>
+        </motion.div> */}
       </div>
     </section>
   )

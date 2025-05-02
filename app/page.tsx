@@ -72,9 +72,9 @@ export default function Home() {
         ref={teamRef} 
       />
       
-      <ContactSection 
+      {/* <ContactSection 
         ref={contactRef} 
-      />
+      /> */}
       
       <Footer />
     </main>

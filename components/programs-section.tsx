@@ -53,7 +53,7 @@ const programs: ProgramFeature[] = [
     link: "/programs/#mentorship"
   },
   {
-    title: "Engineering Team",
+    title: "Professional Development",
     icon: Users,
     description: "Our student-led engineering team develops and maintains our website and other digital resources, providing hands-on experience in software development.",
     image: "/programs/ENGINEERING.png",

@@ -152,8 +152,8 @@ export function Footer() {
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
+                  width="18"
+                  height="18"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -169,10 +169,6 @@ export function Footer() {
                   href="https://mail.google.com/mail/u/0/?fs=1&tf=cm&source=mailto&to=info@firstbyte.org" 
                   target="_blank"
                   className="text-muted-foreground hover:text-foreground transition-colors"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    scrollToSection('programs');
-                  }}
                 >
                   <span className="text-muted-foreground">teachfirstbyte@gmail.com</span>
                 </a>
@@ -201,10 +197,6 @@ export function Footer() {
                   href="https://www.google.com/maps/dir//Northeastern+University,+360+Huntington+Ave,+Boston,+MA+02115/" 
                   target="_blank"
                   className="text-muted-foreground hover:text-foreground transition-colors flex flex-col"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    scrollToSection('programs');
-                  }}
                 >
                   <p className="text-muted-foreground">Northeastern University</p>
                   <p className="text-muted-foreground">360 Huntington Ave, Boston, MA 02115</p>
