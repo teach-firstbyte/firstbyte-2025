@@ -5,6 +5,7 @@ import { ChevronRight, Users, GraduationCap, Lightbulb } from "lucide-react"
 import { StarBorder } from "@/components/ui/star-border"
 import { Button } from "@/components/ui/button"
 import { forwardRef } from "react"
+import { AnimatedGlowButton } from "@/components/ui/animated-glow-button"
 
 export const ContactSection = forwardRef<HTMLElement>((props, ref) => {
   return (
@@ -77,9 +78,9 @@ export const ContactSection = forwardRef<HTMLElement>((props, ref) => {
                   placeholder="How can we help?"
                 />
               </div>
-              <StarBorder as="button" type="submit" className="w-full">
+              <AnimatedGlowButton as="button" type="submit" color="purple" className="w-full">
                 Send Message
-              </StarBorder>
+              </AnimatedGlowButton>
             </form>
           </motion.div>
 

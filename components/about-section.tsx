@@ -41,10 +41,6 @@ export const AboutSection = forwardRef<HTMLElement>((props, ref) => {
               Our founders, a group of passionate educators and tech professionals, came together to create engaging,
               hands-on learning experiences that make these subjects approachable and exciting.
             </p>
-            <StarBorder as="div" className="group">
-              Our Team{" "}
-              <ChevronRight className="ml-2 h-4 w-4 inline-block group-hover:translate-x-1 transition-transform" />
-            </StarBorder>
           </motion.div>
 
           <motion.div

@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ArrowRight, ChevronDown, Linkedin, Twitter, Github, Clock, ChevronRight } from "lucide-react"
 import { AnimatedTooltip } from "@/components/ui/animated-tooltip"
 import teamData from "@/data/team.json"
+import { AnimatedGlowButton } from "@/components/ui/animated-glow-button"
 
 interface TeamMember {
   name: string
@@ -230,7 +231,13 @@ function ClassicTooltip({ position, title, subtitle, visible, id = "tooltip" }: 
   );
 }
 
-function TeamMemberCard({ member, index }: { member: TeamMember; index: number }) {
+interface TeamMemberCardProps {
+  member: TeamMember;
+  index: number;
+  noStaggerDelay?: boolean;
+}
+
+function TeamMemberCard({ member, index, noStaggerDelay = false }: TeamMemberCardProps) {
   const [isHovered, setIsHovered] = useState(false)
   const [showRoleHistory, setShowRoleHistory] = useState(false)
   
@@ -345,7 +352,7 @@ function TeamMemberCard({ member, index }: { member: TeamMember; index: number }
       animate={{ opacity: 1, y: 0 }}
       transition={{ 
         duration: 0.5,
-        delay: index * 0.1,
+        delay: noStaggerDelay ? 0 : index * 0.1,
         ease: [0.19, 1, 0.22, 1]
       }}
       whileHover={{ 
@@ -752,14 +759,6 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
           isExpanded ? "mb-8" : "mb-0"
         )}
       >
-        {/* Year Badge */}
-        <div className="absolute -left-4 -top-4 z-30 bg-primary text-primary-foreground rounded-full w-12 h-12 flex items-center justify-center font-bold shadow-md">
-          <ChevronDown className={cn(
-            "h-5 w-5 transition-transform duration-300",
-            isExpanded ? "rotate-180" : ""
-          )} />
-        </div>
-        
         {/* Card Stack */}
         <div className="relative">
           {/* Stacked background cards for visual effect */}
@@ -1131,12 +1130,15 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
 
 export const TeamSection = forwardRef<HTMLElement, TeamSectionProps>(({ className }, ref) => {
   const [visibleCount, setVisibleCount] = useState(8)
+  const [showingMore, setShowingMore] = useState(false)
   
   const handleShowMore = () => {
+    setShowingMore(true)
     setVisibleCount(currentExecutiveBoard.length)
   }
   
   const handleShowLess = () => {
+    setShowingMore(false)
     setVisibleCount(8)
   }
 
@@ -1173,33 +1175,36 @@ export const TeamSection = forwardRef<HTMLElement, TeamSectionProps>(({ classNam
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
             {currentVisible.map((member, index) => (
-              <TeamMemberCard key={member.name} member={member} index={index} />
+              <TeamMemberCard 
+                key={member.name} 
+                member={member} 
+                index={index} 
+                noStaggerDelay={showingMore}
+              />
             ))}
           </div>
           
           {currentExecutiveBoard.length > visibleCount ? (
             <div className="flex justify-center mt-8">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="flex items-center gap-2 px-5 py-2 rounded-full bg-muted hover:bg-muted/80 text-sm font-medium transition-all"
+              <AnimatedGlowButton
+                color="green"
                 onClick={handleShowMore}
+                className="flex items-center gap-2 text-sm font-medium"
               >
                 <span>Show All</span>
                 <ChevronDown className="h-4 w-4" />
-              </motion.button>
+              </AnimatedGlowButton>
             </div>
           ) : currentExecutiveBoard.length > 8 && visibleCount > 8 ? (
             <div className="flex justify-center mt-8">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="flex items-center gap-2 px-5 py-2 rounded-full bg-muted hover:bg-muted/80 text-sm font-medium transition-all"
+              <AnimatedGlowButton
+                color="green"
                 onClick={handleShowLess}
+                className="flex items-center gap-2 text-sm font-medium"
               >
                 <span>Show Less</span>
                 <ChevronDown className="h-4 w-4 rotate-180" />
-              </motion.button>
+              </AnimatedGlowButton>
             </div>
           ) : null}
         </div>
@@ -1234,13 +1239,13 @@ export const TeamSection = forwardRef<HTMLElement, TeamSectionProps>(({ classNam
           className="flex justify-center mt-20"
         >
           <Link href="/team">
-            <Button size="lg" className="group relative overflow-hidden shadow-md">
-              <span className="relative z-10 flex items-center gap-2">
-                See Full Team Directory
-                <ArrowRight className="ml-1 transition-transform duration-300 group-hover:translate-x-1" />
-              </span>
-              <span className="absolute inset-0 bg-primary opacity-80 group-hover:opacity-100 transition-opacity duration-300" />
-            </Button>
+            <AnimatedGlowButton
+              color="green"
+              className="flex items-center gap-2 text-sm font-medium"
+            >
+              See Full Team Directory
+              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+            </AnimatedGlowButton>
           </Link>
         </motion.div>
       </div>

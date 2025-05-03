@@ -1,7 +1,6 @@
 "use client"
 
 import { useRef, useState, useEffect } from "react"
-import { useScroll } from "framer-motion"
 import { Navbar } from "@/components/navbar"
 import { TeamSection } from "@/components/team-section"
 import useMousePosition from "@/hooks/use-mouse-position"

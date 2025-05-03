@@ -2,14 +2,13 @@
 
 import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion"
-import { Button } from "@/components/ui/button"
-import { StarBorder } from "@/components/ui/star-border"
+import { motion, AnimatePresence, useScroll } from "framer-motion"
 import { ThemeToggle } from "@/components/theme-toggle"
-import { Menu, Search, X, ChevronUp, Linkedin, Instagram } from "lucide-react"
+import { Menu, Search, X, Linkedin, Instagram, ArrowUpRight } from "lucide-react"
 import { LinktreeIcon } from "@/components/ui/icons"
 import { HighlightGroup, HighlighterItem } from "@/hooks/use-mouse-position"
 import { createPortal } from "react-dom"
+import { AnimatedGlowButton } from "@/components/ui/animated-glow-button"
 
 // Define TypeScript interface for props
 interface NavbarProps {
@@ -318,50 +317,48 @@ export function Navbar({ activeSection }: NavbarProps) {
     <div className="fixed top-0 left-0 right-0 z-50 pointer-events-none">
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
         <div className="flex justify-between items-start py-6 md:py-10">
-          {/* Logo in top left - only visible when scrolled past hero */}
-          <AnimatePresence>
-            {pastHero && (
-              <motion.div
-                className="pointer-events-auto"
-                initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                transition={{ duration: 0.5, ease: [0.19, 1, 0.22, 1] }}
-              >
-                <Link href="/" className="text-xl font-bold flex items-center gap-2">
-                  <img src="/FirstByteBitex4.png" alt="FirstByte Logo" className="w-6 h-6" />
-                  FirstByte
-                </Link>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* Logo placeholder to maintain layout when not visible */}
-          {!pastHero && (
-            <div className="opacity-0 invisible pointer-events-none">
-              <span className="text-xl font-bold flex items-center gap-2">
-                <img src="/FirstByteBitex4.png" alt="FirstByte Logo" className="w-6 h-6" />
-                FirstByte
-              </span>
-            </div>
-          )}
-
           {/* Pill navbar in top right */}
           <motion.div
             ref={navRef}
-            className={`pointer-events-auto backdrop-blur-lg border border-border/40 shadow-sm overflow-hidden z-10`}
+            className={`pointer-events-auto backdrop-blur-lg border border-border/40 shadow-sm overflow-hidden z-10 ml-auto flex`}
             initial="initial"
             animate={pastHero ? "scrolled" : "initial"}
             variants={pillVariants}
-            layout
-            layoutRoot
             style={{
               '--background-rgb': 'var(--background)',
             } as any}
           >
+            {/* Logo container that grows/shrinks */}
+            <AnimatePresence mode="wait">
+              {pastHero ? (
+                <motion.div
+                  key="logo-visible"
+                  className="overflow-hidden flex items-center"
+                  initial={{ width: 0, opacity: 0 }}
+                  animate={{ width: "auto", opacity: 1 }}
+                  exit={{ width: 0, opacity: 0 }}
+                  transition={{ 
+                    duration: 0.4,
+                    ease: [0.19, 1, 0.22, 1] 
+                  }}
+                >
+                  <Link 
+                    href="/" 
+                    className="flex items-center pl-4"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      scrollToSection("home");
+                    }}
+                  >
+                    <img src="/FirstByteBitex4.png" alt="FirstByte Logo" className="w-6 h-6" />
+                  </Link>
+                </motion.div>
+              ) : null}
+            </AnimatePresence>
+
+            {/* Main content container - stable size */}
             <motion.div 
               className="flex h-12 md:h-14 items-center justify-end px-3 md:px-4"
-              layout
             >
               <HighlightGroup className="hidden md:flex items-center gap-2">
                 {navLinks.map((link, index) => (
@@ -482,17 +479,16 @@ export function Navbar({ activeSection }: NavbarProps) {
                     </motion.button>
                   </HighlighterItem>
 
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <a
+                  <HighlighterItem>
+                    <AnimatedGlowButton 
+                      color="green"
                     href="https://docs.google.com/forms/d/e/1FAIpQLSf1BCJAfHPWxypcqdFvHBKm5jYJcnTFwrbj2l_RCfskubxOmA/viewform?usp=sharing"
-                    target="_blank">
-                    <StarBorder className="text-sm">Get Involved</StarBorder>
-                    </a>
-                  </motion.div>
+                      className="py-1.5 px-3 text-sm"
+                    >
+                      Get Involved
+                      <ArrowUpRight className="h-3.5 w-3.5 ml-1 text-muted-foreground" />
+                    </AnimatedGlowButton>
+                  </HighlighterItem>
 
                   {/* Theme Toggle */}
                   <HighlighterItem>
@@ -578,7 +574,15 @@ export function Navbar({ activeSection }: NavbarProps) {
                 variants={mobileMenuItemVariants}
               >
                 <div className="flex items-center gap-2">
-                  <img src="/FirstByteBitex4.png" alt="FirstByte Logo" className="w-6 h-6" />
+                  <img 
+                    src="/FirstByteBitex4.png" 
+                    alt="FirstByte Logo" 
+                    className="w-6 h-6 cursor-pointer" 
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      scrollToSection("home");
+                    }}
+                  />
                   
                   {/* Mobile Search Button */}
                   <motion.button
@@ -646,13 +650,15 @@ export function Navbar({ activeSection }: NavbarProps) {
                       <LinktreeIcon className="h-4 w-4" />
                     </motion.div>
                   </a>
-                  <Button 
+                  <AnimatedGlowButton 
+                    color="green"
+                    href="https://docs.google.com/forms/d/e/1FAIpQLSf1BCJAfHPWxypcqdFvHBKm5jYJcnTFwrbj2l_RCfskubxOmA/viewform?usp=sharing"
+                    className="py-1 px-2 text-xs"
                     onClick={() => setIsMenuOpen(false)}
-                    className="transition-all duration-300 ml-2"
-                    size="sm"
                   >
                     Get Involved
-                  </Button>
+                    <ArrowUpRight className="h-3 w-3 ml-1 text-muted-foreground" />
+                  </AnimatedGlowButton>
                 </div>
               </motion.div>
             </nav>
