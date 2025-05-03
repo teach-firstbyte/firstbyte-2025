@@ -21,69 +21,39 @@ for i in range(10):
   {
     language: "JavaScript",
     code: `function createGame() {
-const player = {
-  x: 50,
-  y: 50,
-  speed: 5
-};
-
-function update() {
-  // Move player based on keyboard input
-  if (keys.ArrowRight) player.x += player.speed;
-  if (keys.ArrowLeft) player.x -= player.speed;
-  if (keys.ArrowUp) player.y -= player.speed;
-  if (keys.ArrowDown) player.y += player.speed;
-  
-  // Draw everything
-  draw();
-  
-  // Loop
-  requestAnimationFrame(update);
+  const player = {
+    x: 50,
+    speed: 5
+  };
+  function update() {
+    // Move player based on keyboard input
+    if (keys.ArrowRight) player.x += player.speed;
+    if (keys.ArrowLeft) player.x -= player.speed;
+    // Draw everything and loop
+    draw();
+    requestAnimationFrame(update);
+  }
+  update();
 }
-
-update();
-}
-
 createGame();`,
     color: "#f7df1e",
   },
   {
     language: "HTML/CSS",
     code: `<div class="card">
-<div class="card-header">
-  <h2>FirstByte Workshop</h2>
+  <div class="card-header">
+    <h2>FirstByte Workshop</h2>
+  </div>
+  <div class="card-body">
+    <p>Welcome to your first coding project!</p>
+    <button class="btn">Run Code</button>
+  </div>
 </div>
-<div class="card-body">
-  <p>Welcome to your first coding project!</p>
-  <button class="btn">Run Code</button>
-</div>
-</div>
-
 <style>
 .card {
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  background-color: white;
   overflow: hidden;
   margin: 20px;
-}
-
-.card-header {
-  background-color: #4f46e5;
-  color: white;
-  padding: 15px;
-}
-
-.card-body {
-  padding: 15px;
-}
-
-.btn {
-  background-color: #4f46e5;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
 }
 </style>`,
     color: "#e34c26",
@@ -139,7 +109,7 @@ useEffect(() => {
         <div className={`text-xs ${isLightTheme ? 'text-zinc-600' : 'text-zinc-400'} font-mono`}>{codeSnippets[currentSnippet].language}</div>
       </div>
 
-      <div className={`p-4 font-mono text-sm ${isLightTheme ? 'text-zinc-800' : 'text-white'} overflow-auto h-[calc(100%-40px)]`}>
+      <div className={`p-4 font-mono text-sm ${isLightTheme ? 'text-zinc-800' : 'text-white'} overflow-auto h-[calc(100%-45px)]`}>
         <pre className="whitespace-pre-wrap">
           {text}
           <motion.span
