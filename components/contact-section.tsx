@@ -9,28 +9,30 @@ import { AnimatedGlowButton } from "@/components/ui/animated-glow-button"
 
 export const ContactSection = forwardRef<HTMLElement>((props, ref) => {
   return (
-    <section ref={ref} id="contact" className="py-20 px-4 md:px-6 lg:px-8 bg-muted/30">
+    <section ref={ref} id="contact" className="py-20 px-4 md:px-6 lg:px-8 bg-[hsl(var(--gray-100))] bg-grid-light">
       <div className="max-w-7xl mx-auto">
-        <motion.div
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
-        >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Join Our Mission</h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Whether you're a student, educator, volunteer, or supporter, there are many ways to get involved.
-          </p>
-        </motion.div>
+        <div className="grid md:grid-cols-3 gap-8 mb-16">
+          <motion.div
+            className="md:col-span-2"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Join Our Mission</h2>
+            <p className="text-xl text-muted-foreground max-w-2xl">
+              Whether you're a student, educator, volunteer, or supporter, there are many ways to get involved.
+            </p>
+          </motion.div>
+        </div>
 
         <div className="grid md:grid-cols-2 gap-12">
           <motion.div
+            className="bg-card rounded-lg p-8 shadow-sm border"
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
-            className="bg-card rounded-lg p-8 shadow-sm border"
           >
             <h3 className="text-2xl font-bold mb-6">Get In Touch</h3>
             <form className="space-y-4">

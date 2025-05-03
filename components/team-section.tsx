@@ -6,12 +6,14 @@ import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from
 import { createPortal } from "react-dom"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { ArrowRight, ChevronDown, Linkedin, Twitter, Github, Clock, ChevronRight } from "lucide-react"
+import { ArrowRight, ChevronDown, Linkedin, Twitter, Github, Clock, ChevronRight, X, Globe } from "lucide-react"
 import { AnimatedTooltip } from "@/components/ui/animated-tooltip"
 import teamData from "@/data/team.json"
 import { AnimatedGlowButton } from "@/components/ui/animated-glow-button"
+import { BlurTooltip, TooltipPosition } from "@/components/ui/blur-tooltip"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 
 interface TeamMember {
   name: string
@@ -22,6 +24,7 @@ interface TeamMember {
   linkedin?: string
   twitter?: string
   github?: string
+  website?: string
   years?: string[] // List of years with FirstByte (e.g. ["2022", "2023", "2024"])
   previousRoles?: { role: string; year: string }[] // Previous roles with years
 }
@@ -122,13 +125,6 @@ const pastBoards: PastBoard[] = [
   // createPastBoard("2024", "2024 Leadership"),
 ];
 
-// Tooltip position interface
-interface TooltipPosition {
-  x: number;
-  y: number;
-  width?: number;
-}
-
 // Portal component for tooltips
 function TooltipPortal({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false)
@@ -144,49 +140,6 @@ function TooltipPortal({ children }: { children: React.ReactNode }) {
   return typeof window !== 'undefined' 
     ? createPortal(children, document.body)
     : null
-}
-
-// Reusable BlurTooltip component
-interface BlurTooltipProps {
-  position: TooltipPosition;
-  content: string | React.ReactNode;
-  visible: boolean;
-  icon?: React.ReactNode;
-  id?: string;
-}
-
-function BlurTooltip({ position, content, visible, icon, id = "tooltip" }: BlurTooltipProps) {
-  return (
-    <TooltipPortal>
-      <div 
-        className="pointer-events-none fixed left-0 top-0 z-[9999]" 
-        id="STALKER" 
-        style={{ transform: `translate(${position.x}px, ${position.y}px)` }}
-      >
-        <div 
-          id="STALKER_INNER"
-          className="flex items-center space-x-[3px] rounded-xl border border-light/20 bg-dark0/80 p-2 px-3 backdrop-blur-md"
-          style={{ 
-            filter: visible ? "blur(0px)" : "blur(16px)",
-            opacity: visible ? 1 : 0,
-            transitionDuration: "1.2s",
-            transitionTimingFunction: "cubic-bezier(0.32, 0.72, 0, 1)",
-            marginLeft: "-112px" 
-          }}
-        >
-          <span className="text-xs text-white/50">
-            {content}
-          </span>
-          {icon || (
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-auto w-4 text-white/50">
-              <path d="M7 7h10v10"></path>
-              <path d="M7 17 17 7"></path>
-            </svg>
-          )}
-        </div>
-      </div>
-    </TooltipPortal>
-  );
 }
 
 // Reusable original style tooltip
@@ -240,6 +193,74 @@ interface TeamMemberCardProps {
 function TeamMemberCard({ member, index, noStaggerDelay = false }: TeamMemberCardProps) {
   const [isHovered, setIsHovered] = useState(false)
   const [showRoleHistory, setShowRoleHistory] = useState(false)
+  const [memberTooltipPosition, setMemberTooltipPosition] = useState<TooltipPosition | null>(null)
+  const [tooltipVisible, setTooltipVisible] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [hoveredSocialUrl, setHoveredSocialUrl] = useState<string | null>(null)
+  
+  // Handle mouse movement for tooltip
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (isHovered) {
+      setMemberTooltipPosition({
+        x: e.clientX,
+        y: e.clientY + 15 // Position below cursor
+      });
+    }
+  };
+  
+  // Show tooltip on hover
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+    setTooltipVisible(true);
+  };
+  
+  // Handle mouse enter with position update
+  const handleDivMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
+    handleMouseEnter();
+    setMemberTooltipPosition({
+      x: e.clientX,
+      y: e.clientY + 15
+    });
+  };
+  
+  // Hide tooltip when not hovering
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    setTooltipVisible(false);
+    setHoveredSocialUrl(null);
+  };
+  
+  // Handle social icon hover
+  const handleSocialHover = (
+    type: 'linkedin' | 'github' | 'twitter' | 'website',
+    url: string, 
+    event: React.MouseEvent<HTMLElement>
+  ) => {
+    // Set the social URL to show
+    setHoveredSocialUrl(url);
+    
+    // Update position
+    setMemberTooltipPosition({
+      x: event.clientX,
+      y: event.clientY + 15
+    });
+    
+    // Make sure tooltip is visible
+    setTooltipVisible(true);
+    
+    // Prevent parent tooltip from showing
+    event.stopPropagation();
+  };
+  
+  // Handle mouse leave from social icon
+  const handleSocialLeave = () => {
+    setHoveredSocialUrl(null);
+  };
+  
+  // Open modal when card is clicked
+  const handleCardClick = () => {
+    setIsModalOpen(true);
+  };
   
   // Generate year badges for each year with FirstByte
   const renderYearBadges = () => {
@@ -253,7 +274,7 @@ function TeamMemberCard({ member, index, noStaggerDelay = false }: TeamMemberCar
         {sortedYears.map(year => (
           <div 
             key={year}
-            className="inline-flex items-center justify-center h-5 px-2 text-xs font-semibold text-white bg-primary rounded-full"
+            className="inline-flex items-center justify-center h-5 px-2 text-xs font-semibold text-foreground bg-muted rounded-full"
           >
             {year}
           </div>
@@ -338,6 +359,8 @@ function TeamMemberCard({ member, index, noStaggerDelay = false }: TeamMemberCar
       window.open(member.linkedin, '_blank');
     } else if (member.github) {
       window.open(member.github, '_blank');
+    } else if (member.website) {
+      window.open(member.website, '_blank');
     } else if (member.twitter) {
       window.open(member.twitter, '_blank');
     }
@@ -347,109 +370,270 @@ function TeamMemberCard({ member, index, noStaggerDelay = false }: TeamMemberCar
   const hasRoleHistory = member.previousRoles && member.previousRoles.length > 0;
   
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ 
-        duration: 0.5,
-        delay: noStaggerDelay ? 0 : index * 0.1,
-        ease: [0.19, 1, 0.22, 1]
-      }}
-      whileHover={{ 
-        y: -8,
-        transition: { duration: 0.3, ease: "easeOut" }
-      }}
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
-      className="relative group"
-    >
-      <Card className="overflow-hidden transition-all duration-300 group-hover:shadow-lg border-2 border-transparent group-hover:border-primary/20">
-        <div className="aspect-square overflow-hidden relative">
-          <div 
-            className={cn(
-              "absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10 opacity-0 transition-opacity duration-300",
-              isHovered ? "opacity-100" : ""
-            )}
-          />
-          <Avatar 
-            className="h-full w-full rounded-none cursor-pointer"
-            onClick={navigateToProfile}
-          >
-            {member.image ? (
-              <AvatarImage src={member.image} alt={member.name} className="object-cover transition-transform duration-500 group-hover:scale-110" />
-            ) : (
-              <AvatarFallback className="h-full w-full rounded-none text-5xl">
-                {member.name.split(" ").map(n => n[0]).join("")}
-              </AvatarFallback>
-            )}
-          </Avatar>
+    <>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ 
+          duration: 0.5,
+          delay: noStaggerDelay ? 0 : index * 0.1,
+          ease: [0.19, 1, 0.22, 1]
+        }}
+        whileHover={{ 
+          y: -8,
+          transition: { duration: 0.3, ease: "easeOut" }
+        }}
+        onHoverStart={() => handleMouseEnter()}
+        onHoverEnd={() => handleMouseLeave()}
+        onMouseMove={handleMouseMove}
+        onMouseEnter={handleDivMouseEnter}
+        onClick={handleCardClick}
+        className="relative group"
+      >
+        <Card className="overflow-hidden transition-all duration-300 group-hover:shadow-lg border-2 border-transparent group-hover:border-primary/20 cursor-pointer">
+          <div className="aspect-square overflow-hidden relative">
+            <div 
+              className={cn(
+                "absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10 opacity-0 transition-opacity duration-300",
+                isHovered ? "opacity-100" : ""
+              )}
+            />
+            <Avatar 
+              className="h-full w-full rounded-none"
+            >
+              {member.image ? (
+                <AvatarImage 
+                  src={member.image} 
+                  alt={member.name} 
+                  className="object-cover transition-transform duration-500 group-hover:scale-110 h-full w-full"
+                />
+              ) : (
+                <AvatarFallback className="h-full w-full rounded-none text-5xl">
+                  {member.name.split(" ").map(n => n[0]).join("")}
+                </AvatarFallback>
+              )}
+            </Avatar>
+            
+            <div className={cn(
+              "absolute bottom-0 left-0 right-0 p-4 z-20 transform transition-transform duration-300",
+              isHovered ? "translate-y-0" : "translate-y-full opacity-0"
+            )}>
+              <div className="flex gap-2 justify-center">
+                {member.linkedin && (
+                  <Link href={member.linkedin} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+                    <motion.div 
+                      whileHover={{ scale: 1.2 }}
+                      whileTap={{ scale: 0.9 }}
+                      className="bg-white/90 text-primary p-2 rounded-full"
+                      onMouseEnter={(e) => handleSocialHover('linkedin', member.linkedin!, e)}
+                      onMouseLeave={handleSocialLeave}
+                    >
+                      <Linkedin className="h-4 w-4" />
+                    </motion.div>
+                  </Link>
+                )}
+                {member.github && (
+                  <Link href={member.github} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+                    <motion.div 
+                      whileHover={{ scale: 1.2 }}
+                      whileTap={{ scale: 0.9 }}
+                      className="bg-white/90 text-primary p-2 rounded-full"
+                      onMouseEnter={(e) => handleSocialHover('github', member.github!, e)}
+                      onMouseLeave={handleSocialLeave}
+                    >
+                      <Github className="h-4 w-4" />
+                    </motion.div>
+                  </Link>
+                )}
+                {member.website && (
+                  <Link href={member.website} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+                    <motion.div 
+                      whileHover={{ scale: 1.2 }}
+                      whileTap={{ scale: 0.9 }}
+                      className="bg-white/90 text-primary p-2 rounded-full"
+                      onMouseEnter={(e) => handleSocialHover('website', member.website!, e)}
+                      onMouseLeave={handleSocialLeave}
+                    >
+                      <Globe className="h-4 w-4" />
+                    </motion.div>
+                  </Link>
+                )}
+                {member.twitter && (
+                  <Link href={member.twitter} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+                    <motion.div 
+                      whileHover={{ scale: 1.2 }}
+                      whileTap={{ scale: 0.9 }}
+                      className="bg-white/90 text-primary p-2 rounded-full"
+                      onMouseEnter={(e) => handleSocialHover('twitter', member.twitter!, e)}
+                      onMouseLeave={handleSocialLeave}
+                    >
+                      <Twitter className="h-4 w-4" />
+                    </motion.div>
+                  </Link>
+                )}
+              </div>
+            </div>
+          </div>
+          <CardHeader className="p-4 pb-0">
+            <h3 className="text-lg font-semibold">{member.name}</h3>
+          </CardHeader>
+          <CardContent className="p-4 pt-1 pb-4">
+            <div className="flex items-start justify-between">
+              <div className="min-h-[40px] flex-1">
+                <p className="text-sm text-muted-foreground line-clamp-2">{member.role}</p>
+              </div>
+              {hasRoleHistory && (
+                <button 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowRoleHistory(!showRoleHistory);
+                  }}
+                  className="text-xs text-primary flex items-center ml-2 hover:underline"
+                >
+                  <ChevronDown className={cn(
+                    "h-3 w-3 transition-transform", 
+                    showRoleHistory ? "rotate-180" : ""
+                  )} />
+                </button>
+              )}
+            </div>
+            {renderYearBadges()}
+            {renderRoleHistory()}
+          </CardContent>
+        </Card>
+      </motion.div>
+      
+      {/* Blur Tooltip */}
+      {memberTooltipPosition && (
+        <BlurTooltip
+          position={memberTooltipPosition}
+          content={hoveredSocialUrl || `Learn more about ${member.name}`}
+          visible={tooltipVisible}
+          id={`member-tooltip-${index}`}
+        />
+      )}
+      
+      {/* Modal with member details */}
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="sm:max-w-[600px] p-0">
+          <DialogHeader className="sr-only">
+            <DialogTitle>{member.name} - Team Member Details</DialogTitle>
+          </DialogHeader>
           
-          <div className={cn(
-            "absolute bottom-0 left-0 right-0 p-4 z-20 transform transition-transform duration-300",
-            isHovered ? "translate-y-0" : "translate-y-full opacity-0"
-          )}>
-            <div className="flex gap-2 justify-center">
-              {member.linkedin && (
-                <Link href={member.linkedin} target="_blank" rel="noopener noreferrer">
-                  <motion.div 
-                    whileHover={{ scale: 1.2 }}
-                    whileTap={{ scale: 0.9 }}
-                    className="bg-white/90 text-primary p-2 rounded-full"
-                  >
-                    <Linkedin className="h-4 w-4" />
-                  </motion.div>
-                </Link>
-              )}
-              {member.twitter && (
-                <Link href={member.twitter} target="_blank" rel="noopener noreferrer">
-                  <motion.div 
-                    whileHover={{ scale: 1.2 }}
-                    whileTap={{ scale: 0.9 }}
-                    className="bg-white/90 text-primary p-2 rounded-full"
-                  >
-                    <Twitter className="h-4 w-4" />
-                  </motion.div>
-                </Link>
-              )}
-              {member.github && (
-                <Link href={member.github} target="_blank" rel="noopener noreferrer">
-                  <motion.div 
-                    whileHover={{ scale: 1.2 }}
-                    whileTap={{ scale: 0.9 }}
-                    className="bg-white/90 text-primary p-2 rounded-full"
-                  >
-                    <Github className="h-4 w-4" />
-                  </motion.div>
-                </Link>
-              )}
+          <button 
+            onClick={() => setIsModalOpen(false)}
+            className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+          >
+            <X className="h-4 w-4" />
+            <span className="sr-only">Close</span>
+          </button>
+          
+          <div className="p-6">
+            <div className="flex flex-col md:flex-row gap-6">
+              <div className="w-full md:w-1/3 max-w-[200px] mx-auto md:mx-0">
+                <div className="aspect-square w-full overflow-hidden rounded-md border border-border/20">
+                  {member.image ? (
+                    <img 
+                      src={member.circularImage || member.image} 
+                      alt={member.name}
+                      className="h-full w-full object-cover object-center"
+                    />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center bg-muted text-4xl font-semibold">
+                      {member.name.split(" ").map(n => n[0]).join("")}
+                    </div>
+                  )}
+                </div>
+              </div>
+              
+              <div className="flex-1">
+                <h2 className="text-2xl font-semibold mb-1">{member.name}</h2>
+                <p className="text-muted-foreground mb-4">{member.role}</p>
+                
+                {member.bio && (
+                  <div className="mb-4">
+                    <h3 className="text-sm font-medium mb-2">About</h3>
+                    <p className="text-sm">{member.bio}</p>
+                  </div>
+                )}
+                
+                {hasRoleHistory && (
+                  <div className="mb-4">
+                    <h3 className="text-sm font-medium mb-2">Experience at FirstByte</h3>
+                    <div className="relative pl-6">
+                      <div className="absolute left-2 top-2 bottom-2 w-0.5 bg-gradient-to-b from-muted-foreground/30 to-primary" />
+                      {member.previousRoles?.map((role, idx) => (
+                        <div key={idx} className="mb-3 relative">
+                          <div className="absolute left-[-18px] top-0.5 h-3 w-3 rounded-full bg-primary ring-2 ring-background" />
+                          <div className="flex flex-col">
+                            <span className="text-sm font-medium">{role.role}</span>
+                            <span className="text-xs text-muted-foreground">{role.year}</span>
+                          </div>
+                        </div>
+                      ))}
+                      <div className="mb-0 relative">
+                        <div className="absolute left-[-18px] top-0.5 h-3 w-3 rounded-full bg-primary ring-2 ring-background" />
+                        <div className="flex flex-col">
+                          <span className="text-sm font-medium">{member.role}</span>
+                          <span className="text-xs text-muted-foreground">Current</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
+                <div className="flex flex-wrap gap-3">
+                  {member.linkedin && (
+                    <Link href={member.linkedin} target="_blank" rel="noopener noreferrer">
+                      <Button variant="outline" size="sm" className="gap-2"
+                        onMouseEnter={(e) => handleSocialHover('linkedin', member.linkedin!, e)}
+                        onMouseLeave={handleSocialLeave}
+                      >
+                        <Linkedin className="h-4 w-4" />
+                        LinkedIn
+                      </Button>
+                    </Link>
+                  )}
+                  {member.github && (
+                    <Link href={member.github} target="_blank" rel="noopener noreferrer">
+                      <Button variant="outline" size="sm" className="gap-2"
+                        onMouseEnter={(e) => handleSocialHover('github', member.github!, e)}
+                        onMouseLeave={handleSocialLeave}
+                      >
+                        <Github className="h-4 w-4" />
+                        Github
+                      </Button>
+                    </Link>
+                  )}
+                  {member.website && (
+                    <Link href={member.website} target="_blank" rel="noopener noreferrer">
+                      <Button variant="outline" size="sm" className="gap-2"
+                        onMouseEnter={(e) => handleSocialHover('website', member.website!, e)}
+                        onMouseLeave={handleSocialLeave}
+                      >
+                        <Globe className="h-4 w-4" />
+                        Website
+                      </Button>
+                    </Link>
+                  )}
+                  {member.twitter && (
+                    <Link href={member.twitter} target="_blank" rel="noopener noreferrer">
+                      <Button variant="outline" size="sm" className="gap-2"
+                        onMouseEnter={(e) => handleSocialHover('twitter', member.twitter!, e)}
+                        onMouseLeave={handleSocialLeave}
+                      >
+                        <Twitter className="h-4 w-4" />
+                        Twitter
+                      </Button>
+                    </Link>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-        <CardHeader className="p-4 pb-0">
-          <h3 className="text-lg font-semibold">{member.name}</h3>
-        </CardHeader>
-        <CardContent className="p-4 pt-1 pb-4">
-          <div className="flex items-start justify-between">
-            <div className="min-h-[40px] flex-1">
-              <p className="text-sm text-muted-foreground line-clamp-2">{member.role}</p>
-            </div>
-            {hasRoleHistory && (
-              <button 
-                onClick={() => setShowRoleHistory(!showRoleHistory)}
-                className="text-xs text-primary flex items-center ml-2 hover:underline"
-              >
-                <ChevronDown className={cn(
-                  "h-3 w-3 transition-transform", 
-                  showRoleHistory ? "rotate-180" : ""
-                )} />
-              </button>
-            )}
-          </div>
-          {renderYearBadges()}
-          {renderRoleHistory()}
-        </CardContent>
-      </Card>
-    </motion.div>
+        </DialogContent>
+      </Dialog>
+    </>
   )
 }
 
@@ -463,7 +647,7 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
   const [isExpanded, setIsExpanded] = useState(false)
   const [focusedMember, setFocusedMember] = useState<number | null>(null)
   const [hoveredMemberIndex, setHoveredMemberIndex] = useState<number | null>(null)
-  const [tooltipRect, setTooltipRect] = useState<TooltipPosition | null>(null)
+  const [cardTooltipRect, setCardTooltipRect] = useState<TooltipPosition | null>(null)
   const [isTransitioning, setIsTransitioning] = useState(false)
   
   // Social media hover states - change to store just the URL
@@ -498,7 +682,7 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
     }
     
     // Set position directly from cursor position
-    setTooltipRect({
+    setCardTooltipRect({
       x: event.clientX,
       y: event.clientY
     });
@@ -528,7 +712,7 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
   
   // Handle social icon hover
   const handleSocialHover = (
-    type: 'linkedin' | 'github' | 'twitter',
+    type: 'linkedin' | 'github' | 'twitter' | 'website',
     url: string, 
     event: React.MouseEvent<HTMLElement>
   ) => {
@@ -567,6 +751,8 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
       window.open(member.linkedin, '_blank');
     } else if (member.github) {
       window.open(member.github, '_blank');
+    } else if (member.website) {
+      window.open(member.website, '_blank');
     } else if (member.twitter) {
       window.open(member.twitter, '_blank');
     }
@@ -593,7 +779,7 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
     if (hoveredMemberIndex === null) return;
     
-    setTooltipRect({
+    setCardTooltipRect({
       x: event.clientX,
       y: event.clientY
     });
@@ -953,17 +1139,6 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
                                       </div>
                                     </Link>
                                   )}
-                                  {board.members[focusedMember].twitter && (
-                                    <Link href={board.members[focusedMember].twitter!} target="_blank" rel="noopener noreferrer">
-                                      <motion.div 
-                                        whileHover={{ scale: 1.1 }}
-                                        whileTap={{ scale: 0.95 }}
-                                        className="bg-primary/10 text-primary p-2 rounded-full"
-                                      >
-                                        <Twitter className="h-4 w-4" />
-                                      </motion.div>
-                                    </Link>
-                                  )}
                                   {board.members[focusedMember].github && (
                                     <Link 
                                       href={board.members[focusedMember].github!} 
@@ -975,6 +1150,34 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
                                     >
                                       <div className="p-1 text-muted-foreground hover:text-primary">
                                         <Github className="h-3 w-3" />
+                                      </div>
+                                    </Link>
+                                  )}
+                                  {board.members[focusedMember].website && (
+                                    <Link 
+                                      href={board.members[focusedMember].website!} 
+                                      target="_blank" 
+                                      rel="noopener noreferrer"
+                                      onClick={(e) => e.stopPropagation()}
+                                      onMouseEnter={(e) => handleSocialHover('website', board.members[focusedMember].website!, e)}
+                                      onMouseLeave={handleSocialLeave}
+                                    >
+                                      <div className="p-1 text-muted-foreground hover:text-primary">
+                                        <Globe className="h-3 w-3" />
+                                      </div>
+                                    </Link>
+                                  )}
+                                  {board.members[focusedMember].twitter && (
+                                    <Link 
+                                      href={board.members[focusedMember].twitter!} 
+                                      target="_blank" 
+                                      rel="noopener noreferrer"
+                                      onClick={(e) => e.stopPropagation()}
+                                      onMouseEnter={(e) => handleSocialHover('twitter', board.members[focusedMember].twitter!, e)}
+                                      onMouseLeave={handleSocialLeave}
+                                    >
+                                      <div className="p-1 text-muted-foreground hover:text-primary">
+                                        <Twitter className="h-3 w-3" />
                                       </div>
                                     </Link>
                                   )}
@@ -1090,6 +1293,34 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
                                         </div>
                                       </Link>
                                     )}
+                                    {member.website && (
+                                      <Link 
+                                        href={member.website} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        onClick={(e) => e.stopPropagation()}
+                                        onMouseEnter={(e) => handleSocialHover('website', member.website!, e)}
+                                        onMouseLeave={handleSocialLeave}
+                                      >
+                                        <div className="p-1 text-muted-foreground hover:text-primary">
+                                          <Globe className="h-3 w-3" />
+                                        </div>
+                                      </Link>
+                                    )}
+                                    {member.twitter && (
+                                      <Link 
+                                        href={member.twitter} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        onClick={(e) => e.stopPropagation()}
+                                        onMouseEnter={(e) => handleSocialHover('twitter', member.twitter!, e)}
+                                        onMouseLeave={handleSocialLeave}
+                                      >
+                                        <div className="p-1 text-muted-foreground hover:text-primary">
+                                          <Twitter className="h-3 w-3" />
+                                        </div>
+                                      </Link>
+                                    )}
                                   </div>
                                 </div>
                               </Card>
@@ -1113,10 +1344,10 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
       </div>
       
       {/* Member tooltip using ClassicTooltip */}
-      {hoveredMemberIndex !== null && tooltipRect && isExpanded && (
+      {hoveredMemberIndex !== null && cardTooltipRect && isExpanded && (
         <div>
           <ClassicTooltip
-            position={tooltipRect}
+            position={cardTooltipRect}
             title={board.members[hoveredMemberIndex]?.name}
             subtitle={hoveredSocialUrl || board.members[hoveredMemberIndex]?.role}
             visible={memberTooltipVisible}
@@ -1145,20 +1376,28 @@ export const TeamSection = forwardRef<HTMLElement, TeamSectionProps>(({ classNam
   const currentVisible = currentExecutiveBoard.slice(0, visibleCount)
 
   return (
-    <section ref={ref} id="team" className={cn("bg-background text-foreground py-12 sm:py-24 md:py-32 overflow-hidden", className)}>
+    <section ref={ref} id="team" className={cn("bg-[hsl(var(--gray-50))] text-foreground py-12 sm:py-24 md:py-32 overflow-hidden bg-dots-light", className)}>
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="flex flex-col items-center gap-4 text-center sm:gap-8 mb-12"
-        >
-          <h2 className="text-3xl font-semibold leading-tight sm:text-5xl sm:leading-tight">Our Team</h2>
-          <p className="text-md max-w-[600px] font-medium text-muted-foreground sm:text-xl">
-            Meet the talented individuals behind FirstByte who make our mission of coding education possible.
-          </p>
-        </motion.div>
+        <div className="grid md:grid-cols-2 gap-8 mb-12">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-3xl font-semibold leading-tight sm:text-5xl sm:leading-tight">Our Team</h2>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <p className="text-md font-medium text-muted-foreground sm:text-xl">
+              Meet the talented individuals behind FirstByte who make our mission of coding education possible.
+            </p>
+          </motion.div>
+        </div>
 
         {/* Current Executive Board */}
         <div className="mb-20">

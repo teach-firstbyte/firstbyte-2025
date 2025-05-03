@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
+import { useTheme } from "next-themes"
 
 const codeSnippets = [
   {
@@ -94,6 +95,8 @@ export function CodeAnimation() {
   const [typing, setTyping] = useState(true)
   const [text, setText] = useState("")
   const [cursorPosition, setCursorPosition] = useState(0)
+  const { theme } = useTheme()
+  const isLightTheme = theme === "light"
 
   useEffect(() => {
     const snippet = codeSnippets[currentSnippet].code
@@ -121,23 +124,23 @@ export function CodeAnimation() {
   }, [typing, text, cursorPosition, currentSnippet])
 
   return (
-    <div className="w-full h-full bg-zinc-900 rounded-lg overflow-hidden shadow-xl">
-      <div className="flex items-center gap-2 px-4 py-2 bg-zinc-800">
+    <div className={`w-full h-full ${isLightTheme ? 'bg-zinc-100' : 'bg-zinc-900'} rounded-lg overflow-hidden shadow-xl`}>
+      <div className={`flex items-center gap-2 px-4 py-2 ${isLightTheme ? 'bg-zinc-200' : 'bg-zinc-800'}`}>
         <div className="flex gap-1.5">
           <div className="w-3 h-3 rounded-full bg-red-500"></div>
           <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
           <div className="w-3 h-3 rounded-full bg-green-500"></div>
         </div>
-        <div className="text-xs text-zinc-400 font-mono">{codeSnippets[currentSnippet].language}</div>
+        <div className={`text-xs ${isLightTheme ? 'text-zinc-600' : 'text-zinc-400'} font-mono`}>{codeSnippets[currentSnippet].language}</div>
       </div>
 
-      <div className="p-4 font-mono text-sm text-white overflow-auto h-[calc(100%-40px)]">
+      <div className={`p-4 font-mono text-sm ${isLightTheme ? 'text-zinc-800' : 'text-white'} overflow-auto h-[calc(100%-40px)]`}>
         <pre className="whitespace-pre-wrap">
           {text}
           <motion.span
             animate={{ opacity: [1, 0] }}
             transition={{ repeat: Number.POSITIVE_INFINITY, duration: 0.8 }}
-            className="inline-block w-2 h-4 bg-white"
+            className={`inline-block w-2 h-4 ${isLightTheme ? 'bg-zinc-800' : 'bg-white'}`}
           ></motion.span>
         </pre>
       </div>

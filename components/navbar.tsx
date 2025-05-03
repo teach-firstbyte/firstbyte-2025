@@ -93,17 +93,17 @@ export function Navbar({ activeSection }: NavbarProps) {
   const pillVariants = {
     initial: { 
       borderRadius: "9999px",
-      background: "rgba(var(--background-rgb), 0.75)",
+      background: "rgba(var(--background-rgb), 0.9)",
       width: "auto",
       x: 0,
-      boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)"
+      boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)"
     },
     scrolled: { 
       borderRadius: "9999px",
-      background: "rgba(var(--background-rgb), 0.85)",
+      background: "rgba(var(--background-rgb), 0.95)",
       width: "auto",
       x: 0,
-      boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+      boxShadow: "0 4px 14px rgba(0, 0, 0, 0.15)",
       transition: {
         duration: 0.6,
         ease: [0.19, 1, 0.22, 1]
@@ -200,7 +200,7 @@ export function Navbar({ activeSection }: NavbarProps) {
           {/* Pill navbar in top right */}
           <motion.div
             ref={navRef}
-            className={`pointer-events-auto backdrop-blur-lg border border-border/40 shadow-sm overflow-hidden z-10 ml-auto flex`}
+            className={`pointer-events-auto backdrop-blur-lg border border-border/60 shadow-sm overflow-hidden z-10 ml-auto flex`}
             initial="initial"
             animate={pastHero ? "scrolled" : "initial"}
             variants={pillVariants}
@@ -416,7 +416,7 @@ export function Navbar({ activeSection }: NavbarProps) {
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
-            className="md:hidden pointer-events-auto overflow-hidden bg-background/95 backdrop-blur-lg border-b"
+            className="md:hidden pointer-events-auto overflow-hidden bg-background/98 backdrop-blur-lg border-b border-border/60 shadow-sm"
             initial="closed"
             animate="open"
             exit="closed"
