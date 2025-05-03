@@ -64,15 +64,18 @@ const BentoCard = ({
     )}
   >
     {/* <Link href={href} className="absolute inset-0 z-20" /> */}
-    <div>{background}</div>
-    <div className="pointer-events-none absolute bottom-0 z-10 flex transform-gpu flex-col gap-1 p-5 transition-all duration-300 group-hover:opacity-0">
+    <div className="overflow-hidden">
+      {background}
+      <div className="absolute inset-0 bg-black/10 backdrop-blur-[0px] transition-all duration-300 group-hover:bg-black/40 group-hover:backdrop-blur-[2px] z-10"></div>
+    </div>
+    <div className="pointer-events-none absolute bottom-0 z-20 flex transform-gpu flex-col gap-1 p-5 transition-all duration-300 group-hover:opacity-0">
       <Icon className="h-10 w-10 origin-left transform-gpu text-neutral-300 ease-in-out" />
       <h3 className="text-lg font-semibold text-neutral-300">
         {name}
       </h3>
     </div>
 
-    <div className="pointer-events-none absolute bottom-0 z-10 flex w-full transform-gpu flex-col items-start p-5 opacity-0 transition-all duration-300 group-hover:opacity-100">
+    <div className="pointer-events-none absolute bottom-0 z-20 flex w-full transform-gpu flex-col items-start p-5 opacity-0 transition-all duration-300 group-hover:opacity-100">
       <div className="transform-gpu translate-y-16 transition-all duration-300 group-hover:translate-y-0">
         <Icon className="h-10 w-10 origin-left text-neutral-300" />
         <h3 className="text-lg font-semibold text-neutral-300">

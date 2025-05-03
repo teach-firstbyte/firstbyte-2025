@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { ArrowLeft, Filter, Search, X, Calendar, Users, Clock, MapPin } from "lucide-react"
+import { ArrowLeft, Filter, Search, X, Calendar, Users, Clock, MapPin, Laptop, Lightbulb, Code, Puzzle, GraduationCap, BookOpen } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -17,7 +17,6 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { cn } from "@/lib/utils"
-import Image from "next/image"
 
 interface Program {
   id: string;
@@ -316,11 +315,10 @@ export default function ProgramsPage() {
                   >
                     <Card className="h-full overflow-hidden flex flex-col">
                       <div className="relative h-48 overflow-hidden">
-                        <Image 
+                        <img 
                           src={program.image} 
                           alt={program.title}
-                          fill
-                          className="object-cover transition-transform hover:scale-105"
+                          className="object-cover transition-transform hover:scale-105 absolute inset-0 w-full h-full"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
                         <div className="absolute bottom-0 left-0 p-4">
@@ -385,11 +383,10 @@ export default function ProgramsPage() {
                     <Card className="overflow-hidden">
                       <div className="md:flex">
                         <div className="relative w-full md:w-48 h-40 md:h-auto overflow-hidden">
-                          <Image 
+                          <img 
                             src={program.image} 
                             alt={program.title}
-                            fill
-                            className="object-cover"
+                            className="object-cover absolute inset-0 w-full h-full"
                           />
                         </div>
                         <div className="p-6 flex-1">
@@ -435,11 +432,10 @@ export default function ProgramsPage() {
             <div id={program.id} key={`detail-${program.id}`} className="scroll-mt-24">
               <div className="grid md:grid-cols-2 gap-8 items-start">
                 <div className="relative aspect-video overflow-hidden rounded-lg">
-                  <Image 
+                  <img 
                     src={program.image} 
                     alt={program.title}
-                    fill
-                    className="object-cover"
+                    className="object-cover absolute inset-0 w-full h-full"
                   />
                 </div>
                 <div>

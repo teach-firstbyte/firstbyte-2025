@@ -5,7 +5,6 @@ import { Puzzle, ChevronRight, Code, Laptop, GraduationCap, Lightbulb, Users } f
 import { StarBorder } from "@/components/ui/star-border"
 import { forwardRef, useState } from "react"
 import { BentoGrid, BentoCard } from "@/components/ui/bento-grid"
-import Image from "next/image"
 import Link from "next/link"
 
 interface ProgramFeature {
@@ -134,12 +133,11 @@ export const ProgramsSection = forwardRef<HTMLElement>((props, ref) => {
                 initialY={initialY}
                 background={
                   <div className="absolute inset-0 h-full w-full">
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/20 to-black/50 z-10" />
-                    <Image
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/40 z-20 transition-opacity duration-300 group-hover:opacity-75" />
+                    <img
                       src={program.image}
                       alt={program.title}
-                      fill
-                      className="object-cover object-center"
+                      className="object-cover object-center absolute inset-0 h-full w-full transition-transform duration-300 group-hover:scale-105"
                     />
                   </div>
                 }

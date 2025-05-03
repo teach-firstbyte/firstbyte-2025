@@ -1,6 +1,10 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { motion, useAnimationControls } from "framer-motion"
+import { Linkedin, Instagram, ArrowUpRight } from "lucide-react"
+import { LinktreeIcon } from "@/components/ui/icons"
+import { useTooltip, BlurTooltip } from "@/components/ui/blur-tooltip"
+import { useEffect, useState } from "react"
 
 const scrollToSection = (id: string) => {
   const element = document.getElementById(id)
@@ -17,64 +21,98 @@ const scrollToSection = (id: string) => {
 }
 
 export function Footer() {
+  const {
+    tooltipRect,
+    tooltipContent,
+    tooltipVisible,
+    handleTooltipShow,
+    handleTooltipHide
+  } = useTooltip()
+  
+  // Animation controls for the grid lines
+  const gridControls = useAnimationControls()
+  const [isHovered, setIsHovered] = useState(false)
+  
+  // Animate grid lines
+  useEffect(() => {
+    gridControls.start({
+      opacity: isHovered ? [0.2, 0.4, 0.2] : [0.05, 0.15, 0.05],
+      scale: isHovered ? [1, 1.05, 1] : [1, 1.02, 1],
+      transition: {
+        duration: isHovered ? 2 : 4,
+        repeat: Number.POSITIVE_INFINITY,
+        ease: 'easeInOut',
+      },
+    })
+  }, [isHovered, gridControls])
+  
   return (
-    <footer className="py-12 px-4 border-t">
-      <div className="max-w-7xl mx-auto">
+    <footer 
+      className="relative py-12 px-4 border-t overflow-hidden"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* Animating grid lines with green glow */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
+        <motion.div 
+          className="absolute inset-0"
+          animate={gridControls}
+          style={{
+            background: 'radial-gradient(circle at 50% 50%, rgba(22, 163, 74, 0.15), transparent 70%)'
+          }}
+        />
+      </div>
+    
+      <div className="max-w-7xl mx-auto relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="md:col-span-2">
-            <h3 className="font-bold text-xl mb-4">FirstByte</h3>
+            <div className="flex items-center gap-2 mb-4">
+              <img 
+                src="/FirstByteBitex4.png" 
+                alt="FirstByte Logo" 
+                width={28} 
+                height={28} 
+              />
+              <h3 className="font-bold text-xl">FirstByte</h3>
+            </div>
             <p className="text-muted-foreground mb-4 max-w-md">
               Empowering the next generation through accessible, engaging, and effective computer science and STEM
               education.
             </p>
-            <div className="flex space-x-4">
+            <div className="flex space-x-6">
               <motion.a 
                 href="https://www.instagram.com/teach_firstbyte" 
                 target="_blank" 
-                className="p-2 rounded-full bg-muted hover:bg-muted/80 transition-colors"
+                className="text-foreground/80 hover:text-primary transition-colors"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
+                onMouseEnter={(e) => handleTooltipShow("Instagram", e)}
+                onMouseLeave={handleTooltipHide}
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="h-5 w-5"
-                >
-                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                </svg>
+                <Instagram className="h-5 w-5" />
               </motion.a>
               <motion.a 
                 href="https://www.linkedin.com/company/firstbyte" 
                 target="_blank" 
-                className="p-2 rounded-full bg-muted hover:bg-muted/80 transition-colors"
+                className="text-foreground/80 hover:text-primary transition-colors"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
+                onMouseEnter={(e) => handleTooltipShow("LinkedIn", e)}
+                onMouseLeave={handleTooltipHide}
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="h-5 w-5"
-                >
-                  <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-                  <rect x="2" y="9" width="4" height="12"></rect>
-                  <circle cx="4" cy="4" r="2"></circle>
-                </svg>
+                <Linkedin className="h-5 w-5" />
+              </motion.a>
+              <motion.a 
+                href="https://linktr.ee/firstbyte" 
+                target="_blank" 
+                className="text-foreground/80 hover:text-primary transition-colors"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                onMouseEnter={(e) => handleTooltipShow("Linktree", e)}
+                onMouseLeave={handleTooltipHide}
+              >
+                <LinktreeIcon className="h-5 w-5" />
               </motion.a>
             </div>
           </div>
@@ -167,18 +205,26 @@ export function Footer() {
                   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                   <circle cx="12" cy="10" r="3"></circle>
                 </svg>
-                <span className="text-muted-foreground">Northeastern University</span>
+                <div className="text-muted-foreground">
+                  <div>Northeastern University</div>
+                  <div>360 Huntington Ave</div>
+                  <div>Boston, MA 02115</div>
+                </div>
               </li>
             </ul>
           </div>
         </div>
-
-        <div className="mt-12 pt-8 border-t text-center text-sm text-muted-foreground">
-          <p>© {new Date().getFullYear()} FirstByte. All rights reserved.</p>
-          <div className="mt-2 flex justify-center space-x-6">
-          </div>
-        </div>
       </div>
+      
+      {/* Render the tooltip */}
+      {tooltipRect && (
+        <BlurTooltip
+          position={tooltipRect}
+          content={tooltipContent}
+          visible={tooltipVisible}
+          id="footer-tooltip"
+        />
+      )}
     </footer>
   )
 } 
