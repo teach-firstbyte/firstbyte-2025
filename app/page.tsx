@@ -39,9 +39,10 @@ export default function Home() {
       } else if (teamRef.current && teamRef.current instanceof HTMLElement && 
                 scrollPosition < teamRef.current.offsetTop + teamRef.current.offsetHeight) {
         setActiveSection("team")
-      } else if (contactRef.current) {
-        setActiveSection("contact")
-      }
+      } 
+      // else if (contactRef.current) {
+      //   setActiveSection("contact")
+      // }
     }
 
     window.addEventListener("scroll", handleScroll)
@@ -71,9 +72,9 @@ export default function Home() {
         ref={teamRef} 
       />
       
-      <ContactSection 
+      {/* <ContactSection 
         ref={contactRef} 
-      />
+      /> */}
       
       <Footer />
     </main>

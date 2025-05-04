@@ -8,7 +8,7 @@ import { forwardRef } from "react"
 
 export const AboutSection = forwardRef<HTMLElement>((props, ref) => {
   return (
-    <section ref={ref} id="about" className="py-20 px-4 md:px-6 lg:px-8 relative overflow-hidden">
+    <section ref={ref} id="about" className="py-10 px-4 md:px-6 lg:px-8 relative overflow-hidden">
       {/* Simple Line Grid Background */}
       <div className="absolute bottom-0 left-0 right-0 w-full h-[500px] overflow-hidden pointer-events-none">
         <div 
@@ -214,7 +214,7 @@ export const AboutSection = forwardRef<HTMLElement>((props, ref) => {
           transition={{ duration: 0.5 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Our Story</h2>
+          <h2 className="text-3xl font-semibold leading-tight sm:text-5xl sm:leading-tight">Our Story</h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             FirstByte was founded with a simple mission: to make computer science and STEM education accessible to all
             students, regardless of their background.
