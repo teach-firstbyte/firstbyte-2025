@@ -5,6 +5,7 @@ import { Linkedin, Instagram, ArrowUpRight } from "lucide-react"
 import { LinktreeIcon } from "@/components/ui/icons"
 import { useTooltip, BlurTooltip } from "@/components/ui/blur-tooltip"
 import { useEffect, useState } from "react"
+import Link from "next/link"
 
 const scrollToSection = (id: string) => {
   const element = document.getElementById(id)
@@ -172,25 +173,52 @@ export function Footer() {
             <h4 className="font-semibold text-lg mb-4">Contact Us</h4>
             <ul className="space-y-2">
               <li className="flex items-start gap-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="h-5 w-5 mt-0.5 text-muted-foreground"
-                >
-                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                  <polyline points="22,6 12,13 2,6"></polyline>
-                </svg>
-                <span className="text-muted-foreground">teachfirstbyte@gmail.com</span>
+                
+                
+                <motion.div
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                <Link
+                    href="https://mail.google.com/mail/u/0/?fs=1&tf=cm&source=mailto&to=info@firstbyte.org" 
+                    target="_blank"
+                    className="text-muted-foreground hover:text-foreground transition-colors flex flex-col">
+                    <div className="flex flex-row gap-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="h-5 w-5 mt-0.5 text-muted-foreground"
+                    >
+                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                      <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                  <div>teachfirstbyte@gmail.com</div>
+                  </div>
+                </Link>
+                </motion.div>
               </li>
               <li className="flex items-start gap-2">
-                <svg
+                
+                
+                <motion.div
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                    <Link
+                      href="https://www.google.com/maps/dir//Northeastern+University,+360+Huntington+Ave,+Boston,+MA+02115/" 
+                      target="_blank"
+                      className="text-muted-foreground hover:text-foreground transition-colors flex flex-col">
+                    <div className="flex flex-row gap-2">
+                    <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
                   height="24"
@@ -205,11 +233,14 @@ export function Footer() {
                   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                   <circle cx="12" cy="10" r="3"></circle>
                 </svg>
-                <div className="text-muted-foreground">
-                  <div>Northeastern University</div>
-                  <div>360 Huntington Ave</div>
-                  <div>Boston, MA 02115</div>
-                </div>
+                    <div className="flex flex-col">
+                    <div>Northeastern University</div>
+                    <div>360 Huntington Ave</div>
+                    <div>Boston, MA 02115</div>
+                    </div>
+                    </div>
+                  </Link>
+                </motion.div>
               </li>
             </ul>
           </div>
