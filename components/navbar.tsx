@@ -464,27 +464,26 @@ export function Navbar({ activeSection }: NavbarProps) {
                 </motion.div>
               ))}
               <motion.div 
-                className="mt-3 flex items-center justify-end"
+                className="mt-3 flex items-center justify-between"
                 variants={mobileMenuItemVariants}
               >
-                <div className="flex items-center gap-2">
-                  {/* Mobile Search Button */}
-                  <motion.button
-                    whileTap={{ scale: 0.97 }}
-                    className="flex items-center gap-1.5 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground"
-                    onClick={() => {
-                      setIsMenuOpen(false)
-                      const event = new KeyboardEvent('keydown', {
-                        key: 'k',
-                        metaKey: true,
-                        bubbles: true
-                      });
-                      document.dispatchEvent(event);
-                    }}
-                  >
+                {/* Search button moved to the left */}
+                <motion.button
+                  whileTap={{ scale: 0.97 }}
+                  className="flex items-center gap-1.5 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground"
+                  onClick={() => {
+                    setIsMenuOpen(false)
+                    const event = new KeyboardEvent('keydown', {
+                      key: 'k',
+                      metaKey: true,
+                      bubbles: true
+                    });
+                    document.dispatchEvent(event);
+                  }}
+                >
                   <Search className="h-4 w-4" />
-                  </motion.button>
-                </div>
+                </motion.button>
+                
                 <div className="flex items-center gap-3">
                   <a
                     href="https://www.instagram.com/teach_firstbyte"
