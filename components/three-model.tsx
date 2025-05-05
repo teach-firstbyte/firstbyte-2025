@@ -79,6 +79,10 @@ export function ThreeModel({ isMobile = false }: ThreeModelProps) {
           0% { opacity: 1; transform: translateX(0) translateY(-50%); }
           100% { opacity: 0; transform: translateX(-10px) translateY(-50%); }
         }
+        @keyframes bounce-gentle {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-5px); }
+        }
         .animate-shimmer {
           background-size: 1000px 100%;
           background-image: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent);
@@ -95,6 +99,12 @@ export function ThreeModel({ isMobile = false }: ThreeModelProps) {
         }
         .animate-fade-out {
           animation: fade-out 0.8s ease-out forwards;
+        }
+        .animate-bounce-gentle {
+          animation: bounce-gentle 2s infinite ease-in-out;
+        }
+        .clip-corner {
+          clip-path: polygon(0 0, 100% 0, 100% 100%);
         }
       `
       document.head.appendChild(styleSheet)
@@ -645,11 +655,17 @@ export function ThreeModel({ isMobile = false }: ThreeModelProps) {
       )}
       
       {isLoaded && showPrompt && (
-        <div className="absolute top-[20%] md:top-[25%] right-[5%] md:right-[15%] transform -translate-y-1/2 z-20 pointer-events-none animate-fade-in prompt-message">
-          <div className={`relative ${isDarkMode ? 'bg-gradient-to-br from-green-500 to-black text-white' : 'bg-gradient-to-br from-green-500 to-emerald-900 text-white'} px-3 md:px-4 py-1 md:py-2 rounded-lg shadow-lg max-w-[120px] md:max-w-[150px] animate-pulse-slow animate-glow`}>
-            <div className={`absolute left-0 top-1/2 -translate-x-2 md:-translate-x-3 -translate-y-1/2 w-2 h-2 md:w-3 md:h-3 rotate-45 ${isDarkMode ? 'bg-gradient-to-br from-green-500 to-black' : 'bg-gradient-to-br from-green-500 to-emerald-900'}`}></div>
-            <p className="text-xs md:text-sm font-medium text-center">Drag to rotate me!</p>
-            <div className={`absolute inset-0 rounded-lg ${isDarkMode ? 'bg-gradient-to-r from-green-400/0 via-green-400/20 to-black/10' : 'bg-gradient-to-r from-green-400/0 via-green-400/20 to-emerald-900/10'} animate-shimmer`}></div>
+        <div className="absolute top-[85%] md:top-[80%] left-[8%] md:left-[18%] transform -translate-y-1/2 z-20 pointer-events-none animate-fade-in prompt-message">
+          <div className="animate-bounce-gentle flex flex-col items-start space-y-1">
+            <p className="text-[10px] text-muted-foreground mb-0.5 ml-1">FirstByte</p>
+            <div className="relative bg-[#E5E5EA] dark:bg-[#2C2C2E] px-4 py-2.5 rounded-2xl rounded-bl-none shadow-lg max-w-[150px] md:max-w-[170px] 
+                          before:content-[''] before:absolute before:bottom-0 before:left-[-10px] before:w-[20px] before:h-[18px] 
+                          before:bg-[#E5E5EA] dark:before:bg-[#2C2C2E] 
+                          before:[clip-path:path('M_0_18_C_12_18_12_0_20_0_L_20_18_Z')]
+                          ">
+              <p className="text-sm md:text-base font-medium text-black dark:text-white whitespace-nowrap">Drag to rotate me!</p>
+            </div>
+            <p className="text-[10px] text-muted-foreground mt-0.5 ml-1">now</p>
           </div>
         </div>
       )}
