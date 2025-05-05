@@ -126,6 +126,29 @@ const pastBoards: PastBoard[] = [
   // createPastBoard("2024", "2024 Leadership"),
 ];
 
+// Hook to detect mobile devices
+const useIsMobile = () => {
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    // Function to check if the device is mobile based on screen width
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    // Initial check
+    checkMobile();
+    
+    // Add event listener for resize
+    window.addEventListener('resize', checkMobile);
+    
+    // Cleanup
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+  
+  return isMobile;
+};
+
 // Portal component for tooltips
 function TooltipPortal({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false)
@@ -198,10 +221,11 @@ function TeamMemberCard({ member, index, noStaggerDelay = false }: TeamMemberCar
   const [tooltipVisible, setTooltipVisible] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [hoveredSocialUrl, setHoveredSocialUrl] = useState<string | null>(null)
+  const isMobile = useIsMobile();
   
-  // Handle mouse movement for tooltip
+  // Handle mouse movement for tooltip - only on desktop
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (isHovered) {
+    if (isHovered && !isMobile) {
       setMemberTooltipPosition({
         x: e.clientX,
         y: e.clientY + 15 // Position below cursor
@@ -209,19 +233,23 @@ function TeamMemberCard({ member, index, noStaggerDelay = false }: TeamMemberCar
     }
   };
   
-  // Show tooltip on hover
+  // Show tooltip on hover - only on desktop
   const handleMouseEnter = () => {
-    setIsHovered(true);
-    setTooltipVisible(true);
+    if (!isMobile) {
+      setIsHovered(true);
+      setTooltipVisible(true);
+    }
   };
   
-  // Handle mouse enter with position update
+  // Handle mouse enter with position update - only on desktop
   const handleDivMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
-    handleMouseEnter();
-    setMemberTooltipPosition({
-      x: e.clientX,
-      y: e.clientY + 15
-    });
+    if (!isMobile) {
+      handleMouseEnter();
+      setMemberTooltipPosition({
+        x: e.clientX,
+        y: e.clientY + 15
+      });
+    }
   };
   
   // Hide tooltip when not hovering
@@ -231,12 +259,14 @@ function TeamMemberCard({ member, index, noStaggerDelay = false }: TeamMemberCar
     setHoveredSocialUrl(null);
   };
   
-  // Handle social icon hover
+  // Handle social icon hover - only on desktop
   const handleSocialHover = (
     type: 'linkedin' | 'github' | 'twitter' | 'website',
     url: string, 
     event: React.MouseEvent<HTMLElement>
   ) => {
+    if (isMobile) return;
+    
     // Set the social URL to show
     setHoveredSocialUrl(url);
     
@@ -381,7 +411,7 @@ function TeamMemberCard({ member, index, noStaggerDelay = false }: TeamMemberCar
           ease: [0.19, 1, 0.22, 1]
         }}
         whileHover={{ 
-          y: -8,
+          y: isMobile ? 0 : -8,
           transition: { duration: 0.3, ease: "easeOut" }
         }}
         onHoverStart={() => handleMouseEnter()}
@@ -504,8 +534,8 @@ function TeamMemberCard({ member, index, noStaggerDelay = false }: TeamMemberCar
         </Card>
       </motion.div>
       
-      {/* Blur Tooltip */}
-      {memberTooltipPosition && (
+      {/* Blur Tooltip - only show on desktop */}
+      {!isMobile && memberTooltipPosition && (
         <BlurTooltip
           position={memberTooltipPosition}
           content={hoveredSocialUrl || `Learn more about ${member.name}`}
@@ -647,7 +677,8 @@ const getTeamPhotoForYear = (year: string): { image: string, description: string
 };
 
 function CardStack({ board, index }: { board: PastBoard; index: number }) {
-  const [isExpanded, setIsExpanded] = useState(false)
+  const isMobile = useIsMobile();
+  const [isExpanded, setIsExpanded] = useState(isMobile) // Default to expanded on mobile
   const [focusedMember, setFocusedMember] = useState<number | null>(null)
   const [hoveredMemberIndex, setHoveredMemberIndex] = useState<number | null>(null)
   const [cardTooltipRect, setCardTooltipRect] = useState<TooltipPosition | null>(null)
@@ -661,6 +692,13 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
   
   // Refs to track tooltip cleanup timers
   const memberTooltipTimer = React.useRef<NodeJS.Timeout | null>(null)
+  
+  // Effect to update expanded state when isMobile changes
+  useEffect(() => {
+    if (isMobile) {
+      setIsExpanded(true);
+    }
+  }, [isMobile]);
   
   // Framer Motion values for tooltip animation
   const springConfig = { stiffness: 100, damping: 5 };
@@ -676,7 +714,7 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
   
   // Handle mouse enter on member card
   const handleMouseEnter = (index: number, event: React.MouseEvent<HTMLDivElement>) => {
-    if (isTransitioning) return;
+    if (isTransitioning || isMobile) return;
     
     // Clear any pending timeout for member tooltip cleanup
     if (memberTooltipTimer.current) {
@@ -719,8 +757,19 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
     url: string, 
     event: React.MouseEvent<HTMLElement>
   ) => {
+    if (isMobile) return;
+    
     // Set the social URL to show
     setHoveredSocialUrl(url);
+    
+    // Update position
+    setCardTooltipRect({
+      x: event.clientX,
+      y: event.clientY + 15
+    });
+    
+    // Make sure tooltip is visible
+    setMemberTooltipVisible(true);
     
     // Prevent parent tooltip from showing
     event.stopPropagation();
@@ -950,9 +999,9 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
       >
         {/* Card Stack */}
         <div className="relative">
-          {/* Stacked background cards for visual effect */}
+          {/* Stacked background cards for visual effect - hide on mobile */}
           <AnimatePresence>
-            {!isExpanded && (
+            {!isExpanded && !isMobile && (
               <>
                 <motion.div 
                   key="bg-card-1"
@@ -981,10 +1030,11 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
           >
             <Card 
               className={cn(
-                "relative z-10 transition-shadow duration-300 shadow-md border-2 border-transparent hover:border-primary/20 cursor-pointer",
-                isExpanded ? "w-full" : "aspect-square sm:aspect-auto"
+                "relative z-10 transition-shadow duration-300 shadow-md border-2 border-transparent hover:border-primary/20",
+                isExpanded ? "w-full" : "aspect-square sm:aspect-auto",
+                !isExpanded && !isMobile ? "cursor-pointer" : ""
               )}
-              onClick={() => !isExpanded && setIsExpanded(true)}
+              onClick={() => !isExpanded && !isMobile && setIsExpanded(true)}
             >
               <motion.div 
                 layout
@@ -1001,29 +1051,31 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
                       <span>{board.year}</span>
                     </div>
                   </div>
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (isExpanded) {
-                        // First hide the focused member if any
-                        setFocusedMember(null);
-                        // Then close the card after a short delay
-                        setTimeout(() => {
-                          setIsExpanded(false);
-                        }, 200);
-                      } else {
-                        setIsExpanded(true);
-                      }
-                    }}
-                    className="bg-primary/10 hover:bg-primary/20 rounded-full p-2 transition-colors"
-                  >
-                    <ChevronDown className={cn(
-                      "h-4 w-4 transition-transform duration-300",
-                      isExpanded ? "rotate-180" : ""
-                    )} />
-                  </motion.button>
+                  {!isMobile && (
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (isExpanded) {
+                          // First hide the focused member if any
+                          setFocusedMember(null);
+                          // Then close the card after a short delay
+                          setTimeout(() => {
+                            setIsExpanded(false);
+                          }, 200);
+                        } else {
+                          setIsExpanded(true);
+                        }
+                      }}
+                      className="bg-primary/10 hover:bg-primary/20 rounded-full p-2 transition-colors"
+                    >
+                      <ChevronDown className={cn(
+                        "h-4 w-4 transition-transform duration-300",
+                        isExpanded ? "rotate-180" : ""
+                      )} />
+                    </motion.button>
+                  )}
                 </div>
                 
                 <AnimatePresence mode="wait">
@@ -1217,7 +1269,7 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
                       {/* Show all members with AnimatedTooltip hover effect */}
                       <div className="mt-4">
                         <h4 className="text-sm font-medium mb-3">{board.members.length} Team Members</h4>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                        <div className="grid grid-cols-1 gap-3">
                           {board.members.map((member, i) => (
                             <motion.div
                               key={i}
@@ -1231,7 +1283,7 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
                                 }
                               }}
                               whileHover={{ 
-                                y: -4,
+                                y: isMobile ? 0 : -4,
                                 transition: { duration: 0.2 }
                               }}
                               className={cn(
@@ -1251,7 +1303,10 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
                               >
                                 <div className="flex items-center p-3 gap-3 relative group">
                                   <Avatar 
-                                    className="h-12 w-12 hover:scale-110 transition-transform duration-200 cursor-pointer"
+                                    className={cn(
+                                      "transition-transform duration-200 cursor-pointer",
+                                      isMobile ? "h-14 w-14" : "h-12 w-12 hover:scale-110"
+                                    )}
                                     onClick={(e) => {
                                       e.stopPropagation();
                                       setFocusedMember(i);
@@ -1266,10 +1321,16 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
                                     )}
                                   </Avatar>
                                   <div className="flex-1 min-w-0">
-                                    <h4 className="font-medium text-sm truncate">{member.name}</h4>
-                                    <p className="text-xs text-muted-foreground truncate">{member.role}</p>
+                                    <h4 className={cn(
+                                      "font-medium truncate",
+                                      isMobile ? "text-base" : "text-sm"
+                                    )}>{member.name}</h4>
+                                    <p className={cn(
+                                      "text-muted-foreground truncate",
+                                      isMobile ? "text-sm" : "text-xs"
+                                    )}>{member.role}</p>
                                   </div>
-                                  <div className="flex gap-1">
+                                  <div className="flex gap-2">
                                     {member.linkedin && (
                                       <Link 
                                         href={member.linkedin} 
@@ -1279,8 +1340,13 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
                                         onMouseEnter={(e) => handleSocialHover('linkedin', member.linkedin!, e)}
                                         onMouseLeave={handleSocialLeave}
                                       >
-                                        <div className="p-1 text-muted-foreground hover:text-primary">
-                                          <Linkedin className="h-3 w-3" />
+                                        <div className={cn(
+                                          "text-muted-foreground hover:text-primary",
+                                          isMobile ? "p-2" : "p-1"
+                                        )}>
+                                          <Linkedin className={cn(
+                                            isMobile ? "h-4 w-4" : "h-3 w-3"
+                                          )} />
                                         </div>
                                       </Link>
                                     )}
@@ -1293,8 +1359,13 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
                                         onMouseEnter={(e) => handleSocialHover('github', member.github!, e)}
                                         onMouseLeave={handleSocialLeave}
                                       >
-                                        <div className="p-1 text-muted-foreground hover:text-primary">
-                                          <Github className="h-3 w-3" />
+                                        <div className={cn(
+                                          "text-muted-foreground hover:text-primary",
+                                          isMobile ? "p-2" : "p-1"
+                                        )}>
+                                          <Github className={cn(
+                                            isMobile ? "h-4 w-4" : "h-3 w-3"
+                                          )} />
                                         </div>
                                       </Link>
                                     )}
@@ -1307,8 +1378,13 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
                                         onMouseEnter={(e) => handleSocialHover('website', member.website!, e)}
                                         onMouseLeave={handleSocialLeave}
                                       >
-                                        <div className="p-1 text-muted-foreground hover:text-primary">
-                                          <Globe className="h-3 w-3" />
+                                        <div className={cn(
+                                          "text-muted-foreground hover:text-primary",
+                                          isMobile ? "p-2" : "p-1"
+                                        )}>
+                                          <Globe className={cn(
+                                            isMobile ? "h-4 w-4" : "h-3 w-3"
+                                          )} />
                                         </div>
                                       </Link>
                                     )}
@@ -1321,8 +1397,13 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
                                         onMouseEnter={(e) => handleSocialHover('twitter', member.twitter!, e)}
                                         onMouseLeave={handleSocialLeave}
                                       >
-                                        <div className="p-1 text-muted-foreground hover:text-primary">
-                                          <Twitter className="h-3 w-3" />
+                                        <div className={cn(
+                                          "text-muted-foreground hover:text-primary",
+                                          isMobile ? "p-2" : "p-1"
+                                        )}>
+                                          <Twitter className={cn(
+                                            isMobile ? "h-4 w-4" : "h-3 w-3"
+                                          )} />
                                         </div>
                                       </Link>
                                     )}
@@ -1337,7 +1418,7 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
                   )}
                 </AnimatePresence>
                 
-                {!isExpanded && (
+                {!isExpanded && !isMobile && (
                   <div className="text-xs text-muted-foreground mt-4">
                     <span className="font-medium">{board.members.length} members</span> • Click to expand
                   </div>
@@ -1348,8 +1429,8 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
         </div>
       </div>
       
-      {/* Member tooltip using ClassicTooltip */}
-      {hoveredMemberIndex !== null && cardTooltipRect && isExpanded && (
+      {/* Member tooltip using ClassicTooltip - only show on desktop */}
+      {!isMobile && hoveredMemberIndex !== null && cardTooltipRect && isExpanded && (
         <div>
           <ClassicTooltip
             position={cardTooltipRect}
@@ -1367,6 +1448,7 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
 export const TeamSection = forwardRef<HTMLElement, TeamSectionProps>(({ className }, ref) => {
   const [visibleCount, setVisibleCount] = useState(8)
   const [showingMore, setShowingMore] = useState(false)
+  const isMobile = useIsMobile();
   
   const handleShowMore = () => {
     setShowingMore(true)
@@ -1383,7 +1465,7 @@ export const TeamSection = forwardRef<HTMLElement, TeamSectionProps>(({ classNam
   return (
     <section ref={ref} id="team" className={cn("bg-[hsl(var(--gray-50))] text-foreground py-10 overflow-hidden bg-dots-light", className)}>
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
-        <div className="grid md:grid-cols-2 gap-8 mb-12">
+        <div className="grid md:grid-cols-2 gap-4 md:gap-8 mb-12">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
