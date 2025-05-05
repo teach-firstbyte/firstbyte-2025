@@ -9,7 +9,8 @@ import dynamic from 'next/dynamic'
 import { forwardRef, useEffect, useState } from "react"
 import { cn } from "@/lib/utils"
 import { useTheme } from "next-themes"
-import { AnimatedGlowButton } from "@/components/ui/animated-glow-button"
+import Link from "next/link"
+import { AnimatedGlowButton } from "./ui/animated-glow-button"
 
 // Dynamically import ThreeModel with ssr disabled
 const ThreeModel = dynamic(() => import('@/components/three-model').then(mod => mod.ThreeModel), {
@@ -158,12 +159,21 @@ export const HeroSection = forwardRef<HTMLElement, HeroSectionProps>(
                     <p className="text-xl md:text-2xl my-4 text-muted-foreground leading-relaxed">
                       Empowering the next generation through CS & STEM education
                     </p>
-                    <div className="flex flex-wrap gap-4 justify-end pr-10 md:pr-16">
-                      <AnimatedGlowButton 
-                        color="green" 
+                    
+                    <div className="flex flex-wrap gap-4 justify-center">
+                        <AnimatedGlowButton
+                          href="https://docs.google.com/forms/d/e/1FAIpQLScwDqGMrnM-M2-3MiaBXQQLhIusP1nk6izdAieHM-qmiyhqAQ/viewform?usp=dialog"
+                          className="group text-sm inline-flex"
+                          color="light green" 
+                        >
+                        Partnerships{" "}
+                        <ChevronRight className="ml-2 h-4 w-4 inline-block group-hover:translate-x-1 transition-transform" />
+                        </AnimatedGlowButton>
+                        <AnimatedGlowButton 
+                        color="light green" 
                         href="https://docs.google.com/forms/d/e/1FAIpQLSf1BCJAfHPWxypcqdFvHBKm5jYJcnTFwrbj2l_RCfskubxOmA/viewform?usp=sharing" 
                         className="group text-sm inline-flex"
-                      >
+                        >
                         Join Us{" "}
                         <ChevronRight className="ml-2 h-4 w-4 inline-block group-hover:translate-x-1 transition-transform" />
                       </AnimatedGlowButton>

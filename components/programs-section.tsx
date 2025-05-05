@@ -63,7 +63,7 @@ const programs: ProgramFeature[] = [
 
 export const ProgramsSection = forwardRef<HTMLElement>((props, ref) => {
   return (
-    <section ref={ref} id="programs" className="py-20 px-4 md:px-6 lg:px-8 bg-[hsl(var(--gray-200))] relative overflow-hidden">
+    <section ref={ref} id="programs" className="py-10 px-4 md:px-6 lg:px-8 bg-[hsl(var(--gray-200))] relative overflow-hidden">
       {/* Simple Line Grid Background */}
       <div className="absolute top-0 left-0 right-0 w-full h-[600px] overflow-hidden pointer-events-none">
         <div 
@@ -294,7 +294,7 @@ export const ProgramsSection = forwardRef<HTMLElement>((props, ref) => {
             viewport={{ once: true }}
             className="self-end"
           >
-            <h2 className="text-3xl md:text-4xl font-bold">What We Do</h2>
+            <h2 className="text-3xl font-semibold leading-tight sm:text-5xl sm:leading-tight">What We Do</h2>
           </motion.div>
           
           <motion.div
