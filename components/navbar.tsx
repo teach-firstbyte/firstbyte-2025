@@ -164,6 +164,7 @@ export function Navbar({ activeSection }: NavbarProps) {
     }
   }
 
+  // Updated animation variants for the mobile menu
   const mobileMenuVariants = {
     open: {
       opacity: 1,
@@ -201,13 +202,13 @@ export function Navbar({ activeSection }: NavbarProps) {
   }
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 pointer-events-none">
-      <div className="container mx-auto px-4 md:px-6 lg:px-8">
+    <div className="fixed top-0 left-0 right-0 z-50 pointer-events-none overflow-x-hidden w-full">
+      <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-full">
         <div className="flex justify-between items-start py-6 md:py-10">
           {/* Pill navbar in top right */}
           <motion.div
             ref={navRef}
-            className={`pointer-events-auto backdrop-blur-lg border border-border/60 shadow-sm overflow-hidden z-10 ml-auto flex`}
+            className={`pointer-events-auto backdrop-blur-lg border border-border/60 shadow-sm overflow-hidden z-50 ml-auto flex max-w-[95%]`}
             initial="initial"
             animate={pastHero ? "scrolled" : "initial"}
             variants={pillVariants}
@@ -366,7 +367,7 @@ export function Navbar({ activeSection }: NavbarProps) {
               </HighlightGroup>
 
               <motion.button
-                className="md:hidden flex"
+                className="md:hidden flex z-50 pointer-events-auto relative"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 whileTap={{ scale: 0.9 }}
                 transition={{ duration: 0.2 }}
@@ -400,22 +401,45 @@ export function Navbar({ activeSection }: NavbarProps) {
         </div>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile menu - updated positioning and blur effect */}
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
-            className="md:hidden pointer-events-auto overflow-hidden bg-background/98 backdrop-blur-lg border-b border-border/60 shadow-sm"
+            className="md:hidden pointer-events-auto fixed top-0 left-0 right-0 bg-background/90 backdrop-blur-lg border-b border-border/60 shadow-sm w-full z-40"
             initial="closed"
             animate="open"
             exit="closed"
             variants={mobileMenuVariants}
           >
-            <nav className="flex flex-col gap-2 p-4">
+            {/* Mobile menu header with logo - aligned with navbar */}
+            <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-full">
+              <div className="flex justify-between items-center py-6">
+                <motion.div 
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="flex items-center gap-3 pointer-events-auto"
+                >
+                  <Image 
+                    src="/FirstByteBitex4.png" 
+                    alt="FirstByte Logo" 
+                    width={28} 
+                    height={28} 
+                    className="w-7 h-7"
+                  />
+                  <span className="font-semibold text-lg">FirstByte</span>
+                </motion.div>
+                {/* Empty div to maintain spacing, actual button is in the navbar */}
+                <div className="w-12 h-12"></div>
+              </div>
+            </div>
+
+            <nav className="flex flex-col gap-2 px-4 pt-0 mt-1 pb-4">
               {navLinks.map((link) => (
                 <motion.div key={link.name} variants={mobileMenuItemVariants}>
                   <Link
                     href={link.href}
-                    className={`block px-4 py-3 text-sm font-medium rounded-md transition-all duration-300 relative ${
+                    className={`block px-4 py-3 text-sm font-medium rounded-md transition-all duration-300 relative text-right ${
                       activeSection === link.section 
                         ? "text-primary" 
                         : "text-foreground/80 hover:text-primary"
@@ -426,14 +450,16 @@ export function Navbar({ activeSection }: NavbarProps) {
                       setIsMenuOpen(false);
                     }}
                   >
-                    {link.name}
-                    {activeSection === link.section && (
-                      <motion.div 
-                        className="absolute bottom-0 left-0 w-12 h-[2px] bg-primary" 
-                        layoutId="mobileActiveSection"
-                        transition={{ duration: 0.3, ease: "easeInOut" }}
-                      />
-                    )}
+                    <div className="relative inline-block">
+                      {link.name}
+                      {activeSection === link.section && (
+                        <motion.div 
+                          className="absolute -bottom-1 left-0 right-0 h-[2px] bg-primary" 
+                          layoutId="mobileActiveSection"
+                          transition={{ duration: 0.3, ease: "easeInOut" }}
+                        />
+                      )}
+                    </div>
                   </Link>
                 </motion.div>
               ))}

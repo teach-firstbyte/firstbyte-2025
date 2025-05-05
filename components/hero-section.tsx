@@ -130,7 +130,7 @@ export const HeroSection = forwardRef<HTMLElement, HeroSectionProps>(
     }, [])
 
     return (
-      <section ref={ref} id="home" className="min-h-[100vh] w-full relative pt-24 md:pt-32 pb-32">
+      <section ref={ref} id="home" className="min-h-[100vh] w-full relative pt-24 md:pt-32 pb-32 overflow-x-hidden">
         {/* Background particles - only render on client */}
         {isClient && (
           <Particles
