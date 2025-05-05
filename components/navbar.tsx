@@ -320,6 +320,23 @@ export function Navbar({ activeSection }: NavbarProps) {
                           <Linkedin className="h-5 w-5" />
                         </motion.div>
                       </a>
+                      <a
+                        href="https://linktr.ee/firstbyte"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-foreground/80 hover:text-primary transition-colors"
+                        style={{ opacity: 1, transition: 'opacity 0.3s ease-in-out' }}
+                        onMouseEnter={(e) => handleTooltipShow("Linktree", e)}
+                        onMouseLeave={handleTooltipHide}
+                      >
+                        <motion.div
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <LinktreeIcon className="h-5 w-5" />
+                        </motion.div>
+                      </a>
                       </div>
                     </div>
                   </div>
