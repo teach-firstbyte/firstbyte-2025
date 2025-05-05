@@ -1269,7 +1269,10 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
                       {/* Show all members with AnimatedTooltip hover effect */}
                       <div className="mt-4">
                         <h4 className="text-sm font-medium mb-3">{board.members.length} Team Members</h4>
-                        <div className="grid grid-cols-1 gap-3">
+                        <div className={cn(
+                          "grid gap-3",
+                          isMobile ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4" 
+                        )}>
                           {board.members.map((member, i) => (
                             <motion.div
                               key={i}
@@ -1330,7 +1333,10 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
                                       isMobile ? "text-sm" : "text-xs"
                                     )}>{member.role}</p>
                                   </div>
-                                  <div className="flex gap-2">
+                                  <div className={cn(
+                                    "flex",
+                                    isMobile ? "gap-2" : "gap-1"
+                                  )}>
                                     {member.linkedin && (
                                       <Link 
                                         href={member.linkedin} 
