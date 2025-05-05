@@ -33,7 +33,24 @@ export function AnimatedGlowButton<T extends ElementType = "button">({
   ...props
 }: AnimatedGlowButtonProps<T> & Omit<ComponentPropsWithoutRef<T>, keyof AnimatedGlowButtonProps<T>>) {
   const [isHovered, setIsHovered] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const glowControls = useAnimationControls();
+  
+  // Check if device is mobile
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    // Initial check
+    checkIfMobile();
+    
+    // Add event listener for window resize
+    window.addEventListener('resize', checkIfMobile);
+    
+    // Cleanup
+    return () => window.removeEventListener('resize', checkIfMobile);
+  }, []);
   
   // Determine color values based on the color prop
   const getColorValues = () => {
@@ -127,16 +144,19 @@ export function AnimatedGlowButton<T extends ElementType = "button">({
   const colors = customGlowColor || colorValues;
 
   useEffect(() => {
+    // On mobile, always show animation regardless of hover state
+    const shouldAnimate = isMobile || isHovered;
+    
     glowControls.start({
-      opacity: isHovered ? [0.25, 0.45, 0.25] : [0.07, 0.2, 0.07],
-      scale: isHovered ? [1.01, 1.04, 1.01] : [1, 1.02, 1],
+      opacity: shouldAnimate ? [0.25, 0.45, 0.25] : [0.07, 0.2, 0.07],
+      scale: shouldAnimate ? [1.01, 1.04, 1.01] : [1, 1.02, 1],
       transition: {
-        duration: isHovered ? 2 : 4,
+        duration: shouldAnimate ? 2 : 4,
         repeat: Number.POSITIVE_INFINITY,
         ease: 'easeInOut',
       },
     });
-  }, [isHovered, glowControls]);
+  }, [isHovered, isMobile, glowControls]);
 
   // If we have title and description, use the card layout
   const hasCardLayout = Boolean(title || description);
@@ -157,6 +177,9 @@ export function AnimatedGlowButton<T extends ElementType = "button">({
     ...(Component === 'button' && { disabled: isDisabled }),
     ...props
   } as any;
+
+  // Calculate if animation should be active (either on hover or mobile)
+  const isAnimationActive = isMobile || (isHovered && !isDisabled);
 
   // Render component with either card or simple button layout
   const renderCardLayout = () => {
@@ -180,7 +203,7 @@ export function AnimatedGlowButton<T extends ElementType = "button">({
             animate={glowControls}
           />
 
-          {isHovered && !isDisabled && (
+          {isAnimationActive && (
             <>
               <motion.div
                 className={`absolute left-1/4 top-0 h-1 w-1 rounded-full ${colors.particleColor}`}
@@ -266,22 +289,22 @@ export function AnimatedGlowButton<T extends ElementType = "button">({
               <motion.div
                 className={`absolute inset-0 rounded-lg ${colors.bgGlow} opacity-70 blur-md`}
                 animate={{
-                  opacity: isHovered && !isDisabled ? [0.4, 0.7, 0.4] : [0.3, 0.5, 0.3],
-                  scale: isHovered && !isDisabled ? [1, 1.1, 1] : [1, 1.05, 1],
+                  opacity: isAnimationActive ? [0.4, 0.7, 0.4] : [0.3, 0.5, 0.3],
+                  scale: isAnimationActive ? [1, 1.1, 1] : [1, 1.05, 1],
                 }}
                 transition={{
-                  duration: isHovered ? 2 : 3,
+                  duration: isAnimationActive ? 2 : 3,
                   repeat: Number.POSITIVE_INFINITY,
                   ease: 'easeInOut',
                 }}
               />
               <motion.div
                 animate={{
-                  rotate: isHovered && !isDisabled ? [0, 3, 0, -3, 0] : 0,
+                  rotate: isAnimationActive ? [0, 3, 0, -3, 0] : 0,
                 }}
                 transition={{
                   duration: 2.5,
-                  repeat: isHovered && !isDisabled ? Number.POSITIVE_INFINITY : 0,
+                  repeat: isAnimationActive ? Number.POSITIVE_INFINITY : 0,
                   ease: 'easeInOut',
                 }}
               >
@@ -293,7 +316,7 @@ export function AnimatedGlowButton<T extends ElementType = "button">({
               <motion.h3
                 className="text-sm font-medium text-foreground"
                 animate={{
-                  textShadow: isHovered && !isDisabled
+                  textShadow: isAnimationActive
                     ? [
                         '0 0 0px rgba(255,255,255,0)',
                         `0 0 5px ${colors.textShadow}`,
@@ -303,7 +326,7 @@ export function AnimatedGlowButton<T extends ElementType = "button">({
                 }}
                 transition={{
                   duration: 2.5,
-                  repeat: isHovered && !isDisabled ? Number.POSITIVE_INFINITY : 0,
+                  repeat: isAnimationActive ? Number.POSITIVE_INFINITY : 0,
                 }}
               >
                 {title || children}
@@ -317,18 +340,18 @@ export function AnimatedGlowButton<T extends ElementType = "button">({
 
             <motion.div
               animate={{
-                x: isHovered && !isDisabled ? [0, 3, 0] : 0,
-                opacity: isHovered && !isDisabled ? [0.7, 0.9, 0.7] : 0.7,
+                x: isAnimationActive ? [0, 3, 0] : 0,
+                opacity: isAnimationActive ? [0.7, 0.9, 0.7] : 0.7,
               }}
               transition={{
                 x: {
                   duration: 2,
-                  repeat: isHovered && !isDisabled ? Number.POSITIVE_INFINITY : 0,
+                  repeat: isAnimationActive ? Number.POSITIVE_INFINITY : 0,
                   ease: 'easeInOut',
                 },
                 opacity: {
                   duration: 2,
-                  repeat: isHovered && !isDisabled ? Number.POSITIVE_INFINITY : 0,
+                  repeat: isAnimationActive ? Number.POSITIVE_INFINITY : 0,
                   ease: 'easeInOut',
                 },
               }}
@@ -365,7 +388,7 @@ export function AnimatedGlowButton<T extends ElementType = "button">({
             animate={glowControls}
           />
 
-          {isHovered && !isDisabled && (
+          {isAnimationActive && (
             <>
               <motion.div
                 className={`absolute left-1/4 top-0 h-1 w-1 rounded-full ${colors.particleColor}`}
@@ -463,7 +486,7 @@ export function AnimatedGlowButton<T extends ElementType = "button">({
         <motion.span
           className="relative z-10 flex items-center justify-center gap-1.5"
           animate={{
-            textShadow: isHovered && !isDisabled
+            textShadow: isAnimationActive
               ? [
                   '0 0 0px rgba(255,255,255,0)',
                   `0 0 5px ${colors.textShadow}`,
@@ -473,7 +496,7 @@ export function AnimatedGlowButton<T extends ElementType = "button">({
           }}
           transition={{
             duration: 2.5,
-            repeat: isHovered && !isDisabled ? Number.POSITIVE_INFINITY : 0,
+            repeat: isAnimationActive ? Number.POSITIVE_INFINITY : 0,
           }}
         >
           {children}

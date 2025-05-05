@@ -97,16 +97,16 @@ const createPastBoard = (year: string, title: string): PastBoard => {
 };
 
 // Define specific order for founding team
-const foundingTeamOrder = ["Andy Ge", "Win Tongtawee", "Caleb Lee", "Landyn Sparacino", "Jennifer Esfahany", "Srikar Ananthoju"];
+const revivalTeamOrder = ["Andy Ge", "Win Tongtawee", "Caleb Lee", "Landyn Sparacino", "Jennifer Esfahany", "Srikar Ananthoju"];
 
 // Create past board entries with custom ordering for founding team
 const pastBoards: PastBoard[] = [
   {
-    ...createPastBoard("2022", "Founding Team"),
+    ...createPastBoard("2022", "Revival Team"),
     // Sort members according to the specified order
-    members: createPastBoard("2022", "Founding Team").members.sort((a, b) => {
-      const indexA = foundingTeamOrder.indexOf(a.name);
-      const indexB = foundingTeamOrder.indexOf(b.name);
+    members: createPastBoard("2022", "Revival Team").members.sort((a, b) => {
+      const indexA = revivalTeamOrder.indexOf(a.name);
+      const indexB = revivalTeamOrder.indexOf(b.name);
       
       // If both names are in the order list, sort by their position
       if (indexA !== -1 && indexB !== -1) {

@@ -38,7 +38,7 @@ const formatTeamMembersForDisplay = () => {
     const isCurrent = member.years?.includes("2024") || member.years?.includes("2025") || false;
     
     let board = "";
-    if (isFounder) board = "Founding Team";
+    if (isFounder) board = "Revival Team";
     else if (isCurrent) board = "Current E-Board";
     
     return {
