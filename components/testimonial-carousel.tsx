@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import Image from "next/image"
 
 const testimonials = [
   {
@@ -80,9 +81,11 @@ export function TestimonialCarousel() {
             <Card className="max-w-3xl mx-auto bg-muted/30">
               <CardContent className="pt-6">
                 <div className="mb-4">
-                  <img
+                  <Image
                     src={testimonials[current].image || "/placeholder.svg"}
                     alt={testimonials[current].name}
+                    width={80}
+                    height={80}
                     className="w-20 h-20 rounded-full mx-auto"
                   />
                 </div>

@@ -14,6 +14,7 @@ import teamData from "@/data/team.json"
 import { AnimatedGlowButton } from "@/components/ui/animated-glow-button"
 import { BlurTooltip, TooltipPosition } from "@/components/ui/blur-tooltip"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import Image from "next/image"
 
 interface TeamMember {
   name: string
@@ -533,9 +534,11 @@ function TeamMemberCard({ member, index, noStaggerDelay = false }: TeamMemberCar
               <div className="w-full md:w-1/3 max-w-[200px] mx-auto md:mx-0">
                 <div className="aspect-square w-full overflow-hidden rounded-md border border-border/20">
                   {member.image ? (
-                    <img 
+                    <Image 
                       src={member.circularImage || member.image} 
                       alt={member.name}
+                      width={200}
+                      height={200}
                       className="h-full w-full object-cover object-center"
                     />
                   ) : (
@@ -1197,9 +1200,11 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
                           className="mb-6"
                         >
                           <div className="relative aspect-video overflow-hidden rounded-lg border mb-2">
-                            <img 
+                            <Image 
                               src={teamPhoto.image} 
                               alt={teamPhoto.description}
+                              width={800}
+                              height={450}
                               className="object-cover"
                             />
                           </div>

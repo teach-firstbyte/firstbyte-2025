@@ -5,6 +5,7 @@ import { Linkedin, Instagram, ArrowUpRight } from "lucide-react"
 import { LinktreeIcon } from "@/components/ui/icons"
 import { useTooltip, BlurTooltip } from "@/components/ui/blur-tooltip"
 import { useEffect, useState } from "react"
+import Image from "next/image"
 
 const scrollToSection = (id: string) => {
   const element = document.getElementById(id)
@@ -68,7 +69,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="md:col-span-2">
             <div className="flex items-center gap-2 mb-4">
-              <img 
+              <Image 
                 src="/FirstByteBitex4.png" 
                 alt="FirstByte Logo" 
                 width={28} 

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { motion } from "framer-motion"
 import { ArrowLeft, Filter, Search, X, Calendar, Users, Clock, MapPin, Laptop, Lightbulb, Code, Puzzle, GraduationCap, BookOpen } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -315,9 +316,11 @@ export default function ProgramsPage() {
                   >
                     <Card className="h-full overflow-hidden flex flex-col">
                       <div className="relative h-48 overflow-hidden">
-                        <img 
+                        <Image 
                           src={program.image} 
                           alt={program.title}
+                          width={500}
+                          height={300}
                           className="object-cover transition-transform hover:scale-105 absolute inset-0 w-full h-full"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
@@ -383,9 +386,11 @@ export default function ProgramsPage() {
                     <Card className="overflow-hidden">
                       <div className="md:flex">
                         <div className="relative w-full md:w-48 h-40 md:h-auto overflow-hidden">
-                          <img 
+                          <Image 
                             src={program.image} 
                             alt={program.title}
+                            width={500}
+                            height={300}
                             className="object-cover absolute inset-0 w-full h-full"
                           />
                         </div>
@@ -432,9 +437,11 @@ export default function ProgramsPage() {
             <div id={program.id} key={`detail-${program.id}`} className="scroll-mt-24">
               <div className="grid md:grid-cols-2 gap-8 items-start">
                 <div className="relative aspect-video overflow-hidden rounded-lg">
-                  <img 
+                  <Image 
                     src={program.image} 
                     alt={program.title}
+                    width={500}
+                    height={300}
                     className="object-cover absolute inset-0 w-full h-full"
                   />
                 </div>

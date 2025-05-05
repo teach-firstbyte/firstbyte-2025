@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils"
+import Image from "next/image"
 
 export interface TestimonialAuthor {
   name: string
@@ -28,9 +29,11 @@ export function TestimonialCard({ author, text, href, className }: TestimonialCa
       </div>
       <div className="mt-6 flex items-center gap-3">
         {author.avatar ? (
-          <img
+          <Image
             src={author.avatar || "/placeholder.svg"}
             alt={author.name}
+            width={40}
+            height={40}
             className="h-10 w-10 rounded-full object-cover"
           />
         ) : (

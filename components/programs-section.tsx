@@ -6,6 +6,7 @@ import { StarBorder } from "@/components/ui/star-border"
 import { forwardRef, useState } from "react"
 import { BentoGrid, BentoCard } from "@/components/ui/bento-grid"
 import Link from "next/link"
+import Image from "next/image"
 
 interface ProgramFeature {
   title: string;
@@ -365,9 +366,11 @@ export const ProgramsSection = forwardRef<HTMLElement>((props, ref) => {
                 background={
                   <div className="absolute inset-0 h-full w-full">
                     <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/40 z-20 transition-opacity duration-300 group-hover:opacity-75" />
-                    <img
+                    <Image
                       src={program.image}
                       alt={program.title}
+                      width={500}
+                      height={300}
                       className="object-cover object-center absolute inset-0 h-full w-full transition-transform duration-300 group-hover:scale-105"
                     />
                   </div>

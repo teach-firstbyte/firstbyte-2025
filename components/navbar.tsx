@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { motion, AnimatePresence, useScroll } from "framer-motion"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Menu, Search, X, Linkedin, Instagram, ArrowUpRight } from "lucide-react"
@@ -230,7 +231,7 @@ export function Navbar({ activeSection }: NavbarProps) {
                       scrollToSection("home");
                     }}
                   >
-                    <img src="/FirstByteBitex4.png" alt="FirstByte Logo" className="w-6 h-6" />
+                    <Image src="/FirstByteBitex4.png" alt="FirstByte Logo" width={24} height={24} className="w-6 h-6" />
                   </Link>
                 </motion.div>
               ) : null}
@@ -454,9 +455,11 @@ export function Navbar({ activeSection }: NavbarProps) {
                 variants={mobileMenuItemVariants}
               >
                 <div className="flex items-center gap-2">
-                  <img 
+                  <Image 
                     src="/FirstByteBitex4.png" 
                     alt="FirstByte Logo" 
+                    width={24}
+                    height={24}
                     className="w-6 h-6 cursor-pointer" 
                     onClick={() => {
                       setIsMenuOpen(false);
