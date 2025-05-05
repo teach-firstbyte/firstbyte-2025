@@ -109,7 +109,7 @@ useEffect(() => {
         <div className={`text-xs ${isLightTheme ? 'text-zinc-600' : 'text-zinc-400'} font-mono`}>{codeSnippets[currentSnippet].language}</div>
       </div>
 
-      <div className={`p-4 font-mono text-sm ${isLightTheme ? 'text-zinc-800' : 'text-white'} overflow-auto h-[calc(100%-45px)]`}>
+      <div className={`p-4 font-mono text-sm ${isLightTheme ? 'text-zinc-800' : 'text-white'} overflow-hidden h-[calc(100%-45px)]`}>
         <pre className="whitespace-pre-wrap">
           {text}
           <motion.span

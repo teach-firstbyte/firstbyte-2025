@@ -208,33 +208,34 @@ export const AboutSection = forwardRef<HTMLElement>((props, ref) => {
 
       <div className="max-w-7xl mx-auto">
         <motion.div
-          className="text-center mb-16"
+          className="text-left sm:text-center mb-8 sm:mb-16 px-1 sm:px-4"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-3xl font-semibold leading-tight sm:text-5xl sm:leading-tight">Our Story</h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+          <h2 className="text-3xl font-semibold leading-tight sm:text-5xl sm:leading-tight mb-4">Our Story</h2>
+          <p className="text-lg sm:text-xl text-muted-foreground mx-auto sm:max-w-3xl">
             FirstByte was founded with a simple mission: to make computer science and STEM education accessible to all
             students, regardless of their background.
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-12 items-center">
+        <div className="grid md:grid-cols-2 gap-6 sm:gap-12 items-center">
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
+            className="px-1 sm:px-4"
           >
-            <h3 className="text-2xl font-bold mb-4">Why We Started</h3>
-            <p className="mb-4 text-muted-foreground">
+            <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">Why We Started</h3>
+            <p className="mb-3 sm:mb-4 text-muted-foreground">
               We recognized a gap in educational opportunities, particularly in underserved communities. Many students
               weren't getting exposure to computer science and STEM fields early enough to develop interest and
               confidence.
             </p>
-            <p className="mb-6 text-muted-foreground relative z-10">
+            <p className="mb-4 sm:mb-6 text-muted-foreground relative z-10">
               Our founders, a group of passionate educators and tech professionals, came together to create engaging,
               hands-on learning experiences that make these subjects approachable and exciting.
             </p>
@@ -245,7 +246,7 @@ export const AboutSection = forwardRef<HTMLElement>((props, ref) => {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
             viewport={{ once: true }}
-            className="relative h-[400px] rounded-lg overflow-hidden"
+            className="relative h-[300px] sm:h-[400px] rounded-lg overflow-hidden"
           >
             <CodeAnimation />
           </motion.div>
@@ -253,4 +254,6 @@ export const AboutSection = forwardRef<HTMLElement>((props, ref) => {
       </div>
     </section>
   )
-}) 
+})
+
+AboutSection.displayName = "AboutSection" 
