@@ -218,7 +218,7 @@ export function Navbar({ activeSection }: NavbarProps) {
           >
             {/* Logo container that grows/shrinks */}
             <AnimatePresence mode="wait">
-              {pastHero ? (
+              {pastHero && !isMenuOpen ? (
                 <motion.div
                   key="logo-visible"
                   className="overflow-hidden flex items-center"
@@ -464,22 +464,10 @@ export function Navbar({ activeSection }: NavbarProps) {
                 </motion.div>
               ))}
               <motion.div 
-                className="mt-3 flex items-center justify-between"
+                className="mt-3 flex items-center justify-end"
                 variants={mobileMenuItemVariants}
               >
                 <div className="flex items-center gap-2">
-                  <Image 
-                    src="/FirstByteBitex4.png" 
-                    alt="FirstByte Logo" 
-                    width={24}
-                    height={24}
-                    className="w-6 h-6 cursor-pointer" 
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                      scrollToSection("home");
-                    }}
-                  />
-                  
                   {/* Mobile Search Button */}
                   <motion.button
                     whileTap={{ scale: 0.97 }}
