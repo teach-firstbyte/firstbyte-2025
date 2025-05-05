@@ -24,11 +24,19 @@ const scrollToSection = (id: string) => {
     // Use a timeout to ensure the menu close animation completes
     setTimeout(() => {
       try {
-        // Simple direct approach that works on most devices
-        element.scrollIntoView({ 
-          behavior: 'smooth',
-          block: 'start'
-        })
+        // For the home section, we want to scroll to the very top
+        if (id === "home") {
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          })
+        } else {
+          // For other sections, use scrollIntoView
+          element.scrollIntoView({ 
+            behavior: 'smooth',
+            block: 'start'
+          })
+        }
       } catch (error) {
         // Ultimate fallback - direct jump
         window.location.hash = id
@@ -89,7 +97,7 @@ export function Navbar({ activeSection }: NavbarProps) {
   }, [])
 
   const navLinks = [
-    { name: "Home", href: "/#", section: "" },
+    { name: "Home", href: "/#home", section: "home" },
     { name: "About", href: "/#about", section: "about" },
     { name: "Programs", href: "/#programs", section: "programs" },
     { name: "Team", href: "/#team", section: "team" },
@@ -318,23 +326,6 @@ export function Navbar({ activeSection }: NavbarProps) {
                           transition={{ duration: 0.2 }}
                         >
                           <Linkedin className="h-5 w-5" />
-                        </motion.div>
-                      </a>
-                      <a
-                        href="https://linktr.ee/firstbyte"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-foreground/80 hover:text-primary transition-colors"
-                        style={{ opacity: 1, transition: 'opacity 0.3s ease-in-out' }}
-                        onMouseEnter={(e) => handleTooltipShow("Linktree", e)}
-                        onMouseLeave={handleTooltipHide}
-                      >
-                        <motion.div
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
-                          transition={{ duration: 0.2 }}
-                        >
-                          <LinktreeIcon className="h-5 w-5" />
                         </motion.div>
                       </a>
                       </div>
