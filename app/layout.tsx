@@ -6,7 +6,12 @@ import { CommandMenu } from "@/components/command-menu"
 export const metadata = {
   title: "FirstByte - CS & STEM Education",
   description: "Empowering the next generation through CS & STEM education",
-    generator: 'v0.dev'
+  icons: {
+    icon: {
+      url: "/FirstByteBitex4.png",
+      type: "image/png"
+    }
+  }
 }
 
 export default function RootLayout({

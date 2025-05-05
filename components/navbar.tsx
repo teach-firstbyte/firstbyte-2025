@@ -89,7 +89,7 @@ export function Navbar({ activeSection }: NavbarProps) {
   }, [])
 
   const navLinks = [
-    { name: "Home", href: "/#home", section: "home" },
+    { name: "Home", href: "/#", section: "" },
     { name: "About", href: "/#about", section: "about" },
     { name: "Programs", href: "/#programs", section: "programs" },
     { name: "Team", href: "/#team", section: "team" },
@@ -473,7 +473,7 @@ export function Navbar({ activeSection }: NavbarProps) {
                 </div>
                 <div className="flex items-center gap-3">
                   <a
-                    href="https://www.instagram.com/firstbytedotorg"
+                    href="https://www.instagram.com/teach_firstbyte"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-foreground/80 hover:text-primary transition-colors"
