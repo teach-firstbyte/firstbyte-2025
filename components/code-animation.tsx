@@ -26,10 +26,8 @@ for i in range(10):
     speed: 5
   };
   function update() {
-    // Move player based on keyboard input
     if (keys.ArrowRight) player.x += player.speed;
     if (keys.ArrowLeft) player.x -= player.speed;
-    // Draw everything and loop
     draw();
     requestAnimationFrame(update);
   }
@@ -58,45 +56,96 @@ createGame();`,
 </style>`,
     color: "#e34c26",
   },
-]
+];
+
+const mobileCodeSnippets = [
+  {
+    language: "Python",
+    code: `def fib(n):
+  if n <= 1:
+      return n
+  else:
+      return fib(n-1) + fib(n-2)
+for i in range(10):
+  print(fib(i))`,
+    color: "#3572A5",
+  },
+  {
+    language: "JavaScript",
+    code: `while (player.alive) {
+  if (keys.ArrowRight) player.x += player.speed;
+  if (keys.ArrowLeft) player.x -= player.speed;
+  draw();
+}
+runGame();`,
+    color: "#f7df1e",
+  },
+  {
+    language: "HTML/CSS",
+    code: `<div class="card">
+  <h2>FirstByte Workshop</h2>
+  <div class="card-body">
+    <p>Your first coding project!</p>
+    <button class="btn">Run Code</button>
+  </div>
+</div>`,
+    color: "#e34c26",
+  },
+];
 
 export function CodeAnimation() {
-  const [currentSnippet, setCurrentSnippet] = useState(0)
-  const [typing, setTyping] = useState(true)
-  const [text, setText] = useState("")
-  const [cursorPosition, setCursorPosition] = useState(0)
-  const { theme } = useTheme()
-  const isLightTheme = theme === "light"
+  const [currentSnippet, setCurrentSnippet] = useState(0);
+  const [typing, setTyping] = useState(true);
+  const [screenMediumPlus, setMediumPlus] = useState(true);
+  const [text, setText] = useState("");
+  const [cursorPosition, setCursorPosition] = useState(0);
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
 
-  //  typing animation 
-useEffect(() => {
-  if (!typing) return;                             // stop when paused
+  // Detect screen size
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(min-width: 768px)");
+    setMediumPlus(mediaQuery.matches);
 
-  const snippet = codeSnippets[currentSnippet].code;
-  if (cursorPosition < snippet.length) {
+    const handleResize = () => setMediumPlus(mediaQuery.matches);
+    mediaQuery.addEventListener("change", handleResize);
+    return () => mediaQuery.removeEventListener("change", handleResize);
+  }, []);
+
+  // Typing effect
+  useEffect(() => {
+    if (!typing) return;
+
+    const currentSet = screenMediumPlus ? codeSnippets : mobileCodeSnippets;
+    const snippet = currentSet[currentSnippet].code;
+
+    if (cursorPosition < snippet.length) {
+      const id = setTimeout(() => {
+        setText((prev) => prev + snippet.charAt(cursorPosition));
+        setCursorPosition((prev) => prev + 1);
+      }, 30);
+      return () => clearTimeout(id);
+    } else {
+      setTyping(false);
+    }
+  }, [typing, cursorPosition, currentSnippet, screenMediumPlus]);
+
+  // Delay before moving to next snippet
+  useEffect(() => {
+    if (typing) return;
+
     const id = setTimeout(() => {
-      setText(prev => prev + snippet.charAt(cursorPosition));
-      setCursorPosition(prev => prev + 1);
-    }, 30);
+      setText("");
+      setCursorPosition(0);
+      setCurrentSnippet((prev) => (prev + 1) % codeSnippets.length);
+      setTyping(true);
+    }, 5000);
+
     return () => clearTimeout(id);
-  } else {
-    setTyping(false);                              // finished this snippet
-  }
-}, [typing, cursorPosition, currentSnippet]);
+  }, [typing]);
 
-//  pause between snippets & advance 
-useEffect(() => {
-  if (typing) return;                              // only run while paused
-
-  const id = setTimeout(() => {
-    setText("");
-    setCursorPosition(0);
-    setCurrentSnippet(prev => (prev + 1) % codeSnippets.length);
-    setTyping(true);                               // start typing next snippet
-  }, 5000);
-
-  return () => clearTimeout(id);                   
-}, [typing]);
+  const currentSet = screenMediumPlus ? codeSnippets : mobileCodeSnippets;
+  const language = currentSet[currentSnippet].language;
 
   return (
     <div className={`w-full h-full ${isLightTheme ? 'bg-zinc-100' : 'bg-zinc-900'} rounded-lg overflow-hidden shadow-xl`}>
@@ -106,7 +155,9 @@ useEffect(() => {
           <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
           <div className="w-3 h-3 rounded-full bg-green-500"></div>
         </div>
-        <div className={`text-xs ${isLightTheme ? 'text-zinc-600' : 'text-zinc-400'} font-mono`}>{codeSnippets[currentSnippet].language}</div>
+        <div className={`text-xs ${isLightTheme ? 'text-zinc-600' : 'text-zinc-400'} font-mono`}>
+          {language}
+        </div>
       </div>
 
       <div className={`p-4 font-mono text-sm ${isLightTheme ? 'text-zinc-800' : 'text-white'} overflow-hidden h-[calc(100%-45px)]`}>
@@ -114,12 +165,11 @@ useEffect(() => {
           {text}
           <motion.span
             animate={{ opacity: [1, 0] }}
-            transition={{ repeat: Number.POSITIVE_INFINITY, duration: 0.8 }}
+            transition={{ repeat: Infinity, duration: 0.8 }}
             className={`inline-block w-2 h-4 ${isLightTheme ? 'bg-zinc-800' : 'bg-white'}`}
           ></motion.span>
         </pre>
       </div>
     </div>
-  )
+  );
 }
-
