@@ -20,7 +20,11 @@ try {
   console.error("Error preloading model:", error)
 }
 
-export function ThreeModel() {
+interface ThreeModelProps {
+  isMobile?: boolean; // Make prop optional for now
+}
+
+export function ThreeModel({ isMobile = false }: ThreeModelProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [isRotating, setIsRotating] = useState(true)
   const [isLoaded, setIsLoaded] = useState(false)
@@ -164,7 +168,8 @@ export function ThreeModel() {
           scene.remove(cube);
           
           // Make model smaller and adjust position
-          model.scale.set(0.2, 0.2, 0.2)
+          const scale = isMobile ? 0.25 : 0.2; // Slightly larger on mobile
+          model.scale.set(scale, scale, scale)
           model.position.set(0, -0.1, 0) // Slight offset to center
           
           // Set initial rotation to the preferred orientation
@@ -640,10 +645,10 @@ export function ThreeModel() {
       )}
       
       {isLoaded && showPrompt && (
-        <div className="absolute top-[25%] right-[15%] transform -translate-y-1/2 z-20 pointer-events-none animate-fade-in prompt-message">
-          <div className={`relative ${isDarkMode ? 'bg-gradient-to-br from-green-500 to-black text-white' : 'bg-gradient-to-br from-green-500 to-emerald-900 text-white'} px-4 py-2 rounded-lg shadow-lg max-w-[150px] animate-pulse-slow animate-glow`}>
-            <div className={`absolute left-0 top-1/2 -translate-x-3 -translate-y-1/2 w-3 h-3 rotate-45 ${isDarkMode ? 'bg-gradient-to-br from-green-500 to-black' : 'bg-gradient-to-br from-green-500 to-emerald-900'}`}></div>
-            <p className="text-sm font-medium">Drag to rotate me!</p>
+        <div className="absolute top-[20%] md:top-[25%] right-[5%] md:right-[15%] transform -translate-y-1/2 z-20 pointer-events-none animate-fade-in prompt-message">
+          <div className={`relative ${isDarkMode ? 'bg-gradient-to-br from-green-500 to-black text-white' : 'bg-gradient-to-br from-green-500 to-emerald-900 text-white'} px-3 md:px-4 py-1 md:py-2 rounded-lg shadow-lg max-w-[120px] md:max-w-[150px] animate-pulse-slow animate-glow`}>
+            <div className={`absolute left-0 top-1/2 -translate-x-2 md:-translate-x-3 -translate-y-1/2 w-2 h-2 md:w-3 md:h-3 rotate-45 ${isDarkMode ? 'bg-gradient-to-br from-green-500 to-black' : 'bg-gradient-to-br from-green-500 to-emerald-900'}`}></div>
+            <p className="text-xs md:text-sm font-medium text-center">Drag to rotate me!</p>
             <div className={`absolute inset-0 rounded-lg ${isDarkMode ? 'bg-gradient-to-r from-green-400/0 via-green-400/20 to-black/10' : 'bg-gradient-to-r from-green-400/0 via-green-400/20 to-emerald-900/10'} animate-shimmer`}></div>
           </div>
         </div>
