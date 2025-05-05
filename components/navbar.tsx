@@ -16,18 +16,24 @@ interface NavbarProps {
   activeSection: string;
 }
 
-// Add the scrollToSection function from Footer component
+// More robust scrollToSection function with direct approach
 const scrollToSection = (id: string) => {
+  // Close any mobile menu first
   const element = document.getElementById(id)
   if (element) {
-    const offset = 100 // Adjust this value to change how far below the section it scrolls
-    const elementPosition = element.getBoundingClientRect().top
-    const offsetPosition = elementPosition + window.pageYOffset - offset
-
-    window.scrollTo({
-      top: offsetPosition,
-      behavior: 'smooth'
-    })
+    // Use a timeout to ensure the menu close animation completes
+    setTimeout(() => {
+      try {
+        // Simple direct approach that works on most devices
+        element.scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'start'
+        })
+      } catch (error) {
+        // Ultimate fallback - direct jump
+        window.location.hash = id
+      }
+    }, 10)
   }
 }
 
@@ -277,8 +283,7 @@ export function Navbar({ activeSection }: NavbarProps) {
                 
                 <div className="flex items-center gap-2 px-1">
                   <div className="flex items-center overflow-hidden" style={{ transition: 'width 0.3s ease-in-out' }}>
-                    <div className="flex items-center gap-4">
-                      <div className="flex items-cetner gap-1">
+                    <div className="flex items-cetner gap-1">
                       <div className="flex items-center gap-2">
                       <a
                         href="https://www.instagram.com/teach_firstbyte"
@@ -312,24 +317,6 @@ export function Navbar({ activeSection }: NavbarProps) {
                           transition={{ duration: 0.2 }}
                         >
                           <Linkedin className="h-5 w-5" />
-                        </motion.div>
-                      </a>
-                      </div>
-                      <a
-                        href="https://linktr.ee/firstbyte"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-foreground/80 hover:text-primary transition-colors"
-                        style={{ opacity: 1, transition: 'opacity 0.3s ease-in-out' }}
-                        onMouseEnter={(e) => handleTooltipShow("Linktree", e)}
-                        onMouseLeave={handleTooltipHide}
-                      >
-                        <motion.div
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
-                          transition={{ duration: 0.2 }}
-                        >
-                          <LinktreeIcon className="h-5 w-5" />
                         </motion.div>
                       </a>
                       </div>
