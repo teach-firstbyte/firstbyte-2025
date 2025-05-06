@@ -492,10 +492,10 @@ export function Navbar({ activeSection }: NavbarProps) {
                 className="mt-3 flex items-center justify-between"
                 variants={mobileMenuItemVariants}
               >
-                {/* Search button moved to the left */}
+                {/* Search button styled like a pill */}
                 <motion.button
                   whileTap={{ scale: 0.97 }}
-                  className="flex items-center gap-1.5 px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground"
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground border border-border/50 rounded-full"
                   onClick={() => {
                     setIsMenuOpen(false)
                     const event = new KeyboardEvent('keydown', {
@@ -507,6 +507,7 @@ export function Navbar({ activeSection }: NavbarProps) {
                   }}
                 >
                   <Search className="h-4 w-4" />
+                  <span className="ml-1">Search</span>
                 </motion.button>
                 
                 <div className="flex items-center gap-3">
