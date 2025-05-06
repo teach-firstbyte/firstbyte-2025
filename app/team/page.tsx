@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { ArrowLeft, Filter, Search, X } from "lucide-react"
+import { ArrowLeft, Filter, Search, X, Info } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -16,6 +16,7 @@ import {
   SelectValue
 } from "@/components/ui/select"
 import teamData from "@/data/team.json"
+import { BlurTooltip, TooltipPosition } from "@/components/ui/blur-tooltip"
 
 interface TeamMember {
   name: string
@@ -56,6 +57,88 @@ export default function TeamPage() {
   const [filterYear, setFilterYear] = useState<string>("all")
   const [filterBoard, setFilterBoard] = useState<string>("all")
   const [filteredMembers, setFilteredMembers] = useState<any[]>(allTeamMembers)
+  const [infoTooltipVisible, setInfoTooltipVisible] = useState(false)
+  const [infoTooltipPosition, setInfoTooltipPosition] = useState<TooltipPosition | null>(null)
+  const [isMobile, setIsMobile] = useState(false)
+  const [activeTooltipId, setActiveTooltipId] = useState<string | null>(null)
+  
+  // Detect mobile devices
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    
+    // Initial check
+    checkMobile()
+    
+    // Add event listener for resize
+    window.addEventListener('resize', checkMobile)
+    
+    // Cleanup
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+  
+  // Handle badge hover for showing tooltip
+  const handleBadgeMouseEnter = (event: React.MouseEvent<HTMLSpanElement>) => {
+    if (isMobile) return
+    
+    setInfoTooltipPosition({
+      x: event.clientX,
+      y: event.clientY + 15
+    })
+    setInfoTooltipVisible(true)
+  }
+  
+  const handleBadgeMouseMove = (event: React.MouseEvent<HTMLSpanElement>) => {
+    if (isMobile) return
+    
+    setInfoTooltipPosition({
+      x: event.clientX,
+      y: event.clientY + 15
+    })
+  }
+  
+  const handleBadgeMouseLeave = () => {
+    if (isMobile) return
+    setInfoTooltipVisible(false)
+  }
+  
+  // Handle badge click for mobile
+  const handleBadgeClick = (event: React.MouseEvent<HTMLSpanElement>, id: string) => {
+    if (!isMobile) return
+    
+    // Get badge position for tooltip placement
+    const badge = event.currentTarget
+    const rect = badge.getBoundingClientRect()
+    
+    // Center tooltip under the badge
+    setInfoTooltipPosition({
+      x: rect.left + (rect.width / 2),
+      y: rect.bottom + 10
+    })
+    
+    // Toggle tooltip visibility
+    if (activeTooltipId === id) {
+      setActiveTooltipId(null)
+      setInfoTooltipVisible(false)
+    } else {
+      setActiveTooltipId(id)
+      setInfoTooltipVisible(true)
+    }
+  }
+  
+  // Close tooltip when clicking elsewhere
+  useEffect(() => {
+    if (!isMobile || !activeTooltipId) return
+    
+    const handleClickOutside = () => {
+      setActiveTooltipId(null)
+      setInfoTooltipVisible(false)
+    }
+    
+    document.addEventListener('click', handleClickOutside)
+    return () => document.removeEventListener('click', handleClickOutside)
+  }, [isMobile, activeTooltipId])
   
   // Get unique years and boards for filter options
   const years = ["all", ...new Set(allTeamMembers.flatMap(member => member.years || []).sort((a, b) => b.localeCompare(a)))]
@@ -202,8 +285,8 @@ export default function TeamPage() {
               >
                 <Card className="overflow-hidden h-full">
                   <div className="flex flex-col h-full">
-                    <div className="flex p-6 gap-4">
-                      <Avatar className="h-16 w-16 rounded-full border-2 border-primary/10">
+                    <div className="flex p-6 gap-5">
+                      <Avatar className="h-16 w-16 rounded-full border-2 border-primary/10 flex-shrink-0">
                         {member.image ? (
                           <AvatarImage src={member.circularImage || member.image} alt={member.name} className="object-cover object-center" />
                         ) : (
@@ -215,11 +298,11 @@ export default function TeamPage() {
                         )}
                       </Avatar>
                       
-                      <div>
-                        <h3 className="font-semibold text-lg">{member.name}</h3>
-                        <p className="text-muted-foreground">{member.role}</p>
+                      <div className="min-w-0">
+                        <h3 className="font-semibold text-lg leading-tight mb-1">{member.name}</h3>
+                        <p className="text-muted-foreground mb-3">{member.role}</p>
                         
-                        <div className="flex flex-wrap items-center gap-2 mt-2">
+                        <div className="flex flex-wrap items-center gap-2 mb-2">
                           {member.years && (
                             <div className="flex flex-wrap gap-1">
                               {[...member.years].sort((a, b) => b.localeCompare(a)).map(year => (
@@ -233,26 +316,38 @@ export default function TeamPage() {
                             </div>
                           )}
                           {member.board && (
-                            <span className="inline-flex items-center rounded-full bg-primary/10 text-primary px-2 py-1 text-xs font-medium">
+                            <span 
+                              className={`inline-flex items-center rounded-full bg-primary/10 text-primary px-2 py-1 text-xs font-medium ${isMobile ? "cursor-pointer" : "cursor-default"}`}
+                              onMouseEnter={member.board === "Revival Team" ? handleBadgeMouseEnter : undefined}
+                              onMouseMove={member.board === "Revival Team" ? handleBadgeMouseMove : undefined}
+                              onMouseLeave={member.board === "Revival Team" ? handleBadgeMouseLeave : undefined}
+                              onClick={member.board === "Revival Team" ? (e) => {
+                                e.stopPropagation();
+                                handleBadgeClick(e, `badge-${member.name}`);
+                              } : undefined}
+                            >
+                              {member.board === "Revival Team" && (
+                                <Info className="h-3 w-3 mr-1" />
+                              )}
                               {member.board}
                             </span>
                           )}
                         </div>
                         
                         {member.previousRoles && member.previousRoles.length > 0 && (
-                          <div className="mt-1 text-xs text-muted-foreground">
-                            Previous roles: {member.previousRoles.map((roleObj: { role: string; year: string }) => `${roleObj.role} (${roleObj.year})`).join(", ")}
+                          <div className="mt-1 text-xs text-muted-foreground mb-2">
+                            <span className="font-medium">Previous roles:</span> {member.previousRoles.map((roleObj: { role: string; year: string }) => `${roleObj.role} (${roleObj.year})`).join(", ")}
                           </div>
                         )}
                       </div>
                     </div>
                     
-                    <CardContent className="flex-1 pb-6">
+                    <CardContent className="pt-0 pb-6 px-6">
                       {member.bio && (
-                        <p className="text-sm text-muted-foreground">{member.bio}</p>
+                        <p className="text-sm text-muted-foreground mb-4">{member.bio}</p>
                       )}
                       
-                      <div className="flex mt-4 gap-2">
+                      <div className="flex mt-auto gap-3">
                         {member.linkedin && (
                           <a 
                             href={member.linkedin} 
@@ -310,6 +405,18 @@ export default function TeamPage() {
           </div>
         )}
       </div>
+      
+      {/* Info tooltip for Revival Team */}
+      {infoTooltipPosition && (
+        <BlurTooltip
+          position={infoTooltipPosition}
+          content="As the only active members during this year, this team revitalized the club from the ground up and established the foundation for what FirstByte is today."
+          visible={infoTooltipVisible}
+          id="revival-team-badge-info"
+          className="max-w-[250px]"
+          hideIcon={true}
+        />
+      )}
     </div>
   )
 } 

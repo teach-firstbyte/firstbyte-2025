@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { ArrowRight, ChevronDown, Linkedin, Twitter, Github, Clock, ChevronRight, X, Globe } from "lucide-react"
+import { ArrowRight, ChevronDown, Linkedin, Twitter, Github, Clock, ChevronRight, X, Globe, Info } from "lucide-react"
 import { AnimatedTooltip } from "@/components/ui/animated-tooltip"
 import teamData from "@/data/team.json"
 import { AnimatedGlowButton } from "@/components/ui/animated-glow-button"
@@ -683,6 +683,9 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
   const [hoveredMemberIndex, setHoveredMemberIndex] = useState<number | null>(null)
   const [cardTooltipRect, setCardTooltipRect] = useState<TooltipPosition | null>(null)
   const [isTransitioning, setIsTransitioning] = useState(false)
+  const [infoTooltipVisible, setInfoTooltipVisible] = useState(false)
+  const [infoTooltipPosition, setInfoTooltipPosition] = useState<TooltipPosition | null>(null)
+  const [activeTooltipId, setActiveTooltipId] = useState<string | null>(null)
   
   // Social media hover states - change to store just the URL
   const [hoveredSocialUrl, setHoveredSocialUrl] = useState<string | null>(null)
@@ -699,6 +702,71 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
       setIsExpanded(true);
     }
   }, [isMobile]);
+  
+  // Handle info icon hover
+  const handleInfoMouseEnter = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (isMobile) return;
+    
+    setInfoTooltipPosition({
+      x: event.clientX,
+      y: event.clientY + 15
+    });
+    setInfoTooltipVisible(true);
+  };
+  
+  const handleInfoMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (isMobile) return;
+    
+    setInfoTooltipPosition({
+      x: event.clientX,
+      y: event.clientY + 15
+    });
+  };
+  
+  const handleInfoMouseLeave = () => {
+    if (isMobile) return;
+    setInfoTooltipVisible(false);
+  };
+  
+  // Handle info icon click for mobile
+  const handleInfoClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (!isMobile) return;
+    
+    // Get badge position for tooltip placement
+    const iconElement = event.currentTarget;
+    const rect = iconElement.getBoundingClientRect();
+    
+    // Position tooltip below the icon
+    setInfoTooltipPosition({
+      x: rect.left + (rect.width / 2),
+      y: rect.bottom + 10
+    });
+    
+    // Toggle tooltip visibility
+    if (activeTooltipId === "revival-info") {
+      setActiveTooltipId(null);
+      setInfoTooltipVisible(false);
+    } else {
+      setActiveTooltipId("revival-info");
+      setInfoTooltipVisible(true);
+    }
+    
+    // Stop event propagation
+    event.stopPropagation();
+  };
+  
+  // Close tooltip when clicking elsewhere on mobile
+  useEffect(() => {
+    if (!isMobile || !activeTooltipId) return;
+    
+    const handleClickOutside = () => {
+      setActiveTooltipId(null);
+      setInfoTooltipVisible(false);
+    };
+    
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [isMobile, activeTooltipId]);
   
   // Framer Motion values for tooltip animation
   const springConfig = { stiffness: 100, damping: 5 };
@@ -983,6 +1051,7 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
   // Get team photo if available for this board's year
   const boardYear = board.year.split('-')[0];
   const teamPhoto = getTeamPhotoForYear(boardYear);
+  const isRevivalTeam = boardYear === "2022";
   
   return (
     <motion.div 
@@ -1045,7 +1114,20 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
               >
                 <div className="flex justify-between items-start mb-4">
                   <div>
-                    <h3 className="text-xl font-semibold">{board.title}</h3>
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-xl font-semibold">{board.title}</h3>
+                      {isRevivalTeam && (
+                        <div 
+                          className={`text-primary hover:text-primary/80 ${isMobile ? "cursor-pointer" : "cursor-default"}`}
+                          onMouseEnter={handleInfoMouseEnter}
+                          onMouseMove={handleInfoMouseMove}
+                          onMouseLeave={handleInfoMouseLeave}
+                          onClick={handleInfoClick}
+                        >
+                          <Info className="h-4 w-4" />
+                        </div>
+                      )}
+                    </div>
                     <div className="flex items-center gap-1 text-sm text-muted-foreground mt-1">
                       <Clock className="h-3 w-3" />
                       <span>{board.year}</span>
@@ -1446,6 +1528,18 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
             id={`member-${hoveredMemberIndex}`}
           />
         </div>
+      )}
+      
+      {/* Info tooltip for Revival Team */}
+      {isRevivalTeam && infoTooltipPosition && (
+        <BlurTooltip
+          position={infoTooltipPosition}
+          content="As the only active members during this year, this team revitalized the club from the ground up and established the foundation for what FirstByte is today."
+          visible={infoTooltipVisible}
+          id="revival-team-info"
+          className="max-w-[250px]"
+          hideIcon={true}
+        />
       )}
     </motion.div>
   )

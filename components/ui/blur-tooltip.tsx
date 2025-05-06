@@ -33,9 +33,11 @@ export interface BlurTooltipProps {
   visible: boolean;
   icon?: React.ReactNode;
   id?: string;
+  className?: string;
+  hideIcon?: boolean;
 }
 
-export function BlurTooltip({ position, content, visible, icon, id = "tooltip" }: BlurTooltipProps) {
+export function BlurTooltip({ position, content, visible, icon, id = "tooltip", className, hideIcon = false }: BlurTooltipProps) {
   return (
     <TooltipPortal>
       <div 
@@ -45,7 +47,7 @@ export function BlurTooltip({ position, content, visible, icon, id = "tooltip" }
       >
         <div 
           id="STALKER_INNER"
-          className="flex items-center space-x-[3px] rounded-xl border border-border/20 bg-background/80 p-2 px-3 backdrop-blur-md"
+          className={`flex items-center space-x-[3px] rounded-xl border border-border/20 bg-background/80 p-2 px-3 backdrop-blur-md ${className || ''}`}
           style={{ 
             filter: visible ? "blur(0px)" : "blur(16px)",
             opacity: visible ? 1 : 0,
@@ -55,15 +57,15 @@ export function BlurTooltip({ position, content, visible, icon, id = "tooltip" }
             transform: "translate(-50%, 0)" // Center horizontally, don't offset vertically
           }}
         >
-          <span className="text-xs text-foreground/50">
+          <span className="text-xs text-foreground/50 whitespace-normal">
             {content}
           </span>
-          {icon || (
+          {!hideIcon && (icon || (
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-auto w-4 text-foreground/50">
               <path d="M7 7h10v10"></path>
               <path d="M7 17 17 7"></path>
             </svg>
-          )}
+          ))}
         </div>
       </div>
     </TooltipPortal>
