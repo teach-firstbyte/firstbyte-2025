@@ -54,7 +54,7 @@ const BentoCard = ({
     whileInView={{ opacity: 1, x: 0, y: 0 }}
     whileHover={{ scale: 1.02 }}
     viewport={{ once: true }}
-    transition={{ duration: 0.3, ease: "easeOut" }}
+    transition={{ duration: 0.5, ease: "easeOut" }}
     className={cn(
       "group relative col-span-3 flex flex-col justify-between overflow-hidden rounded-xl",
       "bg-white",

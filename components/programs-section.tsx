@@ -323,33 +323,33 @@ export const ProgramsSection = forwardRef<HTMLElement>((props, ref) => {
             if (index === 0) {
               // First card is large feature card
               customClassName = "md:col-span-2 md:row-span-2";
-              initialX = -100;
-              initialY = -100;
+              initialX = -20;
+              initialY = -20;
             } else if (index === 1) {
               // Second card is a vertical rectangle
               customClassName = "md:col-span-1 md:row-span-1";
-              initialX = 100;
-              initialY = -100;
+              initialX = 20;
+              initialY = -20;
             } else if (index === 2) {
               // Third card is a vertical rectangle
               customClassName = "md:col-span-1 md:row-span-1";
-              initialX = -100;
-              initialY = 100;
+              initialX = -20;
+              initialY = 20;
             } else if (index === 3) {
               // Fourth card spans horizontally (bento style)
               customClassName = "md:col-span-2 md:row-span-2";
-              initialX = 100;
-              initialY = 100;
+              initialX = 20;
+              initialY = 20;
             } else if (index === 4) {
               // Fifth card is a square
               customClassName = "md:col-span-1 md:row-span-1";
-              initialX = -100;
-              initialY = -100;
+              initialX = -20;
+              initialY = -20;
             } else if (index === 5) {
               // Sixth card is a square
               customClassName = "md:col-span-1 md:row-span-1";
-              initialX = 100;
-              initialY = -100;
+              initialX = 20;
+              initialY = -20;
             }
             
             return (
