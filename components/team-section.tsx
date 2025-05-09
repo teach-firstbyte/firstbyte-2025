@@ -1563,7 +1563,7 @@ export const TeamSection = forwardRef<HTMLElement, TeamSectionProps>(({ classNam
   const currentVisible = currentExecutiveBoard.slice(0, visibleCount)
 
   return (
-    <section ref={ref} id="team" className={cn("bg-[hsl(var(--gray-50))] text-foreground pt-24 pb-10 overflow-hidden bg-dots-light", className)}>
+    <section ref={ref} id="team" className={cn("bg-[hsl(var(--gray-50))] text-foreground pt-32 pb-10 overflow-hidden bg-dots-light", className)}>
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
         <div className="grid md:grid-cols-2 gap-4 md:gap-8 mb-12">
           <motion.div 

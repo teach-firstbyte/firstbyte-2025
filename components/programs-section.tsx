@@ -63,7 +63,7 @@ const programs: ProgramFeature[] = [
 
 export const ProgramsSection = forwardRef<HTMLElement>((props, ref) => {
   return (
-    <section ref={ref} id="programs" className="pt-24 pb-6 sm:pb-8 md:pb-10 px-3 sm:px-4 md:px-6 lg:px-8 bg-[hsl(var(--gray-200))] relative overflow-hidden">
+    <section ref={ref} id="programs" className="pt-32 pb-6 sm:pb-8 md:pb-10 px-3 sm:px-4 md:px-6 lg:px-8 bg-[hsl(var(--gray-200))] relative overflow-hidden">
       {/* Simple Line Grid Background */}
       <div className="absolute top-0 left-0 right-0 w-full h-[600px] overflow-hidden pointer-events-none">
         <div 

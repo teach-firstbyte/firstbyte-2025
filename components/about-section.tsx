@@ -8,7 +8,7 @@ import { forwardRef } from "react"
 
 export const AboutSection = forwardRef<HTMLElement>((props, ref) => {
   return (
-    <section ref={ref} id="about" className="pt-24 px-4 md:px-6 lg:px-8 relative overflow-hidden">
+    <section ref={ref} id="about" className="pt-32 px-4 md:px-6 lg:px-8 relative overflow-hidden">
       {/* Simple Line Grid Background */}
       <div className="absolute bottom-0 left-0 right-0 w-full h-[500px] overflow-hidden pointer-events-none">
         <div 
