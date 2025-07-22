@@ -48,7 +48,7 @@ const teamPhotos = teamData.teamPhotos || [];
 // Helper function to get the correct role for a specific year
 const getRoleForYear = (member: TeamMember, year: string): string => {
   // If we're looking for the current year (2025) role
-  if (year === "2025") {
+  if (year === "Fall 2025") {
     return member.role;
   }
   
@@ -59,10 +59,10 @@ const getRoleForYear = (member: TeamMember, year: string): string => {
 
 // Filter for current executive board (members with 2025 in their years)
 const currentExecutiveBoard = allTeamMembers.filter(member => 
-  member.years?.includes("2025")
+  member.years?.includes("Fall 2025")
 ).map(member => ({
   ...member,
-  role: getRoleForYear(member, "2025") // Ensure we display the 2025 role
+  role: getRoleForYear(member, "Fall 2025") // Ensure we display the 2025 role
 }));
 
 // Filter for founding members (members with 2022 in their years)
@@ -80,7 +80,7 @@ const foundingMembers = allTeamMembers.filter(member =>
 const createPastBoard = (year: string, title: string): PastBoard => {
   // Get all members who were active in that year
   const membersFromYear = allTeamMembers.filter(member => 
-    member.years?.includes(year)
+    member.years?.includes(year) && !(member.years?.includes("Fall 2025"))
   ).map(member => {
     // Get the appropriate role for that year
     return {
@@ -313,26 +313,47 @@ function TeamMemberCard({ member, index, noStaggerDelay = false }: TeamMemberCar
     setIsModalOpen(true);
   };
   
-  // Generate year badges for each year with FirstByte
-  const renderYearBadges = () => {
-    if (!member.years || member.years.length === 0) return null;
-    
-    // Sort years in descending order (newest first)
-    const sortedYears = [...member.years].sort((a, b) => b.localeCompare(a));
-    
-    return (
-      <div className="flex flex-wrap gap-1 mt-1">
-        {sortedYears.map(year => (
-          <div 
-            key={year}
-            className="inline-flex items-center justify-center h-5 px-2 text-xs font-semibold text-foreground bg-muted rounded-full"
-          >
-            {year}
-          </div>
-        ))}
-      </div>
-    );
+  // Helper function to sort years if there is a semester, Fall will show before Spring
+  const sortYears = (a: string, b: string) => {
+    const semAndYear = (str: string) => {
+      const yearMatch = str.match(/\d{4}/);
+      const year = yearMatch ? parseInt(yearMatch[0], 10) : 0;
+
+      const semPrio = str.includes("Fall") ? 1 : 0;
+      
+      return { year, semPrio };
+    };
+
+    const year = semAndYear(a);
+    const sem = semAndYear(b);
+
+    if (sem.year !== year.year) {
+      return sem.year - year.year;
+    }
+
+    return sem.semPrio - year.semPrio;
   };
+  
+  // Generate year badges for each year with FirstByte
+const renderYearBadges = () => {
+  if (!member.years || member.years.length === 0) return null;
+  
+  // Use the new custom sorting function
+  const sortedYears = [...member.years].sort(sortYears);
+  
+  return (
+    <div className="flex flex-wrap gap-1 mt-1">
+      {sortedYears.map(year => (
+        <div 
+          key={year}
+          className="inline-flex items-center justify-center h-5 px-2 text-xs font-semibold text-foreground bg-muted rounded-full"
+        >
+          {year}
+        </div>
+      ))}
+    </div>
+  );
+};
 
   // Create role history display
   const renderRoleHistory = () => {
