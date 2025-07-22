@@ -8,6 +8,130 @@
   ],
   "allTeamMembers": [
     {
+      "name": "Nick Chen",
+      "role": "President",
+      "image": "/teamMemberPhotos/Nick Chen.jpg",
+      "bio": "Hey everyone! My name is Nick and I'm a third-year student studying Cybersecurity with a minor in Law. Teaching has always been a passion of mine, and joining FirstByte has been such an amazing and fulfilling experience getting to both learn and teach so much at the same time. I'm excited to be leading FirstByte this year, and hope to meet you all at our events!",
+      "linkedin": "www.linkedin.com/in/nckchen",
+      "github": "https://github.com/chnnick",
+      "years": ["2024", "2025"],
+      "previousRoles": []
+    },
+    {
+      "name": "Alex Wright",
+      "role": "Vice President",
+      "image": "/teamMemberPhotos/Alex Wright.jpg",
+      "bio": "Hey! My name is Alex and I’m a fourth year computer science major with a concentration in software. I have been at FirstByte for a year now and have worked on the Software team and CS curricula team.",
+      "linkedin": "https://www.linkedin.com/in/alexandria-wright19/",
+      "github": "https://github.com/alexw2326",
+      "years": ["2024", "2025"],
+      "previousRoles": []
+    },
+    {
+      "name": "Jaden Zhou",
+      "role": "Treasurer",
+      "image": "/teamMemberPhotos/Jaden Zhou.png",
+      "bio": "I'm Jaden and I'm a third year CS major.",
+      "linkedin": "https://www.linkedin.com/in/jadenzhou/",
+      "github": "https://www.github.com/JadenZhou",
+      "years": ["2023", "2024", "2025"],
+      "previousRoles": [
+        {"role": "Treasurer", "year": "2023"},
+        {"role": "Treasurer", "year": "2024"}
+      ]
+    },
+    {
+      "name": "Amoli Patel",
+      "role": "CS Curricula Team Co-Lead",
+      "image": "/teamMemberPhotos/Amoli Patel.jpg",
+      "bio": "Hi! My name is Amoli Patel and I am a combined Computer Science and Business Administration major. I am a rising sophomore and have been a part of FirstByte since my first semester at Northeastern. I have thoroughly enjoyed working with the CS Curricula Team and am excited to be a Co-Lead for the team this coming semester!",
+      "linkedin": "www.linkedin.com/in/amoli-patel",
+      "github": "https://github.com/amolipatel05",
+      "years": ["2024", "2025"],
+      "previousRoles": []
+    },
+    {
+      "name": "Gavin Normand",
+      "role": "CS Curricula Lead",
+      "image": "",
+      "bio": "Hi! My name is Gavin Normand",
+      "linkedin": "",
+      "github": "",
+      "years": ["2024", "2025"],
+      "previousRoles": []
+    },
+    {
+      "name": "Alastaire Balin",
+      "role": "Brand & Marketing Lead",
+      "image": "/teamMemberPhotos/Alastaire Balin.jpg",
+      "bio": "Whats up! I'm Alastaire and it's a pleasure of being in FirstByte! This club is family to me and I'm excited to see what we can achieve in the years ahead!",
+      "linkedin": "https://www.linkedin.com/in/alastaire-balin",
+      "github": "https://github.com/al4stur",
+      "years": ["2024", "2025"],
+      "previousRoles": [
+        {"role": "Brand & Marketing Lead", "year": "2024"}
+      ]
+    },
+    {
+      "name": "Shreesh Dassarkar",
+      "role": "Software Events Lead",
+      "image": "/teamMemberPhotos/Shreesh Dassarkar.jpg",
+      "bio": "Hi! I'm Shreesh and I'm a third year DS + Business major and I love playing basketball and fishing.",
+      "linkedin": "https://www.linkedin.com/in/shreesh-dassarkar/",
+      "github": "https://github.com/sdassarkar",
+      "years": ["2023", "2024", "2025"],
+      "previousRoles": [
+        {"role": "Software Events Lead", "year": "2023"},
+        {"role": "Software Events Lead", "year": "2024"}
+      ]
+    },
+    {
+      "name": "Shreyashi Kalakuntla",
+      "role": "STEM Curricula Team Lead",
+      "image": "/teamMemberPhotos/Shreyashi Kalakuntla.jpg",
+      "bio": "Hey Everyone! My name is Shreyashi Kalakuntla and I am a second year studying Business Administration and Data Science with a concentration in finance.",
+      "linkedin": "https://www.linkedin.com/in/shreyashi-kalakuntla",
+      "years": ["2023", "2024", "2025"],
+      "previousRoles": [
+        {"role": "STEM Curricula Team Lead", "year": "2023"},
+        {"role": "STEM Curricula Team Lead", "year": "2024"}
+      ]
+    },
+    {
+      "name": "Inesh Parikh",
+      "role": "STEM Curricula Team Lead",
+      "image": "/teamMemberPhotos/Inesh Parikh.jpg",
+      "bio": "Hi everyone, I am Inesh and I am a second year Behavioral Neuroscience student with a minor in Data Science!",
+      "linkedin": "https://www.linkedin.com/in/inesh-parikh/",
+      "years": ["2024", "2025"],
+      "previousRoles": [
+        {"role": "STEM Curricula Team Lead", "year": "2024"}
+      ]
+    },
+
+    {
+      "name": "Gina Hong",
+      "role": "Software Events Lead",
+      "image": "/teamMemberPhotos/Gina Hong.png",
+      "bio": "Hi! My name is Gina Hong, and I am a rising sophomore studying Computer Science and Business Administration at Northeastern University.I’m currently the Software Events Lead at FirstByte, where I help plan and run tech-focused events for our community! Outside of FirstByte I enjoy cooking, crocheting, and video editing. I’m constantly taking up new interests; from skating to even pottery, (I know super random)!",
+      "linkedin": "",
+      "github": "",
+      "years": ["2024", "2025"],
+      "previousRoles": []
+    },
+
+    {
+      "name": "Ameeka Patel",
+      "role": "Software Website Team Lead",
+      "image": "/teamMemberPhotos/Ameeka Patel.jpg",
+      "bio": "Hi! I'm Ameeka Patel, a combined Computer Science and Business Administration major. I first joined FirstByte because I enjoy helping others learn and was drawn to FirstByte's mission of making STEM education more accessible to all students. Ever since joining, I've enjoyed fruthering my own education while also meaningfully supporting others on their learning journey.",
+      "linkedin": "www.linkedin.com/in/ameeka-patel",
+      "github": "https://github.com/ameeka-patel",
+      "years": ["2024", "2025"],
+      "previousRoles": []
+    },
+
+    {
       "name": "Landyn Sparacino",
       "role": "President",
       "image": "/teamMemberPhotos/Landyn Sparacino.png",
@@ -64,43 +188,6 @@
       ]
     },
     {
-      "name": "Alastaire Balin",
-      "role": "Brand & Marketing Lead",
-      "image": "/teamMemberPhotos/Alastaire Balin.jpg",
-      "bio": "Whats up! I'm Alastaire and it's a pleasure of being in FirstByte! This club is family to me and I'm excited to see what we can achieve in the years ahead!",
-      "linkedin": "https://www.linkedin.com/in/alastaire-balin",
-      "github": "https://github.com/al4stur",
-      "years": ["2024", "2025"],
-      "previousRoles": [
-        {"role": "Brand & Marketing Lead", "year": "2024"}
-      ]
-    },
-    {
-      "name": "Shreesh Dassarkar",
-      "role": "Software Events Lead",
-      "image": "/teamMemberPhotos/Shreesh Dassarkar.jpg",
-      "bio": "Hi! I'm Shreesh and I'm a third year DS + Business major and I love playing basketball and fishing.",
-      "linkedin": "https://www.linkedin.com/in/shreesh-dassarkar/",
-      "github": "https://github.com/sdassarkar",
-      "years": ["2023", "2024", "2025"],
-      "previousRoles": [
-        {"role": "Software Events Lead", "year": "2023"},
-        {"role": "Software Events Lead", "year": "2024"}
-      ]
-    },
-    {
-      "name": "Shreyashi Kalakuntla",
-      "role": "STEM Curricula Team Lead",
-      "image": "/teamMemberPhotos/Shreyashi Kalakuntla.jpg",
-      "bio": "Hey Everyone! My name is Shreyashi Kalakuntla and I am a second year studying Business Administration and Data Science with a concentration in finance.",
-      "linkedin": "https://www.linkedin.com/in/shreyashi-kalakuntla",
-      "years": ["2023", "2024", "2025"],
-      "previousRoles": [
-        {"role": "STEM Curricula Team Lead", "year": "2023"},
-        {"role": "STEM Curricula Team Lead", "year": "2024"}
-      ]
-    },
-    {
       "name": "Andy Ge",
       "role": "President",
       "image": "/teamMemberPhotos/Andy Ge.jpeg",
@@ -149,30 +236,8 @@
         {"role": "Treasurer", "year": "2023"}
       ]
     },
-    {
-      "name": "Inesh Parikh",
-      "role": "STEM Curricula Team Lead",
-      "image": "/teamMemberPhotos/Inesh Parikh.jpg",
-      "bio": "Hi everyone, I am Inesh and I am a second year Behavioral Neuroscience student with a minor in Data Science!",
-      "linkedin": "https://www.linkedin.com/in/inesh-parikh/",
-      "years": ["2024", "2025"],
-      "previousRoles": [
-        {"role": "STEM Curricula Team Lead", "year": "2024"}
-      ]
-    },
-    {
-      "name": "Jaden Zhou",
-      "role": "Treasurer",
-      "image": "/teamMemberPhotos/Jaden Zhou.png",
-      "bio": "I'm Jaden and I'm a third year CS major.",
-      "linkedin": "https://www.linkedin.com/in/jadenzhou/",
-      "github": "https://www.github.com/JadenZhou",
-      "years": ["2023", "2024", "2025"],
-      "previousRoles": [
-        {"role": "Treasurer", "year": "2023"},
-        {"role": "Treasurer", "year": "2024"}
-      ]
-    },
+
+  
     {
       "name": "Ireh Hong",
       "role": "Software Events Lead",
@@ -194,67 +259,9 @@
       "previousRoles": [
         {"role": "Software Events Lead", "year": "2024"}
       ]
-    },
-    {
-      "name": "Amoli Patel",
-      "role": "CS Curricula Team Co-Lead",
-      "image": "/teamMemberPhotos/Amoli Patel.jpg",
-      "bio": "Hi! My name is Amoli Patel and I am a combined Computer Science and Business Administration major. I am a rising sophomore and have been a part of FirstByte since my first semester at Northeastern. I have thoroughly enjoyed working with the CS Curricula Team and am excited to be a Co-Lead for the team this coming semester!",
-      "linkedin": "www.linkedin.com/in/amoli-patel",
-      "github": "https://github.com/amolipatel05",
-      "years": ["2024", "2025"],
-      "previousRoles": []
-    },
-    {
-      "name": "Ameeka Patel",
-      "role": "Software Website Team Lead",
-      "image": "/teamMemberPhotos/Ameeka Patel.jpg",
-      "bio": "Hi! I'm Ameeka Patel, a combined Computer Science and Business Administration major. I first joined FirstByte because I enjoy helping others learn and was drawn to FirstByte's mission of making STEM education more accessible to all students. Ever since joining, I've enjoyed fruthering my own education while also meaningfully supporting others on their learning journey.",
-      "linkedin": "www.linkedin.com/in/ameeka-patel",
-      "github": "https://github.com/ameeka-patel",
-      "years": ["2024", "2025"],
-      "previousRoles": []
-    },
-    {
-      "name": "Gina Hong",
-      "role": "Software Events Lead",
-      "image": "/teamMemberPhotos/Gina Hong.png",
-      "bio": "Hi! My name is Gina Hong, and I am a rising sophomore studying Computer Science and Business Administration at Northeastern University.I’m currently the Software Events Lead at FirstByte, where I help plan and run tech-focused events for our community! Outside of FirstByte I enjoy cooking, crocheting, and video editing. I’m constantly taking up new interests; from skating to even pottery, (I know super random)!",
-      "linkedin": "",
-      "github": "",
-      "years": ["2024", "2025"],
-      "previousRoles": []
-    },
-    {
-      "name": "Alex Wright",
-      "role": "Vice President",
-      "image": "/teamMemberPhotos/Alex Wright.jpg",
-      "bio": "Hey! My name is Alex and I’m a fourth year computer science major with a concentration in software. I have been at FirstByte for a year now and have worked on the Software team and CS curricula team.",
-      "linkedin": "https://www.linkedin.com/in/alexandria-wright19/",
-      "github": "https://github.com/alexw2326",
-      "years": ["2024", "2025"],
-      "previousRoles": []
-    },
-    {
-      "name": "Nick Chen",
-      "role": "President",
-      "image": "/teamMemberPhotos/Nick Chen.jpg",
-      "bio": "Hey everyone! My name is Nick and I'm a third-year student studying Cybersecurity with a minor in Law. Teaching has always been a passion of mine, and joining FirstByte has been such an amazing and fulfilling experience getting to both learn and teach so much at the same time. I'm excited to be leading FirstByte this year, and hope to meet you all at our events!",
-      "linkedin": "www.linkedin.com/in/nckchen",
-      "github": "https://github.com/chnnick",
-      "years": ["2024", "2025"],
-      "previousRoles": []
-    },
-    {
-      "name": "Gavin Normand",
-      "role": "CS Curricula Lead",
-      "image": "",
-      "bio": "Hi! My name is Gavin Normand",
-      "linkedin": "",
-      "github": "",
-      "years": ["2024", "2025"],
-      "previousRoles": []
     }
+ 
+
   ]
   
 } 

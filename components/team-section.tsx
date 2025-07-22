@@ -98,6 +98,7 @@ const createPastBoard = (year: string, title: string): PastBoard => {
 
 // Define specific order for founding team
 const revivalTeamOrder = ["Andy Ge", "Win Tongtawee", "Caleb Lee", "Landyn Sparacino", "Jennifer Esfahany", "Srikar Ananthoju"];
+const eboTwentyFour = ["Landyn Sparacino", "Caleb Lee", "Jaden Zhou", "Inesh Parikh", "Shreyashi Kalakuntla", "Anna Higgins", "Ireh Hong", "Andy Ge", "Jen Esfahany", "Win Tongtawee"];
 
 // Create past board entries with custom ordering for founding team
 const pastBoards: PastBoard[] = [
@@ -120,9 +121,28 @@ const pastBoards: PastBoard[] = [
       // If neither name is in the list, maintain alphabetical order
       return a.name.localeCompare(b.name);
     })
-  }
+  },
   // Add more past boards as needed
-  // createPastBoard("2023", "2023 Leadership"),
+  {
+    ...createPastBoard("2024", "2024 Leadership"),
+    members: createPastBoard("2024", "2024 Leadership").members.sort((a, b) => {
+      const indexA = eboTwentyFour.indexOf(a.name);
+      const indexB = eboTwentyFour.indexOf(b.name);
+    
+      // If both names are in the order list, sort by their position
+      if (indexA !== -1 && indexB !== -1) {
+        return indexA - indexB;
+      }
+    
+      // If only one name is in the list, prioritize it
+      if (indexA !== -1) return -1;
+      if (indexB !== -1) return 1;
+      
+      // If neither name is in the list, maintain alphabetical order
+      return a.name.localeCompare(b.name);
+
+    })
+  }
   // createPastBoard("2024", "2024 Leadership"),
 ];
 
