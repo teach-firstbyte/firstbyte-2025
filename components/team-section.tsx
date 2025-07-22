@@ -122,7 +122,6 @@ const pastBoards: PastBoard[] = [
       return a.name.localeCompare(b.name);
     })
   },
-  // Add more past boards as needed
   {
     ...createPastBoard("2024", "2024 Leadership"),
     members: createPastBoard("2024", "2024 Leadership").members.sort((a, b) => {
@@ -143,6 +142,7 @@ const pastBoards: PastBoard[] = [
 
     })
   }
+  // Add more past boards as needed
   // createPastBoard("2024", "2024 Leadership"),
 ];
 
@@ -1616,7 +1616,7 @@ export const TeamSection = forwardRef<HTMLElement, TeamSectionProps>(({ classNam
             className="flex justify-between items-end mb-8"
           >
             <h3 className="text-2xl font-semibold">Current Executive Board</h3>
-            <div className="text-sm text-muted-foreground">2024-2025</div>
+            <div className="text-sm text-muted-foreground">2025-2026</div>
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
