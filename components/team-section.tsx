@@ -57,93 +57,59 @@ const getRoleForYear = (member: TeamMember, year: string): string => {
   return historicalRole ? historicalRole.role : member.role;
 };
 
-// Filter for current executive board (members with 2025 in their years)
-const currentExecutiveBoard = allTeamMembers.filter(member => 
-  member.years?.includes("Fall 2025")
-).map(member => ({
-  ...member,
-  role: getRoleForYear(member, "Fall 2025") // Ensure we display the 2025 role
-}));
+// Replace the currentExecutiveBoard logic
+// const currentExecutiveBoard = allTeamMembers.filter(member => 
+//   member.years?.includes("Fall 2025")
+// ).map(member => ({
+//   ...member,
+//   role: getRoleForYear(member, "Fall 2025") // Ensure we display the 2025 role
+// }));
 
-// Filter for founding members (members with 2022 in their years)
-const foundingMembers = allTeamMembers.filter(member => 
-  member.years?.includes("2022")
-).map(member => {
-  // For past boards, show the member with their role from that year
-  return {
-    ...member,
-    role: getRoleForYear(member, "2022") // Use the 2022 role specifically
-  };
-});
+// New: Use a fixed, ordered array of names for the current E-Board
+const currentEboardNames = [
+  "Nick Chen",
+  "Alex Wright",
+  "Jaden Zhou",
+  "Amoli Patel",
+  "Gavin Normand",
+  "Shreyashi Katakluna",
+  "Inesh Parikh",
+  "Ameeka Patel",
+  "Alastaire Balin",
+  "Gina Hong",
+  "Shreesh Dassarkar"
+];
 
-// Helper function to create a past board with members showing their roles from that specific year
-const createPastBoard = (year: string, title: string): PastBoard => {
-  // Get all members who were active in that year
-  const membersFromYear = allTeamMembers.filter(member => 
-    member.years?.includes(year) && !(member.years?.includes("Fall 2025"))
-  ).map(member => {
-    // Get the appropriate role for that year
-    return {
-      ...member,
-      role: getRoleForYear(member, year)
-    };
-  });
-  
-  return {
-    year: `${year}-${Number(year) + 1}`, // Format as academic year
-    title: title,
-    members: membersFromYear
-  };
-};
+const currentExecutiveBoard = currentEboardNames
+  .map(name => allTeamMembers.find(member => member.name === name))
+  .filter(Boolean) as TeamMember[];
 
 // Define specific order for founding team
 const revivalTeamOrder = ["Andy Ge", "Win Tongtawee", "Caleb Lee", "Landyn Sparacino", "Jennifer Esfahany", "Srikar Ananthoju"];
 const eboTwentyFour = ["Landyn Sparacino", "Caleb Lee", "Jaden Zhou", "Inesh Parikh", "Shreyashi Kalakuntla", "Anna Higgins", "Ireh Hong", "Andy Ge", "Jen Esfahany", "Win Tongtawee"];
 
-// Create past board entries with custom ordering for founding team
-const pastBoards: PastBoard[] = [
-  {
-    ...createPastBoard("2022", "Revival Team"),
-    // Sort members according to the specified order
-    members: createPastBoard("2022", "Revival Team").members.sort((a, b) => {
-      const indexA = revivalTeamOrder.indexOf(a.name);
-      const indexB = revivalTeamOrder.indexOf(b.name);
-      
-      // If both names are in the order list, sort by their position
-      if (indexA !== -1 && indexB !== -1) {
-        return indexA - indexB;
-      }
-      
-      // If only one name is in the list, prioritize it
-      if (indexA !== -1) return -1;
-      if (indexB !== -1) return 1;
-      
-      // If neither name is in the list, maintain alphabetical order
-      return a.name.localeCompare(b.name);
-    })
-  },
-  {
-    ...createPastBoard("2024", "2024 Leadership"),
-    members: createPastBoard("2024", "2024 Leadership").members.sort((a, b) => {
-      const indexA = eboTwentyFour.indexOf(a.name);
-      const indexB = eboTwentyFour.indexOf(b.name);
-    
-      // If both names are in the order list, sort by their position
-      if (indexA !== -1 && indexB !== -1) {
-        return indexA - indexB;
-      }
-    
-      // If only one name is in the list, prioritize it
-      if (indexA !== -1) return -1;
-      if (indexB !== -1) return 1;
-      
-      // If neither name is in the list, maintain alphabetical order
-      return a.name.localeCompare(b.name);
+// Helper function to create a past board from an ordered array of names
+const createPastBoardFromNames = (year: string, title: string, orderedNames: string[]): PastBoard => {
+  const members = orderedNames
+    .map(name => allTeamMembers.find(member => member.name === name))
+    .filter(Boolean)
+    .map(member => ({
+      ...member!,
+      role: getRoleForYear(member!, year)
+    })) as TeamMember[];
+  
+  return {
+    year: `${year}-${Number(year) + 1}`, // Format as academic year
+    title: title,
+    members: members
+  };
+};
 
-    })
-  }
+// Create past board entries directly from ordered arrays
+const pastBoards: PastBoard[] = [
+  createPastBoardFromNames("2022", "Revival Team", revivalTeamOrder),
+  createPastBoardFromNames("2024", "2024 Leadership", eboTwentyFour)
   // Add more past boards as needed
-  // createPastBoard("2024", "2024 Leadership"),
 ];
 
 // Hook to detect mobile devices
@@ -462,7 +428,11 @@ const renderYearBadges = () => {
         onClick={handleCardClick}
         className="relative group"
       >
-        <Card className="overflow-hidden transition-all duration-300 group-hover:shadow-lg border-2 border-transparent group-hover:border-primary/20 cursor-pointer">
+        {/* Set a fixed min-height for non-mobile cards to ensure equal height, accounting for year badges */}
+        <Card className={cn(
+          "overflow-hidden transition-all duration-300 group-hover:shadow-lg border-2 border-transparent group-hover:border-primary/20 cursor-pointer",
+          !isMobile && "min-h-[320px]"
+        )}>
           <div className="aspect-square overflow-hidden relative">
             <div 
               className={cn(
@@ -903,7 +873,7 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
     id: idx,
     name: member.name,
     designation: member.role,
-    image: member.circularImage || member.image || "/placeholder.svg"
+    image: member.circularImage || member.image || "/teamMemberPhotos/default-pfp.jpg"
   }))
   
   // Navigate to profile when clicking on social media links
