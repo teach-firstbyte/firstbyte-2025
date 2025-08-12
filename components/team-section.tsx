@@ -72,7 +72,7 @@ const currentEboardNames = [
   "Jaden Zhou",
   "Amoli Patel",
   "Gavin Normand",
-  "Shreyashi Katakluna",
+  "Shreyashi Kalakuntla",
   "Inesh Parikh",
   "Ameeka Patel",
   "Alastaire Balin",
@@ -1571,7 +1571,7 @@ export const TeamSection = forwardRef<HTMLElement, TeamSectionProps>(({ classNam
     setVisibleCount(8)
   }
 
-  const currentVisible = currentExecutiveBoard.slice(0, visibleCount)
+  // const currentVisible = currentExecutiveBoard.slice(0, visibleCount)
 
   return (
     <section ref={ref} id="team" className={cn("bg-[hsl(var(--gray-50))] text-foreground pt-32 pb-10 overflow-hidden bg-dots-light", className)}>
@@ -1611,7 +1611,8 @@ export const TeamSection = forwardRef<HTMLElement, TeamSectionProps>(({ classNam
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
-            {currentVisible.map((member, index) => (
+            {/* {currentVisible.map((member, index) => ( */}
+            {currentExecutiveBoard.map((member, index) => (
               <TeamMemberCard 
                 key={member.name} 
                 member={member} 
@@ -1621,7 +1622,7 @@ export const TeamSection = forwardRef<HTMLElement, TeamSectionProps>(({ classNam
             ))}
           </div>
           
-          {currentExecutiveBoard.length > visibleCount ? (
+          {/* {currentExecutiveBoard.length > visibleCount ? (
             <div className="flex justify-center mt-8">
               <AnimatedGlowButton
                 color="green"
@@ -1632,7 +1633,8 @@ export const TeamSection = forwardRef<HTMLElement, TeamSectionProps>(({ classNam
                 <ChevronDown className="h-4 w-4" />
               </AnimatedGlowButton>
             </div>
-          ) : currentExecutiveBoard.length > 8 && visibleCount > 8 ? (
+          ) 
+          : currentExecutiveBoard.length > 8 && visibleCount > 8 ? (
             <div className="flex justify-center mt-8">
               <AnimatedGlowButton
                 color="green"
@@ -1643,7 +1645,9 @@ export const TeamSection = forwardRef<HTMLElement, TeamSectionProps>(({ classNam
                 <ChevronDown className="h-4 w-4 rotate-180" />
               </AnimatedGlowButton>
             </div>
-          ) : null}
+          ) 
+          :
+           null} */}
         </div>
 
         {/* Past Boards */}

@@ -36,11 +36,9 @@ const formatTeamMembersForDisplay = () => {
   return teamData.allTeamMembers.map(member => {
     const latestYear = member.years?.sort((a, b) => b.localeCompare(a))[0] || '';
     const isFounder = member.years?.includes("2022") || false;
-    const isCurrent = member.years?.includes("Fall 2025") || false;
     
     let board = "";
     if (isFounder) board = "Revival Team";
-    else if (isCurrent) board = "Current E-Board";
     
     return {
       ...member,
