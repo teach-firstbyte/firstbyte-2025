@@ -36,11 +36,9 @@ const formatTeamMembersForDisplay = () => {
   return teamData.allTeamMembers.map(member => {
     const latestYear = member.years?.sort((a, b) => b.localeCompare(a))[0] || '';
     const isFounder = member.years?.includes("2022") || false;
-    const isCurrent = member.years?.includes("2024") || member.years?.includes("2025") || false;
     
     let board = "";
     if (isFounder) board = "Revival Team";
-    else if (isCurrent) board = "Current E-Board";
     
     return {
       ...member,
@@ -158,7 +156,13 @@ export default function TeamPage() {
     }
     
     if (filterYear !== "all") {
-      results = results.filter(member => member.years?.includes(filterYear))
+      results = results.filter(member => {
+        if (filterYear.includes(" ")) {
+          return member.years?.includes(filterYear);
+        } else {
+          return member.years?.some(yearEntry => yearEntry.includes(filterYear));
+        }
+      });
     }
     
     if (filterBoard !== "all") {
