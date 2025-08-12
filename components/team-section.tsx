@@ -48,7 +48,7 @@ const teamPhotos = teamData.teamPhotos || [];
 // Helper function to get the correct role for a specific year
 const getRoleForYear = (member: TeamMember, year: string): string => {
   // If we're looking for the current year (2025) role
-  if (year === "2025") {
+  if (year === "Fall 2025") {
     return member.role;
   }
   
@@ -57,73 +57,59 @@ const getRoleForYear = (member: TeamMember, year: string): string => {
   return historicalRole ? historicalRole.role : member.role;
 };
 
-// Filter for current executive board (members with 2025 in their years)
-const currentExecutiveBoard = allTeamMembers.filter(member => 
-  member.years?.includes("2025")
-).map(member => ({
-  ...member,
-  role: getRoleForYear(member, "2025") // Ensure we display the 2025 role
-}));
+// Replace the currentExecutiveBoard logic
+// const currentExecutiveBoard = allTeamMembers.filter(member => 
+//   member.years?.includes("Fall 2025")
+// ).map(member => ({
+//   ...member,
+//   role: getRoleForYear(member, "Fall 2025") // Ensure we display the 2025 role
+// }));
 
-// Filter for founding members (members with 2022 in their years)
-const foundingMembers = allTeamMembers.filter(member => 
-  member.years?.includes("2022")
-).map(member => {
-  // For past boards, show the member with their role from that year
-  return {
-    ...member,
-    role: getRoleForYear(member, "2022") // Use the 2022 role specifically
-  };
-});
+// New: Use a fixed, ordered array of names for the current E-Board
+const currentEboardNames = [
+  "Nick Chen",
+  "Alex Wright",
+  "Jaden Zhou",
+  "Amoli Patel",
+  "Gavin Normand",
+  "Shreyashi Kalakuntla",
+  "Inesh Parikh",
+  "Ameeka Patel",
+  "Alastaire Balin",
+  "Gina Hong",
+  "Shreesh Dassarkar"
+];
 
-// Helper function to create a past board with members showing their roles from that specific year
-const createPastBoard = (year: string, title: string): PastBoard => {
-  // Get all members who were active in that year
-  const membersFromYear = allTeamMembers.filter(member => 
-    member.years?.includes(year)
-  ).map(member => {
-    // Get the appropriate role for that year
-    return {
-      ...member,
-      role: getRoleForYear(member, year)
-    };
-  });
+const currentExecutiveBoard = currentEboardNames
+  .map(name => allTeamMembers.find(member => member.name === name))
+  .filter(Boolean) as TeamMember[];
+
+// Define specific order for founding team
+const revivalTeamOrder = ["Andy Ge", "Win Tongtawee", "Caleb Lee", "Landyn Sparacino", "Jennifer Esfahany", "Srikar Ananthoju"];
+const eboTwentyFour = ["Landyn Sparacino", "Caleb Lee", "Jaden Zhou", "Inesh Parikh", "Shreyashi Kalakuntla", "Anna Higgins", "Ireh Hong", "Andy Ge", "Jen Esfahany", "Win Tongtawee"];
+
+// Helper function to create a past board from an ordered array of names
+const createPastBoardFromNames = (year: string, title: string, orderedNames: string[]): PastBoard => {
+  const members = orderedNames
+    .map(name => allTeamMembers.find(member => member.name === name))
+    .filter(Boolean)
+    .map(member => ({
+      ...member!,
+      role: getRoleForYear(member!, year)
+    })) as TeamMember[];
   
   return {
     year: `${year}-${Number(year) + 1}`, // Format as academic year
     title: title,
-    members: membersFromYear
+    members: members
   };
 };
 
-// Define specific order for founding team
-const revivalTeamOrder = ["Andy Ge", "Win Tongtawee", "Caleb Lee", "Landyn Sparacino", "Jennifer Esfahany", "Srikar Ananthoju"];
-
-// Create past board entries with custom ordering for founding team
+// Create past board entries directly from ordered arrays
 const pastBoards: PastBoard[] = [
-  {
-    ...createPastBoard("2022", "Revival Team"),
-    // Sort members according to the specified order
-    members: createPastBoard("2022", "Revival Team").members.sort((a, b) => {
-      const indexA = revivalTeamOrder.indexOf(a.name);
-      const indexB = revivalTeamOrder.indexOf(b.name);
-      
-      // If both names are in the order list, sort by their position
-      if (indexA !== -1 && indexB !== -1) {
-        return indexA - indexB;
-      }
-      
-      // If only one name is in the list, prioritize it
-      if (indexA !== -1) return -1;
-      if (indexB !== -1) return 1;
-      
-      // If neither name is in the list, maintain alphabetical order
-      return a.name.localeCompare(b.name);
-    })
-  }
+  createPastBoardFromNames("2022", "Revival Team", revivalTeamOrder),
+  createPastBoardFromNames("2024", "2024 Leadership", eboTwentyFour)
   // Add more past boards as needed
-  // createPastBoard("2023", "2023 Leadership"),
-  // createPastBoard("2024", "2024 Leadership"),
 ];
 
 // Hook to detect mobile devices
@@ -293,26 +279,47 @@ function TeamMemberCard({ member, index, noStaggerDelay = false }: TeamMemberCar
     setIsModalOpen(true);
   };
   
-  // Generate year badges for each year with FirstByte
-  const renderYearBadges = () => {
-    if (!member.years || member.years.length === 0) return null;
-    
-    // Sort years in descending order (newest first)
-    const sortedYears = [...member.years].sort((a, b) => b.localeCompare(a));
-    
-    return (
-      <div className="flex flex-wrap gap-1 mt-1">
-        {sortedYears.map(year => (
-          <div 
-            key={year}
-            className="inline-flex items-center justify-center h-5 px-2 text-xs font-semibold text-foreground bg-muted rounded-full"
-          >
-            {year}
-          </div>
-        ))}
-      </div>
-    );
+  // Helper function to sort years if there is a semester, Fall will show before Spring
+  const sortYears = (a: string, b: string) => {
+    const semAndYear = (str: string) => {
+      const yearMatch = str.match(/\d{4}/);
+      const year = yearMatch ? parseInt(yearMatch[0], 10) : 0;
+
+      const semPrio = str.includes("Fall") ? 1 : 0;
+      
+      return { year, semPrio };
+    };
+
+    const year = semAndYear(a);
+    const sem = semAndYear(b);
+
+    if (sem.year !== year.year) {
+      return sem.year - year.year;
+    }
+
+    return sem.semPrio - year.semPrio;
   };
+  
+  // Generate year badges for each year with FirstByte
+const renderYearBadges = () => {
+  if (!member.years || member.years.length === 0) return null;
+  
+  // Use the new custom sorting function
+  const sortedYears = [...member.years].sort(sortYears);
+  
+  return (
+    <div className="flex flex-wrap gap-1 mt-1">
+      {sortedYears.map(year => (
+        <div 
+          key={year}
+          className="inline-flex items-center justify-center h-5 px-2 text-xs font-semibold text-foreground bg-muted rounded-full"
+        >
+          {year}
+        </div>
+      ))}
+    </div>
+  );
+};
 
   // Create role history display
   const renderRoleHistory = () => {
@@ -421,7 +428,11 @@ function TeamMemberCard({ member, index, noStaggerDelay = false }: TeamMemberCar
         onClick={handleCardClick}
         className="relative group"
       >
-        <Card className="overflow-hidden transition-all duration-300 group-hover:shadow-lg border-2 border-transparent group-hover:border-primary/20 cursor-pointer">
+        {/* Set a fixed min-height for non-mobile cards to ensure equal height, accounting for year badges */}
+        <Card className={cn(
+          "overflow-hidden transition-all duration-300 group-hover:shadow-lg border-2 border-transparent group-hover:border-primary/20 cursor-pointer",
+          !isMobile && "min-h-[320px]"
+        )}>
           <div className="aspect-square overflow-hidden relative">
             <div 
               className={cn(
@@ -862,7 +873,7 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
     id: idx,
     name: member.name,
     designation: member.role,
-    image: member.circularImage || member.image || "/placeholder.svg"
+    image: member.circularImage || member.image || "/teamMemberPhotos/default-pfp.jpg"
   }))
   
   // Navigate to profile when clicking on social media links
@@ -1560,7 +1571,7 @@ export const TeamSection = forwardRef<HTMLElement, TeamSectionProps>(({ classNam
     setVisibleCount(8)
   }
 
-  const currentVisible = currentExecutiveBoard.slice(0, visibleCount)
+  // const currentVisible = currentExecutiveBoard.slice(0, visibleCount)
 
   return (
     <section ref={ref} id="team" className={cn("bg-[hsl(var(--gray-50))] text-foreground pt-32 pb-10 overflow-hidden bg-dots-light", className)}>
@@ -1596,11 +1607,12 @@ export const TeamSection = forwardRef<HTMLElement, TeamSectionProps>(({ classNam
             className="flex justify-between items-end mb-8"
           >
             <h3 className="text-2xl font-semibold">Current Executive Board</h3>
-            <div className="text-sm text-muted-foreground">2024-2025</div>
+            <div className="text-sm text-muted-foreground">2025-2026</div>
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
-            {currentVisible.map((member, index) => (
+            {/* {currentVisible.map((member, index) => ( */}
+            {currentExecutiveBoard.map((member, index) => (
               <TeamMemberCard 
                 key={member.name} 
                 member={member} 
@@ -1610,7 +1622,7 @@ export const TeamSection = forwardRef<HTMLElement, TeamSectionProps>(({ classNam
             ))}
           </div>
           
-          {currentExecutiveBoard.length > visibleCount ? (
+          {/* {currentExecutiveBoard.length > visibleCount ? (
             <div className="flex justify-center mt-8">
               <AnimatedGlowButton
                 color="green"
@@ -1621,7 +1633,8 @@ export const TeamSection = forwardRef<HTMLElement, TeamSectionProps>(({ classNam
                 <ChevronDown className="h-4 w-4" />
               </AnimatedGlowButton>
             </div>
-          ) : currentExecutiveBoard.length > 8 && visibleCount > 8 ? (
+          ) 
+          : currentExecutiveBoard.length > 8 && visibleCount > 8 ? (
             <div className="flex justify-center mt-8">
               <AnimatedGlowButton
                 color="green"
@@ -1632,7 +1645,9 @@ export const TeamSection = forwardRef<HTMLElement, TeamSectionProps>(({ classNam
                 <ChevronDown className="h-4 w-4 rotate-180" />
               </AnimatedGlowButton>
             </div>
-          ) : null}
+          ) 
+          :
+           null} */}
         </div>
 
         {/* Past Boards */}

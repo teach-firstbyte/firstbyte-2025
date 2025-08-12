@@ -9,7 +9,7 @@
   "allTeamMembers": [
     {
       "name": "Landyn Sparacino",
-      "role": "President",
+      "role": "President", 
       "image": "/teamMemberPhotos/Landyn Sparacino.png",
       "bio": "Hi everyone! My name is Landyn Sparacino and I am a fourth year studying Cybersecurity and Criminal Justice. Once I graduate in May 2025, I will be joining Blackstone as a Cybersecurity Analyst. I have loved being a part of FirstByte and growing the club.",
       "linkedin": "https://www.linkedin.com/in/landynsparacino",
@@ -164,7 +164,7 @@
       "name": "Jaden Zhou",
       "role": "Treasurer",
       "image": "/teamMemberPhotos/Jaden Zhou.png",
-      "bio": "I'm Jaden and I'm a third year CS major.",
+      "bio": "Hi I’m Jaden. I’m a junior studying CS with a concentration in AI. I’ve been in FirstByte for two years and this will be my second year being treasurer.",
       "linkedin": "https://www.linkedin.com/in/jadenzhou/",
       "github": "https://www.github.com/JadenZhou",
       "years": ["2023", "2024", "2025"],
@@ -220,7 +220,7 @@
       "role": "Software Events Lead",
       "image": "/teamMemberPhotos/Gina Hong.png",
       "bio": "Hi! My name is Gina Hong, and I am a rising sophomore studying Computer Science and Business Administration at Northeastern University.I’m currently the Software Events Lead at FirstByte, where I help plan and run tech-focused events for our community! Outside of FirstByte I enjoy cooking, crocheting, and video editing. I’m constantly taking up new interests; from skating to even pottery, (I know super random)!",
-      "linkedin": "",
+      "linkedin": "https://www.linkedin.com/in/ginahong2006",
       "github": "",
       "years": ["2024", "2025"],
       "previousRoles": []
@@ -229,7 +229,7 @@
       "name": "Alex Wright",
       "role": "Vice President",
       "image": "/teamMemberPhotos/Alex Wright.jpg",
-      "bio": "Hey! My name is Alex and I’m a fourth year computer science major with a concentration in software. I have been at FirstByte for a year now and have worked on the Software team and CS curricula team.",
+      "bio": "Hey! My name is Alex and I'm a fourth year computer science major with a concentration in software. I have been at FirstByte for a year now and have worked on the Software team and CS curricula team.",
       "linkedin": "https://www.linkedin.com/in/alexandria-wright19/",
       "github": "https://github.com/alexw2326",
       "years": ["2024", "2025"],
@@ -247,11 +247,11 @@
     },
     {
       "name": "Gavin Normand",
-      "role": "CS Curricula Lead",
-      "image": "",
-      "bio": "Hi! My name is Gavin Normand",
-      "linkedin": "",
-      "github": "",
+      "role": "CS Curricula Co-Lead",
+      "image": "/teamMemberPhotos/Gavin Normand.png",
+      "bio": "I am a second year Computer Science major with a minor in Math. I was born and raised in rural Central New Jersey and in my free time I love to mountain bike, ski, play basketball and tennis, and hangout with my dog, friends, and family.",
+      "linkedin": "https://www.linkedin.com/in/gavin-normand",
+      "github": "https://github.com/gavinnormand",
       "years": ["2024", "2025"],
       "previousRoles": []
     }
