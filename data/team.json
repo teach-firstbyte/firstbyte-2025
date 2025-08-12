@@ -203,7 +203,9 @@
       "linkedin": "www.linkedin.com/in/amoli-patel",
       "github": "https://github.com/amolipatel05",
       "years": ["2024", "2025"],
-      "previousRoles": []
+      "previousRoles": [
+        {"role": "CS Curricula Team Member", "year": "2024"},
+        {"role": "Software Team Member", "year": "2024"}]
     },
     {
       "name": "Ameeka Patel",
@@ -213,7 +215,9 @@
       "linkedin": "www.linkedin.com/in/ameeka-patel",
       "github": "https://github.com/ameeka-patel",
       "years": ["2024", "2025"],
-      "previousRoles": []
+      "previousRoles": [
+        {"role": "CS Curricula Team Member", "year": "2024"},
+        {"role": "Software Team Member", "year": "2024"}]
     },
     {
       "name": "Gina Hong",
@@ -223,7 +227,9 @@
       "linkedin": "",
       "github": "",
       "years": ["2024", "2025"],
-      "previousRoles": []
+      "previousRoles": [
+        {"role": "Brand & Marketing Team Member", "year": "2024"}
+      ]
     },
     {
       "name": "Alex Wright",
@@ -233,7 +239,9 @@
       "linkedin": "https://www.linkedin.com/in/alexandria-wright19/",
       "github": "https://github.com/alexw2326",
       "years": ["2024", "2025"],
-      "previousRoles": []
+      "previousRoles": [
+        {"role": "CS Curricula Team Member", "year": "2024"},
+        {"role": "Software Team Member", "year": "2024"}]
     },
     {
       "name": "Nick Chen",
@@ -243,7 +251,9 @@
       "linkedin": "www.linkedin.com/in/nckchen",
       "github": "https://github.com/chnnick",
       "years": ["2024", "2025"],
-      "previousRoles": []
+      "previousRoles": [
+        {"role": "CS Curricula Team Member", "year": "2024"},
+        {"role": "Software Team Member", "year": "2024"}]
     },
     {
       "name": "Gavin Normand",
@@ -253,7 +263,8 @@
       "linkedin": "",
       "github": "",
       "years": ["2024", "2025"],
-      "previousRoles": []
+      "previousRoles": [
+        {"role": "CS Curricula Team Member", "year": "2024"}]
     }
   ]
   
