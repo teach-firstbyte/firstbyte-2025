@@ -86,7 +86,7 @@ const currentExecutiveBoard = currentEboardNames
 
 // Define specific order for founding team
 const revivalTeamOrder = ["Andy Ge", "Win Tongtawee", "Caleb Lee", "Landyn Sparacino", "Jennifer Esfahany", "Srikar Ananthoju"];
-const eboTwentyFour = ["Landyn Sparacino", "Caleb Lee", "Jaden Zhou", "Inesh Parikh", "Shreyashi Kalakuntla", "Anna Higgins", "Ireh Hong", "Andy Ge", "Jen Esfahany", "Win Tongtawee"];
+const eboTwentyFour = ["Landyn Sparacino", "Caleb Lee", "Jaden Zhou", "Inesh Parikh", "Shreyashi Kalakuntla", "Anna Higgins", "Ireh Hong", "Andy Ge", "Jennifer Esfahany", "Win Tongtawee"];
 
 // Helper function to create a past board from an ordered array of names
 const createPastBoardFromNames = (year: string, title: string, orderedNames: string[]): PastBoard => {
