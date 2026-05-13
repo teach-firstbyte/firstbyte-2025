@@ -101,7 +101,7 @@ export function Navbar({ activeSection }: NavbarProps) {
     { name: "About", href: "/#about", section: "about" },
     { name: "Programs", href: "/#programs", section: "programs" },
     { name: "Team", href: "/#team", section: "team" },
-    // { name: "All Programs", href: "/programs", section: "programs" },
+    // { name: "Contact", href: "/#contact", section: "contact" },
   ]
 
   // Animation variants
