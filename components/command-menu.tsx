@@ -54,9 +54,12 @@ export function CommandMenu() {
   const { setTheme, theme } = useTheme()
   const router = useRouter()
 
-  // Get current team members (has 2025 in their years array)
-  const currentTeamMembers = teamData.allTeamMembers.filter(
-    (member) => member.years?.includes("2025")
+
+  // Get current team members (has 2026 in their years array)
+  const currentTeamYear = "2026"
+  
+  const currentTeamMembers = teamData.allTeamMembers.filter((member) =>
+    member.years?.some((y) => y === currentTeamYear)
   )
 
   // Extract unique team roles for searching

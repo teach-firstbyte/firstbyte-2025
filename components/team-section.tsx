@@ -13,7 +13,7 @@ import { AnimatedTooltip } from "@/components/ui/animated-tooltip"
 import teamData from "@/data/team.json"
 import { AnimatedGlowButton } from "@/components/ui/animated-glow-button"
 import { BlurTooltip, TooltipPosition } from "@/components/ui/blur-tooltip"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import Image from "next/image"
 
 interface TeamMember {
@@ -45,14 +45,10 @@ const allTeamMembers: TeamMember[] = teamData.allTeamMembers;
 // Get team photos if available
 const teamPhotos = teamData.teamPhotos || [];
 
+const LATEST_MEMBER_YEAR = "2026";
+
 // Helper function to get the correct role for a specific year
 const getRoleForYear = (member: TeamMember, year: string): string => {
-  // If we're looking for the current year (2025) role
-  if (year === "Fall 2025") {
-    return member.role;
-  }
-  
-  // If we're looking for a historical role
   const historicalRole = member.previousRoles?.find(role => role.year === year);
   return historicalRole ? historicalRole.role : member.role;
 };
@@ -68,6 +64,30 @@ const getRoleForYear = (member: TeamMember, year: string): string => {
 // New: Use a fixed, ordered array of names for the current E-Board
 const currentEboardNames = [
   "Nick Chen",
+  "Gina Hong",
+  "Meera Patel",
+  "Jason Chao",
+  "Amy Tran",
+  "Inesh Parikh",
+  "Shreyashi Kalakuntla",
+  "Chayil Mauristhene",
+  "Koena Gupta",
+  "Hector Batista",
+  "Ananya Pochinapeddi",
+  "Himasri Cheerla"
+];
+
+
+
+const currentExecutiveBoard = currentEboardNames
+  .map(name => allTeamMembers.find(member => member.name === name))
+  .filter(Boolean) as TeamMember[];
+
+// Define specific order for founding team
+const revivalTeamOrder = ["Andy Ge", "Win Tongtawee", "Caleb Lee", "Landyn Sparacino", "Jennifer Esfahany", "Srikar Ananthoju"];
+const eboTwentyFour = ["Landyn Sparacino", "Caleb Lee", "Jaden Zhou", "Inesh Parikh", "Shreyashi Kalakuntla", "Anna Higgins", "Ireh Hong", "Andy Ge", "Jennifer Esfahany", "Win Tongtawee"];
+const eboTwentyFiveSix = [
+  "Nick Chen",
   "Alex Wright",
   "Jaden Zhou",
   "Amoli Patel",
@@ -79,15 +99,6 @@ const currentEboardNames = [
   "Gina Hong",
   "Shreesh Dassarkar"
 ];
-
-const currentExecutiveBoard = currentEboardNames
-  .map(name => allTeamMembers.find(member => member.name === name))
-  .filter(Boolean) as TeamMember[];
-
-// Define specific order for founding team
-const revivalTeamOrder = ["Andy Ge", "Win Tongtawee", "Caleb Lee", "Landyn Sparacino", "Jennifer Esfahany", "Srikar Ananthoju"];
-const eboTwentyFour = ["Landyn Sparacino", "Caleb Lee", "Jaden Zhou", "Inesh Parikh", "Shreyashi Kalakuntla", "Anna Higgins", "Ireh Hong", "Andy Ge", "Jennifer Esfahany", "Win Tongtawee"];
-
 // Helper function to create a past board from an ordered array of names
 const createPastBoardFromNames = (year: string, title: string, orderedNames: string[]): PastBoard => {
   const members = orderedNames
@@ -107,9 +118,9 @@ const createPastBoardFromNames = (year: string, title: string, orderedNames: str
 
 // Create past board entries directly from ordered arrays
 const pastBoards: PastBoard[] = [
-  createPastBoardFromNames("2022", "Revival Team", revivalTeamOrder),
-  createPastBoardFromNames("2024", "2024 Leadership", eboTwentyFour)
-  // Add more past boards as needed
+  createPastBoardFromNames("2025", "2025–2026 Executive Board", eboTwentyFiveSix),
+  createPastBoardFromNames("2024", "2024-2025 Executive Board", eboTwentyFour),
+  createPastBoardFromNames("2022", "Revival Team", revivalTeamOrder)
 ];
 
 // Hook to detect mobile devices
@@ -560,6 +571,10 @@ const renderYearBadges = () => {
         <DialogContent className="sm:max-w-[600px] p-0">
           <DialogHeader className="sr-only">
             <DialogTitle>{member.name} - Team Member Details</DialogTitle>
+            <DialogDescription>
+              {member.role}
+              {member.bio ? `. ${member.bio}` : ""}
+            </DialogDescription>
           </DialogHeader>
           
           <button 
@@ -931,8 +946,7 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
     // Get the current board year to highlight
     const boardYear = board.year.split('-')[0];
     
-    // Check if this member is active in the current year (2025)
-    const isActiveCurrently = activeYears.includes("2025");
+    const isActiveCurrently = activeYears.includes(LATEST_MEMBER_YEAR);
     const mostRecentYear = activeYears.length > 0 ? [...activeYears].sort((a, b) => b.localeCompare(a))[0] : "";
     
     // Make sure we get the correct roles for the display
@@ -951,7 +965,6 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
       
       // Create a timeline entry for each previous role
       sortedPreviousRoles.forEach(prevRole => {
-        // Check if this is their last/final role (most recent year if not active in 2025)
         const isLastRole = !isActiveCurrently && prevRole.year === mostRecentYear;
         
         roleTimeline.push({
@@ -964,14 +977,13 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
       });
     }
     
-    // Add the current role specifically only if the member is active in 2025
-    if (isActiveCurrently && mostRecentYear === "2025") {
+    if (isActiveCurrently && mostRecentYear === LATEST_MEMBER_YEAR) {
       roleTimeline.push({
-        year: "2025",
+        year: LATEST_MEMBER_YEAR,
         role: currentRole,
         isCurrent: true,
-        isHighlighted: boardYear === "2025",
-        isLastRole: false // Not needed since isCurrent already marks this
+        isHighlighted: boardYear === LATEST_MEMBER_YEAR,
+        isLastRole: false
       });
     }
     
@@ -1607,7 +1619,7 @@ export const TeamSection = forwardRef<HTMLElement, TeamSectionProps>(({ classNam
             className="flex justify-between items-end mb-8"
           >
             <h3 className="text-2xl font-semibold">Current Executive Board</h3>
-            <div className="text-sm text-muted-foreground">2025-2026</div>
+            <div className="text-sm text-muted-foreground">2026–2027</div>
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
