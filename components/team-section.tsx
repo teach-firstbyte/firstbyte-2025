@@ -47,8 +47,8 @@ const teamPhotos = teamData.teamPhotos || [];
 
 // Helper function to get the correct role for a specific year
 const getRoleForYear = (member: TeamMember, year: string): string => {
-  // If we're looking for the current year (2025) role
-  if (year === "Fall 2025") {
+  // If we're looking for the current year (2026) role
+  if (year === "Fall 2026") {
     return member.role;
   }
   
@@ -67,17 +67,18 @@ const getRoleForYear = (member: TeamMember, year: string): string => {
 
 // New: Use a fixed, ordered array of names for the current E-Board
 const currentEboardNames = [
-  "Nick Chen",
-  "Alex Wright",
-  "Jaden Zhou",
-  "Amoli Patel",
-  "Gavin Normand",
+  "Nicholas Chen",
+  "Gina Hong",
   "Shreyashi Kalakuntla",
   "Inesh Parikh",
-  "Ameeka Patel",
-  "Alastaire Balin",
-  "Gina Hong",
-  "Shreesh Dassarkar"
+  "Amy Tran",
+  "Jason Chao",
+  "Ananya Pochinapeddi",
+  "Himasri Cheerla",
+  "Chayil Mauristhene",
+  "Koena Gupta",
+  "Hector Batista",
+  "Meera Patel"
 ];
 
 const currentExecutiveBoard = currentEboardNames
@@ -87,6 +88,7 @@ const currentExecutiveBoard = currentEboardNames
 // Define specific order for founding team
 const revivalTeamOrder = ["Andy Ge", "Win Tongtawee", "Caleb Lee", "Landyn Sparacino", "Jennifer Esfahany", "Srikar Ananthoju"];
 const eboTwentyFour = ["Landyn Sparacino", "Caleb Lee", "Jaden Zhou", "Inesh Parikh", "Shreyashi Kalakuntla", "Anna Higgins", "Ireh Hong", "Andy Ge", "Jennifer Esfahany", "Win Tongtawee"];
+const eboTwentyFive = ["Nicholas Chen", "Alex Wright", "Jaden Zhou", "Amoli Patel", "Gavin Normand", "Shreyashi Kalakuntla", "Inesh Parikh", "Ameeka Patel", "Alastaire Balin", "Gina Hong", "Shreesh Dassarkar"];
 
 // Helper function to create a past board from an ordered array of names
 const createPastBoardFromNames = (year: string, title: string, orderedNames: string[]): PastBoard => {
@@ -108,7 +110,8 @@ const createPastBoardFromNames = (year: string, title: string, orderedNames: str
 // Create past board entries directly from ordered arrays
 const pastBoards: PastBoard[] = [
   createPastBoardFromNames("2022", "Revival Team", revivalTeamOrder),
-  createPastBoardFromNames("2024", "2024 Leadership", eboTwentyFour)
+  createPastBoardFromNames("2024", "2024 Leadership", eboTwentyFour),
+  createPastBoardFromNames("2025", "2025 Leadership", eboTwentyFive)
   // Add more past boards as needed
 ];
 
@@ -931,8 +934,8 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
     // Get the current board year to highlight
     const boardYear = board.year.split('-')[0];
     
-    // Check if this member is active in the current year (2025)
-    const isActiveCurrently = activeYears.includes("2025");
+    // Check if this member is active in the current year (2026)
+    const isActiveCurrently = activeYears.includes("2026");
     const mostRecentYear = activeYears.length > 0 ? [...activeYears].sort((a, b) => b.localeCompare(a))[0] : "";
     
     // Make sure we get the correct roles for the display
@@ -951,7 +954,7 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
       
       // Create a timeline entry for each previous role
       sortedPreviousRoles.forEach(prevRole => {
-        // Check if this is their last/final role (most recent year if not active in 2025)
+        // Check if this is their last/final role (most recent year if not active in 2026)
         const isLastRole = !isActiveCurrently && prevRole.year === mostRecentYear;
         
         roleTimeline.push({
@@ -964,13 +967,13 @@ function CardStack({ board, index }: { board: PastBoard; index: number }) {
       });
     }
     
-    // Add the current role specifically only if the member is active in 2025
-    if (isActiveCurrently && mostRecentYear === "2025") {
+    // Add the current role specifically only if the member is active in 2026
+    if (isActiveCurrently && mostRecentYear === "2026") {
       roleTimeline.push({
-        year: "2025",
+        year: "2026",
         role: currentRole,
         isCurrent: true,
-        isHighlighted: boardYear === "2025",
+        isHighlighted: boardYear === "2026",
         isLastRole: false // Not needed since isCurrent already marks this
       });
     }
@@ -1607,7 +1610,7 @@ export const TeamSection = forwardRef<HTMLElement, TeamSectionProps>(({ classNam
             className="flex justify-between items-end mb-8"
           >
             <h3 className="text-2xl font-semibold">Current Executive Board</h3>
-            <div className="text-sm text-muted-foreground">2025-2026</div>
+            <div className="text-sm text-muted-foreground">2026-2027</div>
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">

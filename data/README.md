@@ -21,7 +21,7 @@ Each team member has the following structure:
   "linkedin": "https://linkedin.com/in/member-name",
   "github": "https://github.com/membername",  // Optional
   "twitter": "https://twitter.com/membername", // Optional
-  "years": ["2022", "2023", "2024", "2025"],  // Years active with FirstByte
+  "years": ["2022", "2023", "2024", "2025", "2026"],  // Years active with FirstByte
   "previousRoles": ["Past Role 1", "Past Role 2"]  // Optional
 }
 ```
@@ -50,7 +50,7 @@ No need to remove them! Simply ensure their `years` array doesn't include the cu
 ### Filtering Logic
 
 The components automatically filter members based on their years:
-- Current executive board = members with "2025" in their years array
+- Current executive board = members with "2026" in their years array
 - Founding team = members with "2022" in their years array
 
 This allows for automatic organization without duplicating data. 
