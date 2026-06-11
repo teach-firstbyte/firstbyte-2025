@@ -368,13 +368,13 @@ function TeamMemberCard({
         onMouseMove={handleMouseMove}
         onMouseEnter={handleDivMouseEnter}
         onClick={handleCardClick}
-        className="relative group"
+        className="relative group h-full"
       >
         {/* Set a fixed min-height for non-mobile cards to ensure equal height, accounting for year badges */}
         <Card
           className={cn(
             "overflow-hidden transition-all duration-300 group-hover:shadow-lg border-2 border-transparent group-hover:border-primary/20 cursor-pointer",
-            !isMobile && "min-h-[320px]",
+            !isMobile && "min-h-[320px] sm:h-full",
           )}
         >
           <div className="aspect-square overflow-hidden relative">
@@ -780,7 +780,7 @@ export const TeamSection = forwardRef<HTMLElement, TeamSectionProps>(
               {currentExecutiveBoard.map((member, index) => (
                 <div
                   key={member.name}
-                  className="snap-center shrink-0 w-[80%] sm:w-auto sm:shrink"
+                  className="snap-center shrink-0 w-[80%] sm:w-auto sm:shrink sm:h-full"
                 >
                   <TeamMemberCard
                     member={member}
