@@ -97,11 +97,9 @@ export function Navbar({ activeSection }: NavbarProps) {
   }, [])
 
   const navLinks = [
-    { name: "Home", href: "/#home", section: "home" },
     { name: "About", href: "/#about", section: "about" },
     { name: "Programs", href: "/#programs", section: "programs" },
     { name: "Team", href: "/#team", section: "team" },
-    // { name: "Contact", href: "/#contact", section: "contact" },
   ]
 
   // Animation variants
