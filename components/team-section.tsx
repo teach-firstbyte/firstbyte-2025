@@ -1,71 +1,43 @@
-"use client"
+"use client";
 
-import React, { useState, forwardRef, useEffect } from "react"
-import Link from "next/link"
-import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from "framer-motion"
-import { createPortal } from "react-dom"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { ArrowRight, ChevronDown, Linkedin, Twitter, Github, Clock, ChevronRight, X, Globe, Info } from "lucide-react"
-import { AnimatedTooltip } from "@/components/ui/animated-tooltip"
-import teamData from "@/data/team.json"
-import { AnimatedGlowButton } from "@/components/ui/animated-glow-button"
-import { BlurTooltip, TooltipPosition } from "@/components/ui/blur-tooltip"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import Image from "next/image"
-
-interface TeamMember {
-  name: string
-  role: string
-  image?: string | null
-  circularImage?: string | null
-  bio?: string
-  linkedin?: string
-  twitter?: string
-  github?: string
-  website?: string
-  years?: string[] // List of years with FirstByte (e.g. ["2022", "2023", "2024"])
-  previousRoles?: { role: string; year: string }[] // Previous roles with years
-}
-
-interface PastBoard {
-  year: string
-  title: string
-  members: TeamMember[]
-}
+import React, { useState, forwardRef } from "react";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  ArrowRight,
+  ChevronDown,
+  Linkedin,
+  Twitter,
+  Github,
+  X,
+  Globe,
+} from "lucide-react";
+import { AnimatedGlowButton } from "@/components/ui/animated-glow-button";
+import { BlurTooltip, TooltipPosition } from "@/components/ui/blur-tooltip";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import Image from "next/image";
+import {
+  allTeamMembers,
+  getRoleForYear,
+  useIsMobile,
+  type PastBoard,
+  type TeamMember,
+} from "@/components/team/shared";
+import { CardStack } from "@/components/team/card-stack";
 
 interface TeamSectionProps {
-  className?: string
+  className?: string;
 }
 
-// Get all team members from the JSON data
-const allTeamMembers: TeamMember[] = teamData.allTeamMembers;
-// Get team photos if available
-const teamPhotos = teamData.teamPhotos || [];
-
-// Helper function to get the correct role for a specific year
-const getRoleForYear = (member: TeamMember, year: string): string => {
-  // If we're looking for the current year (2026) role
-  if (year === "Fall 2026") {
-    return member.role;
-  }
-  
-  // If we're looking for a historical role
-  const historicalRole = member.previousRoles?.find(role => role.year === year);
-  return historicalRole ? historicalRole.role : member.role;
-};
-
-// Replace the currentExecutiveBoard logic
-// const currentExecutiveBoard = allTeamMembers.filter(member => 
-//   member.years?.includes("Fall 2025")
-// ).map(member => ({
-//   ...member,
-//   role: getRoleForYear(member, "Fall 2025") // Ensure we display the 2025 role
-// }));
-
-// New: Use a fixed, ordered array of names for the current E-Board
 const currentEboardNames = [
   "Nicholas Chen",
   "Gina Hong",
@@ -78,32 +50,66 @@ const currentEboardNames = [
   "Chayil Mauristhene",
   "Koena Gupta",
   "Hector Batista",
-  "Meera Patel"
+  "Meera Patel",
 ];
 
 const currentExecutiveBoard = currentEboardNames
-  .map(name => allTeamMembers.find(member => member.name === name))
+  .map((name) => allTeamMembers.find((member) => member.name === name))
   .filter(Boolean) as TeamMember[];
 
 // Define specific order for founding team
-const revivalTeamOrder = ["Andy Ge", "Win Tongtawee", "Caleb Lee", "Landyn Sparacino", "Jennifer Esfahany", "Srikar Ananthoju"];
-const eboTwentyFour = ["Landyn Sparacino", "Caleb Lee", "Jaden Zhou", "Inesh Parikh", "Shreyashi Kalakuntla", "Anna Higgins", "Ireh Hong", "Andy Ge", "Jennifer Esfahany", "Win Tongtawee"];
-const eboTwentyFive = ["Nicholas Chen", "Alex Wright", "Jaden Zhou", "Amoli Patel", "Gavin Normand", "Shreyashi Kalakuntla", "Inesh Parikh", "Ameeka Patel", "Alastaire Balin", "Gina Hong", "Shreesh Dassarkar"];
+const revivalTeamOrder = [
+  "Andy Ge",
+  "Win Tongtawee",
+  "Caleb Lee",
+  "Landyn Sparacino",
+  "Jennifer Esfahany",
+  "Srikar Ananthoju",
+];
+const eboTwentyFour = [
+  "Landyn Sparacino",
+  "Caleb Lee",
+  "Jaden Zhou",
+  "Inesh Parikh",
+  "Shreyashi Kalakuntla",
+  "Anna Higgins",
+  "Ireh Hong",
+  "Andy Ge",
+  "Jennifer Esfahany",
+  "Win Tongtawee",
+];
+const eboTwentyFive = [
+  "Nicholas Chen",
+  "Alex Wright",
+  "Jaden Zhou",
+  "Amoli Patel",
+  "Gavin Normand",
+  "Shreyashi Kalakuntla",
+  "Inesh Parikh",
+  "Ameeka Patel",
+  "Alastaire Balin",
+  "Gina Hong",
+  "Shreesh Dassarkar",
+];
 
 // Helper function to create a past board from an ordered array of names
-const createPastBoardFromNames = (year: string, title: string, orderedNames: string[]): PastBoard => {
+const createPastBoardFromNames = (
+  year: string,
+  title: string,
+  orderedNames: string[],
+): PastBoard => {
   const members = orderedNames
-    .map(name => allTeamMembers.find(member => member.name === name))
+    .map((name) => allTeamMembers.find((member) => member.name === name))
     .filter(Boolean)
-    .map(member => ({
+    .map((member) => ({
       ...member!,
-      role: getRoleForYear(member!, year)
+      role: getRoleForYear(member!, year),
     })) as TeamMember[];
-  
+
   return {
     year: `${year}-${Number(year) + 1}`, // Format as academic year
     title: title,
-    members: members
+    members: members,
   };
 };
 
@@ -111,91 +117,9 @@ const createPastBoardFromNames = (year: string, title: string, orderedNames: str
 const pastBoards: PastBoard[] = [
   createPastBoardFromNames("2022", "Revival Team", revivalTeamOrder),
   createPastBoardFromNames("2024", "2024 Leadership", eboTwentyFour),
-  createPastBoardFromNames("2025", "2025 Leadership", eboTwentyFive)
+  createPastBoardFromNames("2025", "2025 Leadership", eboTwentyFive),
   // Add more past boards as needed
 ];
-
-// Hook to detect mobile devices
-const useIsMobile = () => {
-  const [isMobile, setIsMobile] = useState(false);
-  
-  useEffect(() => {
-    // Function to check if the device is mobile based on screen width
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    
-    // Initial check
-    checkMobile();
-    
-    // Add event listener for resize
-    window.addEventListener('resize', checkMobile);
-    
-    // Cleanup
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-  
-  return isMobile;
-};
-
-// Portal component for tooltips
-function TooltipPortal({ children }: { children: React.ReactNode }) {
-  const [mounted, setMounted] = useState(false)
-  
-  // Only render portal content after component is mounted
-  // This avoids hydration issues with SSR
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-  
-  if (!mounted) return null
-  
-  return typeof window !== 'undefined' 
-    ? createPortal(children, document.body)
-    : null
-}
-
-// Reusable original style tooltip
-interface ClassicTooltipProps {
-  position: TooltipPosition;
-  title: string;
-  subtitle?: string;
-  visible: boolean;
-  id?: string;
-}
-
-function ClassicTooltip({ position, title, subtitle, visible, id = "tooltip" }: ClassicTooltipProps & { socialUrl?: string | null }) {
-  return (
-    <TooltipPortal>
-      <div 
-        className="pointer-events-none fixed left-0 top-0 z-[9999]" 
-        id={`STALKER-${id}`}
-        style={{ transform: `translate(${position.x}px, ${position.y}px)` }}
-      >
-        <div 
-          className="bg-popover rounded-md shadow-lg px-4 py-2 min-w-[140px] text-center transform -translate-x-1/2"
-          style={{ 
-            filter: visible ? "blur(0px)" : "blur(16px)",
-            opacity: visible ? 1 : 0,
-            transitionDuration: "1.2s",
-            transitionTimingFunction: "cubic-bezier(0.32, 0.72, 0, 1)"
-          }}
-        >
-          <div className="absolute inset-x-10 w-[20%] -bottom-px bg-gradient-to-r from-transparent via-primary to-transparent h-px" />
-          <div className="absolute left-10 w-[40%] z-30 -bottom-px bg-gradient-to-r from-transparent via-primary/70 to-transparent h-px" />
-          <div className="font-bold text-base text-popover-foreground">
-            {title}
-          </div>
-          {subtitle && (
-            <div className="text-xs text-muted-foreground">
-              {subtitle}
-            </div>
-          )}
-        </div>
-      </div>
-    </TooltipPortal>
-  );
-}
 
 interface TeamMemberCardProps {
   member: TeamMember;
@@ -203,25 +127,30 @@ interface TeamMemberCardProps {
   noStaggerDelay?: boolean;
 }
 
-function TeamMemberCard({ member, index, noStaggerDelay = false }: TeamMemberCardProps) {
-  const [isHovered, setIsHovered] = useState(false)
-  const [showRoleHistory, setShowRoleHistory] = useState(false)
-  const [memberTooltipPosition, setMemberTooltipPosition] = useState<TooltipPosition | null>(null)
-  const [tooltipVisible, setTooltipVisible] = useState(false)
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [hoveredSocialUrl, setHoveredSocialUrl] = useState<string | null>(null)
+function TeamMemberCard({
+  member,
+  index,
+  noStaggerDelay = false,
+}: TeamMemberCardProps) {
+  const [isHovered, setIsHovered] = useState(false);
+  const [showRoleHistory, setShowRoleHistory] = useState(false);
+  const [memberTooltipPosition, setMemberTooltipPosition] =
+    useState<TooltipPosition | null>(null);
+  const [tooltipVisible, setTooltipVisible] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [hoveredSocialUrl, setHoveredSocialUrl] = useState<string | null>(null);
   const isMobile = useIsMobile();
-  
+
   // Handle mouse movement for tooltip - only on desktop
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (isHovered && !isMobile) {
       setMemberTooltipPosition({
         x: e.clientX,
-        y: e.clientY + 15 // Position below cursor
+        y: e.clientY + 15, // Position below cursor
       });
     }
   };
-  
+
   // Show tooltip on hover - only on desktop
   const handleMouseEnter = () => {
     if (!isMobile) {
@@ -229,59 +158,59 @@ function TeamMemberCard({ member, index, noStaggerDelay = false }: TeamMemberCar
       setTooltipVisible(true);
     }
   };
-  
+
   // Handle mouse enter with position update - only on desktop
   const handleDivMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!isMobile) {
       handleMouseEnter();
       setMemberTooltipPosition({
         x: e.clientX,
-        y: e.clientY + 15
+        y: e.clientY + 15,
       });
     }
   };
-  
+
   // Hide tooltip when not hovering
   const handleMouseLeave = () => {
     setIsHovered(false);
     setTooltipVisible(false);
     setHoveredSocialUrl(null);
   };
-  
+
   // Handle social icon hover - only on desktop
   const handleSocialHover = (
-    type: 'linkedin' | 'github' | 'twitter' | 'website',
-    url: string, 
-    event: React.MouseEvent<HTMLElement>
+    type: "linkedin" | "github" | "twitter" | "website",
+    url: string,
+    event: React.MouseEvent<HTMLElement>,
   ) => {
     if (isMobile) return;
-    
+
     // Set the social URL to show
     setHoveredSocialUrl(url);
-    
+
     // Update position
     setMemberTooltipPosition({
       x: event.clientX,
-      y: event.clientY + 15
+      y: event.clientY + 15,
     });
-    
+
     // Make sure tooltip is visible
     setTooltipVisible(true);
-    
+
     // Prevent parent tooltip from showing
     event.stopPropagation();
   };
-  
+
   // Handle mouse leave from social icon
   const handleSocialLeave = () => {
     setHoveredSocialUrl(null);
   };
-  
+
   // Open modal when card is clicked
   const handleCardClick = () => {
     setIsModalOpen(true);
   };
-  
+
   // Helper function to sort years if there is a semester, Fall will show before Spring
   const sortYears = (a: string, b: string) => {
     const semAndYear = (str: string) => {
@@ -289,7 +218,7 @@ function TeamMemberCard({ member, index, noStaggerDelay = false }: TeamMemberCar
       const year = yearMatch ? parseInt(yearMatch[0], 10) : 0;
 
       const semPrio = str.includes("Fall") ? 1 : 0;
-      
+
       return { year, semPrio };
     };
 
@@ -302,41 +231,49 @@ function TeamMemberCard({ member, index, noStaggerDelay = false }: TeamMemberCar
 
     return sem.semPrio - year.semPrio;
   };
-  
+
   // Generate year badges for each year with FirstByte
-const renderYearBadges = () => {
-  if (!member.years || member.years.length === 0) return null;
-  
-  // Use the new custom sorting function
-  const sortedYears = [...member.years].sort(sortYears);
-  
-  return (
-    <div className="flex flex-wrap gap-1 mt-1">
-      {sortedYears.map(year => (
-        <div 
-          key={year}
-          className="inline-flex items-center justify-center h-5 px-2 text-xs font-semibold text-foreground bg-muted rounded-full"
-        >
-          {year}
-        </div>
-      ))}
-    </div>
-  );
-};
+  const renderYearBadges = () => {
+    if (!member.years || member.years.length === 0) return null;
+
+    // Use the new custom sorting function
+    const sortedYears = [...member.years].sort(sortYears);
+
+    return (
+      <div className="flex flex-wrap gap-1 mt-1">
+        {sortedYears.map((year) => (
+          <div
+            key={year}
+            className="inline-flex items-center justify-center h-5 px-2 text-xs font-semibold text-foreground bg-muted rounded-full"
+          >
+            {year}
+          </div>
+        ))}
+      </div>
+    );
+  };
 
   // Create role history display
   const renderRoleHistory = () => {
     if (!member.previousRoles || member.previousRoles.length === 0) return null;
-    
+
     // Sort roles by year (oldest first)
-    const sortedRoles = [...member.previousRoles].sort((a, b) => 
-      a.year.localeCompare(b.year)
+    const sortedRoles = [...member.previousRoles].sort((a, b) =>
+      a.year.localeCompare(b.year),
     );
-    
+
     // Group consecutive years with the same role
-    const consolidatedRoles: {startYear: string; endYear: string; role: string}[] = [];
-    let currentGroup: {startYear: string; endYear: string; role: string} | null = null;
-    
+    const consolidatedRoles: {
+      startYear: string;
+      endYear: string;
+      role: string;
+    }[] = [];
+    let currentGroup: {
+      startYear: string;
+      endYear: string;
+      role: string;
+    } | null = null;
+
     sortedRoles.forEach((roleObj, index) => {
       // If this is a new role or first item
       if (!currentGroup || currentGroup.role !== roleObj.role) {
@@ -344,46 +281,47 @@ const renderYearBadges = () => {
         if (currentGroup) {
           consolidatedRoles.push(currentGroup);
         }
-        
+
         // Start new group
         currentGroup = {
           startYear: roleObj.year,
           endYear: roleObj.year,
-          role: roleObj.role
+          role: roleObj.role,
         };
       } else {
         // Continue current group
         currentGroup.endYear = roleObj.year;
       }
-      
+
       // If this is the last item, add the current group
       if (index === sortedRoles.length - 1 && currentGroup) {
         consolidatedRoles.push(currentGroup);
       }
     });
-    
+
     return (
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, height: 0 }}
-        animate={{ 
+        animate={{
           opacity: showRoleHistory ? 1 : 0,
-          height: showRoleHistory ? 'auto' : 0
+          height: showRoleHistory ? "auto" : 0,
         }}
         transition={{ duration: 0.3 }}
         className="overflow-hidden"
       >
         <div className="mt-3 pt-3 border-t border-border">
-          <h4 className="text-xs font-medium mb-1 text-muted-foreground">Previous Roles:</h4>
+          <h4 className="text-xs font-medium mb-1 text-muted-foreground">
+            Previous Roles:
+          </h4>
           <ul className="space-y-1">
             {consolidatedRoles.map((roleGroup, idx) => (
               <li key={idx} className="text-xs flex items-center">
                 <div className="h-1.5 w-1.5 rounded-full bg-primary/70 mr-1.5" />
                 <span>{roleGroup.role}</span>
                 <span className="ml-1 text-muted-foreground">
-                  {roleGroup.startYear === roleGroup.endYear 
-                    ? `(${roleGroup.startYear})` 
-                    : `(${roleGroup.startYear} - ${roleGroup.endYear})`
-                  }
+                  {roleGroup.startYear === roleGroup.endYear
+                    ? `(${roleGroup.startYear})`
+                    : `(${roleGroup.startYear} - ${roleGroup.endYear})`}
                 </span>
               </li>
             ))}
@@ -392,85 +330,98 @@ const renderYearBadges = () => {
       </motion.div>
     );
   };
-  
+
   // Navigate to profile when clicking on the avatar
   const navigateToProfile = () => {
     // Navigate to member's profile - assuming linkedin as default profile link
     if (member.linkedin) {
-      window.open(member.linkedin, '_blank');
+      window.open(member.linkedin, "_blank");
     } else if (member.github) {
-      window.open(member.github, '_blank');
+      window.open(member.github, "_blank");
     } else if (member.website) {
-      window.open(member.website, '_blank');
+      window.open(member.website, "_blank");
     } else if (member.twitter) {
-      window.open(member.twitter, '_blank');
+      window.open(member.twitter, "_blank");
     }
   };
-  
+
   // Determine if the member has role history
-  const hasRoleHistory = member.previousRoles && member.previousRoles.length > 0;
-  
+  const hasRoleHistory =
+    member.previousRoles && member.previousRoles.length > 0;
+
   return (
     <>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ 
+        transition={{
           duration: 0.5,
           delay: noStaggerDelay ? 0 : index * 0.1,
-          ease: [0.19, 1, 0.22, 1]
+          ease: [0.19, 1, 0.22, 1],
         }}
-        whileHover={{ 
+        whileHover={{
           y: isMobile ? 0 : -8,
-          transition: { duration: 0.3, ease: "easeOut" }
+          transition: { duration: 0.3, ease: "easeOut" },
         }}
         onHoverStart={() => handleMouseEnter()}
         onHoverEnd={() => handleMouseLeave()}
         onMouseMove={handleMouseMove}
         onMouseEnter={handleDivMouseEnter}
         onClick={handleCardClick}
-        className="relative group"
+        className="relative group h-full"
       >
         {/* Set a fixed min-height for non-mobile cards to ensure equal height, accounting for year badges */}
-        <Card className={cn(
-          "overflow-hidden transition-all duration-300 group-hover:shadow-lg border-2 border-transparent group-hover:border-primary/20 cursor-pointer",
-          !isMobile && "min-h-[320px]"
-        )}>
+        <Card
+          className={cn(
+            "overflow-hidden transition-all duration-300 group-hover:shadow-lg border-2 border-transparent group-hover:border-primary/20 cursor-pointer",
+            !isMobile && "min-h-[320px] sm:h-full",
+          )}
+        >
           <div className="aspect-square overflow-hidden relative">
-            <div 
+            <div
               className={cn(
                 "absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10 opacity-0 transition-opacity duration-300",
-                isHovered ? "opacity-100" : ""
+                isHovered ? "opacity-100" : "",
               )}
             />
-            <Avatar 
-              className="h-full w-full rounded-none"
-            >
+            <Avatar className="h-full w-full rounded-none">
               {member.image ? (
-                <AvatarImage 
-                  src={member.image} 
-                  alt={member.name} 
+                <AvatarImage
+                  src={member.image}
+                  alt={member.name}
                   className="object-cover transition-transform duration-500 group-hover:scale-110 h-full w-full"
                 />
               ) : (
                 <AvatarFallback className="h-full w-full rounded-none text-5xl">
-                  {member.name.split(" ").map(n => n[0]).join("")}
+                  {member.name
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")}
                 </AvatarFallback>
               )}
             </Avatar>
-            
-            <div className={cn(
-              "absolute bottom-0 left-0 right-0 p-4 z-20 transform transition-transform duration-300",
-              isHovered ? "translate-y-0" : "translate-y-full opacity-0"
-            )}>
+
+            <div
+              className={cn(
+                "absolute bottom-0 left-0 right-0 p-4 z-20 transform transition-transform duration-300",
+                isHovered ? "translate-y-0" : "translate-y-full opacity-0",
+              )}
+            >
               <div className="flex gap-2 justify-center">
                 {member.linkedin && (
-                  <Link href={member.linkedin} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
-                    <motion.div 
+                  <Link
+                    href={member.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <motion.div
                       whileHover={{ scale: 1.2 }}
                       whileTap={{ scale: 0.9 }}
                       className="bg-white/90 text-primary p-2 rounded-full"
-                      onMouseEnter={(e) => handleSocialHover('linkedin', member.linkedin!, e)}
+                      onMouseEnter={(e) =>
+                        handleSocialHover("linkedin", member.linkedin!, e)
+                      }
                       onMouseLeave={handleSocialLeave}
                     >
                       <Linkedin className="h-4 w-4" />
@@ -478,12 +429,19 @@ const renderYearBadges = () => {
                   </Link>
                 )}
                 {member.github && (
-                  <Link href={member.github} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
-                    <motion.div 
+                  <Link
+                    href={member.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <motion.div
                       whileHover={{ scale: 1.2 }}
                       whileTap={{ scale: 0.9 }}
                       className="bg-white/90 text-primary p-2 rounded-full"
-                      onMouseEnter={(e) => handleSocialHover('github', member.github!, e)}
+                      onMouseEnter={(e) =>
+                        handleSocialHover("github", member.github!, e)
+                      }
                       onMouseLeave={handleSocialLeave}
                     >
                       <Github className="h-4 w-4" />
@@ -491,12 +449,19 @@ const renderYearBadges = () => {
                   </Link>
                 )}
                 {member.website && (
-                  <Link href={member.website} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
-                    <motion.div 
+                  <Link
+                    href={member.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <motion.div
                       whileHover={{ scale: 1.2 }}
                       whileTap={{ scale: 0.9 }}
                       className="bg-white/90 text-primary p-2 rounded-full"
-                      onMouseEnter={(e) => handleSocialHover('website', member.website!, e)}
+                      onMouseEnter={(e) =>
+                        handleSocialHover("website", member.website!, e)
+                      }
                       onMouseLeave={handleSocialLeave}
                     >
                       <Globe className="h-4 w-4" />
@@ -504,12 +469,19 @@ const renderYearBadges = () => {
                   </Link>
                 )}
                 {member.twitter && (
-                  <Link href={member.twitter} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
-                    <motion.div 
+                  <Link
+                    href={member.twitter}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <motion.div
                       whileHover={{ scale: 1.2 }}
                       whileTap={{ scale: 0.9 }}
                       className="bg-white/90 text-primary p-2 rounded-full"
-                      onMouseEnter={(e) => handleSocialHover('twitter', member.twitter!, e)}
+                      onMouseEnter={(e) =>
+                        handleSocialHover("twitter", member.twitter!, e)
+                      }
                       onMouseLeave={handleSocialLeave}
                     >
                       <Twitter className="h-4 w-4" />
@@ -525,20 +497,24 @@ const renderYearBadges = () => {
           <CardContent className="p-4 pt-1 pb-4">
             <div className="flex items-start justify-between">
               <div className="min-h-[40px] flex-1">
-                <p className="text-sm text-muted-foreground line-clamp-2">{member.role}</p>
+                <p className="text-sm text-muted-foreground line-clamp-2">
+                  {member.role}
+                </p>
               </div>
               {hasRoleHistory && (
-                <button 
+                <button
                   onClick={(e) => {
                     e.stopPropagation();
                     setShowRoleHistory(!showRoleHistory);
                   }}
                   className="text-xs text-primary flex items-center ml-2 hover:underline"
                 >
-                  <ChevronDown className={cn(
-                    "h-3 w-3 transition-transform", 
-                    showRoleHistory ? "rotate-180" : ""
-                  )} />
+                  <ChevronDown
+                    className={cn(
+                      "h-3 w-3 transition-transform",
+                      showRoleHistory ? "rotate-180" : "",
+                    )}
+                  />
                 </button>
               )}
             </div>
@@ -547,7 +523,7 @@ const renderYearBadges = () => {
           </CardContent>
         </Card>
       </motion.div>
-      
+
       {/* Blur Tooltip - only show on desktop */}
       {!isMobile && memberTooltipPosition && (
         <BlurTooltip
@@ -557,29 +533,29 @@ const renderYearBadges = () => {
           id={`member-tooltip-${index}`}
         />
       )}
-      
+
       {/* Modal with member details */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent className="sm:max-w-[600px] p-0">
           <DialogHeader className="sr-only">
             <DialogTitle>{member.name} - Team Member Details</DialogTitle>
           </DialogHeader>
-          
-          <button 
+
+          <button
             onClick={() => setIsModalOpen(false)}
             className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
           >
             <X className="h-4 w-4" />
             <span className="sr-only">Close</span>
           </button>
-          
+
           <div className="p-6">
             <div className="flex flex-col md:flex-row gap-6">
               <div className="w-full md:w-1/3 max-w-[200px] mx-auto md:mx-0">
                 <div className="aspect-square w-full overflow-hidden rounded-md border border-border/20">
                   {member.image ? (
-                    <Image 
-                      src={member.circularImage || member.image} 
+                    <Image
+                      src={member.circularImage || member.image}
                       alt={member.name}
                       width={200}
                       height={200}
@@ -587,53 +563,75 @@ const renderYearBadges = () => {
                     />
                   ) : (
                     <div className="flex h-full w-full items-center justify-center bg-muted text-4xl font-semibold">
-                      {member.name.split(" ").map(n => n[0]).join("")}
+                      {member.name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")}
                     </div>
                   )}
                 </div>
               </div>
-              
+
               <div className="flex-1">
                 <h2 className="text-2xl font-semibold mb-1">{member.name}</h2>
                 <p className="text-muted-foreground mb-4">{member.role}</p>
-                
+
                 {member.bio && (
                   <div className="mb-4">
                     <h3 className="text-sm font-medium mb-2">About</h3>
                     <p className="text-sm">{member.bio}</p>
                   </div>
                 )}
-                
+
                 {hasRoleHistory && (
                   <div className="mb-4">
-                    <h3 className="text-sm font-medium mb-2">Experience at FirstByte</h3>
+                    <h3 className="text-sm font-medium mb-2">
+                      Experience at FirstByte
+                    </h3>
                     <div className="relative pl-6">
                       <div className="absolute left-2 top-2 bottom-2 w-0.5 bg-gradient-to-b from-muted-foreground/30 to-primary" />
                       {member.previousRoles?.map((role, idx) => (
                         <div key={idx} className="mb-3 relative">
                           <div className="absolute left-[-18px] top-0.5 h-3 w-3 rounded-full bg-primary ring-2 ring-background" />
                           <div className="flex flex-col">
-                            <span className="text-sm font-medium">{role.role}</span>
-                            <span className="text-xs text-muted-foreground">{role.year}</span>
+                            <span className="text-sm font-medium">
+                              {role.role}
+                            </span>
+                            <span className="text-xs text-muted-foreground">
+                              {role.year}
+                            </span>
                           </div>
                         </div>
                       ))}
                       <div className="mb-0 relative">
                         <div className="absolute left-[-18px] top-0.5 h-3 w-3 rounded-full bg-primary ring-2 ring-background" />
                         <div className="flex flex-col">
-                          <span className="text-sm font-medium">{member.role}</span>
-                          <span className="text-xs text-muted-foreground">Current</span>
+                          <span className="text-sm font-medium">
+                            {member.role}
+                          </span>
+                          <span className="text-xs text-muted-foreground">
+                            Current
+                          </span>
                         </div>
                       </div>
                     </div>
                   </div>
                 )}
-                
+
                 <div className="flex flex-wrap gap-3">
                   {member.linkedin && (
-                    <Link href={member.linkedin} target="_blank" rel="noopener noreferrer">
-                      <Button variant="outline" size="sm" className="gap-2"
-                        onMouseEnter={(e) => handleSocialHover('linkedin', member.linkedin!, e)}
+                    <Link
+                      href={member.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="gap-2"
+                        onMouseEnter={(e) =>
+                          handleSocialHover("linkedin", member.linkedin!, e)
+                        }
                         onMouseLeave={handleSocialLeave}
                       >
                         <Linkedin className="h-4 w-4" />
@@ -642,9 +640,18 @@ const renderYearBadges = () => {
                     </Link>
                   )}
                   {member.github && (
-                    <Link href={member.github} target="_blank" rel="noopener noreferrer">
-                      <Button variant="outline" size="sm" className="gap-2"
-                        onMouseEnter={(e) => handleSocialHover('github', member.github!, e)}
+                    <Link
+                      href={member.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="gap-2"
+                        onMouseEnter={(e) =>
+                          handleSocialHover("github", member.github!, e)
+                        }
                         onMouseLeave={handleSocialLeave}
                       >
                         <Github className="h-4 w-4" />
@@ -653,9 +660,18 @@ const renderYearBadges = () => {
                     </Link>
                   )}
                   {member.website && (
-                    <Link href={member.website} target="_blank" rel="noopener noreferrer">
-                      <Button variant="outline" size="sm" className="gap-2"
-                        onMouseEnter={(e) => handleSocialHover('website', member.website!, e)}
+                    <Link
+                      href={member.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="gap-2"
+                        onMouseEnter={(e) =>
+                          handleSocialHover("website", member.website!, e)
+                        }
                         onMouseLeave={handleSocialLeave}
                       >
                         <Globe className="h-4 w-4" />
@@ -664,9 +680,18 @@ const renderYearBadges = () => {
                     </Link>
                   )}
                   {member.twitter && (
-                    <Link href={member.twitter} target="_blank" rel="noopener noreferrer">
-                      <Button variant="outline" size="sm" className="gap-2"
-                        onMouseEnter={(e) => handleSocialHover('twitter', member.twitter!, e)}
+                    <Link
+                      href={member.twitter}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="gap-2"
+                        onMouseEnter={(e) =>
+                          handleSocialHover("twitter", member.twitter!, e)
+                        }
                         onMouseLeave={handleSocialLeave}
                       >
                         <Twitter className="h-4 w-4" />
@@ -681,951 +706,92 @@ const renderYearBadges = () => {
         </DialogContent>
       </Dialog>
     </>
-  )
+  );
 }
 
-// Get team photo for a specific year if available
-const getTeamPhotoForYear = (year: string): { image: string, description: string } | null => {
-  const photo = teamPhotos.find(p => p.year === year);
-  return photo || null;
-};
+export const TeamSection = forwardRef<HTMLElement, TeamSectionProps>(
+  ({ className }, ref) => {
+    const [visibleCount, setVisibleCount] = useState(8);
+    const [showingMore, setShowingMore] = useState(false);
+    const isMobile = useIsMobile();
 
-function CardStack({ board, index }: { board: PastBoard; index: number }) {
-  const isMobile = useIsMobile();
-  const [isExpanded, setIsExpanded] = useState(isMobile) // Default to expanded on mobile
-  const [focusedMember, setFocusedMember] = useState<number | null>(null)
-  const [hoveredMemberIndex, setHoveredMemberIndex] = useState<number | null>(null)
-  const [cardTooltipRect, setCardTooltipRect] = useState<TooltipPosition | null>(null)
-  const [isTransitioning, setIsTransitioning] = useState(false)
-  const [infoTooltipVisible, setInfoTooltipVisible] = useState(false)
-  const [infoTooltipPosition, setInfoTooltipPosition] = useState<TooltipPosition | null>(null)
-  const [activeTooltipId, setActiveTooltipId] = useState<string | null>(null)
-  
-  // Social media hover states - change to store just the URL
-  const [hoveredSocialUrl, setHoveredSocialUrl] = useState<string | null>(null)
-  
-  // Visibility states for animations
-  const [memberTooltipVisible, setMemberTooltipVisible] = useState(false)
-  
-  // Refs to track tooltip cleanup timers
-  const memberTooltipTimer = React.useRef<NodeJS.Timeout | null>(null)
-  
-  // Effect to update expanded state when isMobile changes
-  useEffect(() => {
-    if (isMobile) {
-      setIsExpanded(true);
-    }
-  }, [isMobile]);
-  
-  // Handle info icon hover
-  const handleInfoMouseEnter = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (isMobile) return;
-    
-    setInfoTooltipPosition({
-      x: event.clientX,
-      y: event.clientY + 15
-    });
-    setInfoTooltipVisible(true);
-  };
-  
-  const handleInfoMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (isMobile) return;
-    
-    setInfoTooltipPosition({
-      x: event.clientX,
-      y: event.clientY + 15
-    });
-  };
-  
-  const handleInfoMouseLeave = () => {
-    if (isMobile) return;
-    setInfoTooltipVisible(false);
-  };
-  
-  // Handle info icon click for mobile
-  const handleInfoClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (!isMobile) return;
-    
-    // Get badge position for tooltip placement
-    const iconElement = event.currentTarget;
-    const rect = iconElement.getBoundingClientRect();
-    
-    // Position tooltip below the icon
-    setInfoTooltipPosition({
-      x: rect.left + (rect.width / 2),
-      y: rect.bottom + 10
-    });
-    
-    // Toggle tooltip visibility
-    if (activeTooltipId === "revival-info") {
-      setActiveTooltipId(null);
-      setInfoTooltipVisible(false);
-    } else {
-      setActiveTooltipId("revival-info");
-      setInfoTooltipVisible(true);
-    }
-    
-    // Stop event propagation
-    event.stopPropagation();
-  };
-  
-  // Close tooltip when clicking elsewhere on mobile
-  useEffect(() => {
-    if (!isMobile || !activeTooltipId) return;
-    
-    const handleClickOutside = () => {
-      setActiveTooltipId(null);
-      setInfoTooltipVisible(false);
+    const handleShowMore = () => {
+      setShowingMore(true);
+      setVisibleCount(currentExecutiveBoard.length);
     };
-    
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
-  }, [isMobile, activeTooltipId]);
-  
-  // Framer Motion values for tooltip animation
-  const springConfig = { stiffness: 100, damping: 5 };
-  const x = useMotionValue(0);
-  const rotate = useSpring(
-    useTransform(x, [-100, 100], [-45, 45]),
-    springConfig
-  );
-  const translateX = useSpring(
-    useTransform(x, [-100, 100], [-50, 50]),
-    springConfig
-  );
-  
-  // Handle mouse enter on member card
-  const handleMouseEnter = (index: number, event: React.MouseEvent<HTMLDivElement>) => {
-    if (isTransitioning || isMobile) return;
-    
-    // Clear any pending timeout for member tooltip cleanup
-    if (memberTooltipTimer.current) {
-      clearTimeout(memberTooltipTimer.current);
-      memberTooltipTimer.current = null;
-    }
-    
-    // Set position directly from cursor position
-    setCardTooltipRect({
-      x: event.clientX,
-      y: event.clientY
-    });
-    
-    // Reset any social URL
-    setHoveredSocialUrl(null);
-    
-    // Set the hovered member index and make tooltip visible
-    setHoveredMemberIndex(index);
-    setMemberTooltipVisible(true);
-  };
-  
-  // Handle mouse leave from member card
-  const handleMouseLeave = () => {
-    // Reset any social URL
-    setHoveredSocialUrl(null);
-    setMemberTooltipVisible(false);
-    
-    // Schedule cleanup after animation completes
-    memberTooltipTimer.current = setTimeout(() => {
-      if (!memberTooltipVisible) {
-        setHoveredMemberIndex(null);
-      }
-      memberTooltipTimer.current = null;
-    }, 1200); // Match exit animation duration
-  };
-  
-  // Handle social icon hover
-  const handleSocialHover = (
-    type: 'linkedin' | 'github' | 'twitter' | 'website',
-    url: string, 
-    event: React.MouseEvent<HTMLElement>
-  ) => {
-    if (isMobile) return;
-    
-    // Set the social URL to show
-    setHoveredSocialUrl(url);
-    
-    // Update position
-    setCardTooltipRect({
-      x: event.clientX,
-      y: event.clientY + 15
-    });
-    
-    // Make sure tooltip is visible
-    setMemberTooltipVisible(true);
-    
-    // Prevent parent tooltip from showing
-    event.stopPropagation();
-  };
-  
-  // Handle mouse leave from social icon
-  const handleSocialLeave = () => {
-    setHoveredSocialUrl(null);
-  };
-  
-  // Clean up timeouts on unmount
-  React.useEffect(() => {
-    return () => {
-      if (memberTooltipTimer.current) {
-        clearTimeout(memberTooltipTimer.current);
-      }
-    };
-  }, []);
-  
-  // Format board members for AnimatedTooltip
-  const tooltipMembers = board.members.map((member, idx) => ({
-    id: idx,
-    name: member.name,
-    designation: member.role,
-    image: member.circularImage || member.image || "/teamMemberPhotos/default-pfp.jpg"
-  }))
-  
-  // Navigate to profile when clicking on social media links
-  const navigateToProfile = (member: TeamMember) => {
-    if (member.linkedin) {
-      window.open(member.linkedin, '_blank');
-    } else if (member.github) {
-      window.open(member.github, '_blank');
-    } else if (member.website) {
-      window.open(member.website, '_blank');
-    } else if (member.twitter) {
-      window.open(member.twitter, '_blank');
-    }
-  };
 
-  // Smooth transition from avatar to profile
-  const handleAvatarClick = (id: number) => {
-    if (isTransitioning) return;
-    
-    // Mark as transitioning and immediately set both expanded and focused member
-    setIsTransitioning(true);
-    setHoveredMemberIndex(id);
-    setIsExpanded(true);
-    setFocusedMember(id);
-    
-    // Reset transitioning state after animation completes
-    setTimeout(() => {
-      setHoveredMemberIndex(null);
-      setIsTransitioning(false);
-    }, 300);
-  };
-  
-  // Handle mouse move to update tooltip position
-  const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (hoveredMemberIndex === null) return;
-    
-    setCardTooltipRect({
-      x: event.clientX,
-      y: event.clientY
-    });
-  };
-  
-  // New helper function to display role history for focused member
-  const renderFocusedMemberRoleHistory = (member: TeamMember) => {
-    if (!member.previousRoles || member.previousRoles.length === 0) return null;
-    
-    // IMPORTANT: When showing the member details, we need the original complete member data
-    // Find the original member data from allTeamMembers to ensure we show accurate roles
-    const originalMember = allTeamMembers.find(m => m.name === member.name) || member;
-    
-    // Create a comprehensive role history by year
-    // First, gather all years the member has been active
-    const activeYears = originalMember.years || [];
-    
-    // Get the current board year to highlight
-    const boardYear = board.year.split('-')[0];
-    
-    // Check if this member is active in the current year (2026)
-    const isActiveCurrently = activeYears.includes("2026");
-    const mostRecentYear = activeYears.length > 0 ? [...activeYears].sort((a, b) => b.localeCompare(a))[0] : "";
-    
-    // Make sure we get the correct roles for the display
-    const boardYearRole = getRoleForYear(originalMember, boardYear);
-    const currentRole = originalMember.role; // Always use the full role for current year
-    
-    // Manually create the timeline for better control
-    const roleTimeline: {year: string; role: string; isCurrent: boolean; isHighlighted: boolean; isLastRole: boolean}[] = [];
-    
-    // Add previous roles from the member's history
-    if (originalMember.previousRoles) {
-      // Sort to ensure chronological order
-      const sortedPreviousRoles = [...originalMember.previousRoles].sort((a, b) => 
-        a.year.localeCompare(b.year)
-      );
-      
-      // Create a timeline entry for each previous role
-      sortedPreviousRoles.forEach(prevRole => {
-        // Check if this is their last/final role (most recent year if not active in 2026)
-        const isLastRole = !isActiveCurrently && prevRole.year === mostRecentYear;
-        
-        roleTimeline.push({
-          year: prevRole.year,
-          role: prevRole.role,
-          isCurrent: false, // Never mark past roles as "current"
-          isHighlighted: prevRole.year === boardYear,
-          isLastRole: isLastRole // Flag for final role
-        });
-      });
-    }
-    
-    // Add the current role specifically only if the member is active in 2026
-    if (isActiveCurrently && mostRecentYear === "2026") {
-      roleTimeline.push({
-        year: "2026",
-        role: currentRole,
-        isCurrent: true,
-        isHighlighted: boardYear === "2026",
-        isLastRole: false // Not needed since isCurrent already marks this
-      });
-    }
-    
-    // Sort the complete timeline chronologically
-    const sortedTimeline = roleTimeline.sort((a, b) => a.year.localeCompare(b.year));
-    
-    // Now group consecutive years with the same role for display
-    const consolidatedRoles: {startYear: string; endYear: string; role: string; isCurrent: boolean; isHighlighted: boolean; isLastRole: boolean}[] = [];
-    let currentGroup: {startYear: string; endYear: string; role: string; isCurrent: boolean; isHighlighted: boolean; isLastRole: boolean} | null = null;
-    
-    sortedTimeline.forEach((item, index) => {
-      // Start a new group if: 
-      // - this is the first item
-      // - the role is different from the current group
-      // - this item needs special styling (highlighted, current, or last role)
-      const isSpecialItem = item.isHighlighted || item.isCurrent || item.isLastRole;
-      
-      if (!currentGroup || currentGroup.role !== item.role || isSpecialItem) {
-        // Add previous group if exists
-        if (currentGroup) {
-          consolidatedRoles.push(currentGroup);
-        }
-        
-        // Start new group
-        currentGroup = {
-          startYear: item.year,
-          endYear: item.year,
-          role: item.role,
-          isCurrent: item.isCurrent,
-          isHighlighted: item.isHighlighted,
-          isLastRole: item.isLastRole
-        };
-      } else {
-        // Continue current group for non-special items with same role
-        currentGroup.endYear = item.year;
-      }
-      
-      // If this is the last item, add the current group
-      if (index === sortedTimeline.length - 1 && currentGroup) {
-        consolidatedRoles.push(currentGroup);
-      }
-    });
-    
+    const handleShowLess = () => {
+      setShowingMore(false);
+      setVisibleCount(8);
+    };
+
+    // const currentVisible = currentExecutiveBoard.slice(0, visibleCount)
+
     return (
-      <div className="mt-4 pt-3 border-t border-border/30">
-        <h4 className="text-sm font-medium mb-2 text-foreground flex items-center">
-          <Clock className="h-3.5 w-3.5 mr-1.5 text-primary" />
-          Role Progression:
-        </h4>
-        <div className="relative pl-6 pt-1">
-          {/* Timeline line */}
-          <div className="absolute left-2 top-2 bottom-0 w-0.5 bg-gradient-to-b from-muted-foreground/30 to-primary" />
-          
-          {/* Display consolidated roles in chronological order */}
-          {consolidatedRoles.map((item, idx) => (
-            <div key={idx} className="mb-3 relative">
-              <div className={cn(
-                "absolute left-[-18px] top-0.5 h-3 w-3 rounded-full ring-2 ring-background",
-                item.isHighlighted ? "bg-primary" : // Highlighted year gets primary/green color
-                item.isCurrent || item.isLastRole ? "bg-foreground" : // Current role or last role gets black dot
-                "bg-muted-foreground" // Past role gets gray dot
-              )} />
-              <div className="flex flex-col">
-                <span className={cn(
-                  "text-sm",
-                  item.isHighlighted ? "font-semibold text-primary" : // Highlighted year gets primary color
-                  (item.isCurrent || item.isLastRole) ? "font-semibold" : "" // Current or last role gets bold
-                )}>
-                  {item.role}
-                </span>
-                <span className="text-xs text-muted-foreground">
-                  {item.startYear === item.endYear 
-                    ? item.startYear // Single year
-                    : `${item.startYear} - ${item.endYear}` // Year range
-                  }
-                  {item.isHighlighted && ' • Currently viewing'}
-                  {item.isCurrent && ' • Current'}
-                  {item.isLastRole && ' • Final role'}
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  };
-  
-  // Get team photo if available for this board's year
-  const boardYear = board.year.split('-')[0];
-  const teamPhoto = getTeamPhotoForYear(boardYear);
-  const isRevivalTeam = boardYear === "2022";
-  
-  return (
-    <motion.div 
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: index * 0.2 }}
-      className="relative"
-    >
-      <div 
+      <section
+        ref={ref}
+        id="team"
         className={cn(
-          "relative transition-all duration-500 ease-out",
-          isExpanded ? "mb-8" : "mb-0"
+          "bg-[hsl(var(--gray-50))] text-foreground pt-32 pb-10 overflow-hidden bg-dots-light",
+          className,
         )}
       >
-        {/* Card Stack */}
-        <div className="relative">
-          {/* Stacked background cards for visual effect - hide on mobile */}
-          <AnimatePresence>
-            {!isExpanded && !isMobile && (
-              <>
-                <motion.div 
-                  key="bg-card-1"
-                  initial={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="absolute -bottom-2 -right-2 w-full h-full bg-muted/30 rounded-lg rotate-2 shadow-sm"
-                />
-                <motion.div
-                  key="bg-card-2"
-                  initial={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="absolute -bottom-1 -left-2 w-full h-full bg-muted/50 rounded-lg -rotate-1 shadow-sm"
-                />
-              </>
-            )}
-          </AnimatePresence>
-          
-          {/* Main stack card */}
-          <motion.div
-            layout
-            transition={{ 
-              layout: { duration: 0.5, type: "spring" }
-            }}
-          >
-            <Card 
-              className={cn(
-                "relative z-10 transition-shadow duration-300 shadow-md border-2 border-transparent hover:border-primary/20",
-                isExpanded ? "w-full" : "aspect-square sm:aspect-auto",
-                !isExpanded && !isMobile ? "cursor-pointer" : ""
-              )}
-              onClick={() => !isExpanded && !isMobile && setIsExpanded(true)}
+        <div className="container mx-auto px-4 md:px-6 lg:px-8">
+          <div className="grid md:grid-cols-2 gap-4 md:gap-8 mb-12">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
             >
-              <motion.div 
-                layout
-                transition={{ 
-                  layout: { duration: 0.5, type: "spring" }
-                }}
-                className="p-6"
-              >
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-xl font-semibold">{board.title}</h3>
-                      {isRevivalTeam && (
-                        <div 
-                          className={`text-primary hover:text-primary/80 ${isMobile ? "cursor-pointer" : "cursor-default"}`}
-                          onMouseEnter={handleInfoMouseEnter}
-                          onMouseMove={handleInfoMouseMove}
-                          onMouseLeave={handleInfoMouseLeave}
-                          onClick={handleInfoClick}
-                        >
-                          <Info className="h-4 w-4" />
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-1 text-sm text-muted-foreground mt-1">
-                      <Clock className="h-3 w-3" />
-                      <span>{board.year}</span>
-                    </div>
-                  </div>
-                  {!isMobile && (
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (isExpanded) {
-                          // First hide the focused member if any
-                          setFocusedMember(null);
-                          // Then close the card after a short delay
-                          setTimeout(() => {
-                            setIsExpanded(false);
-                          }, 200);
-                        } else {
-                          setIsExpanded(true);
-                        }
-                      }}
-                      className="bg-primary/10 hover:bg-primary/20 rounded-full p-2 transition-colors"
-                    >
-                      <ChevronDown className={cn(
-                        "h-4 w-4 transition-transform duration-300",
-                        isExpanded ? "rotate-180" : ""
-                      )} />
-                    </motion.button>
-                  )}
-                </div>
-                
-                <AnimatePresence mode="wait">
-                  {!isExpanded ? (
-                    <motion.div 
-                      initial={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.15 }}
-                      className="relative mb-4" 
-                      style={{ zIndex: 40 }}
-                    >
-                      <AnimatedTooltip 
-                        items={tooltipMembers} 
-                        className="mx-auto" 
-                        onItemClick={handleAvatarClick}
-                      />
-                    </motion.div>
-                  ) : null}
-                </AnimatePresence>
-                
-                <AnimatePresence>
-                  {isExpanded && (
-                    <motion.div
-                      layout
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ 
-                        opacity: { duration: 0.2 },
-                        layout: { duration: 0.3, type: "spring", bounce: 0.1 }
-                      }}
-                      className="overflow-hidden"
-                    >
-                      {/* Focused member detail view */}
-                      <AnimatePresence mode="wait">
-                        {focusedMember !== null && (
-                          <motion.div
-                            key={`member-${focusedMember}`}
-                            initial={{ opacity: 0, scale: 0.98 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.98 }}
-                            transition={{ 
-                              duration: 0.2,
-                              ease: "easeOut"
-                            }}
-                            className="mb-6 border rounded-lg p-4 bg-muted/10"
-                          >
-                            <button 
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setFocusedMember(null);
-                              }}
-                              className="flex items-center text-sm text-primary mb-4 hover:underline"
-                            >
-                              <ChevronRight className="h-4 w-4 rotate-180 mr-1" />
-                              Back to all members
-                            </button>
-                            
-                            <div className="flex flex-col md:flex-row gap-6 items-center md:items-start">
-                              <motion.div 
-                                initial={{ scale: 0.95, opacity: 0 }}
-                                animate={{ scale: 1, opacity: 1 }}
-                                transition={{ duration: 0.2 }}
-                                className="w-full md:w-1/3 max-w-[200px]"
-                              >
-                                <Avatar className="h-full w-full aspect-square">
-                                  {board.members[focusedMember].image ? (
-                                    <AvatarImage 
-                                      src={board.members[focusedMember].circularImage || board.members[focusedMember].image} 
-                                      alt={board.members[focusedMember].name}
-                                      className="object-cover object-center"
-                                    />
-                                  ) : (
-                                    <AvatarFallback className="text-4xl">
-                                      {board.members[focusedMember].name.split(" ").map(n => n[0]).join("")}
-                                    </AvatarFallback>
-                                  )}
-                                </Avatar>
-                              </motion.div>
-                              
-                              <motion.div 
-                                initial={{ opacity: 0, x: -5 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ duration: 0.2 }}
-                                className="flex-1"
-                              >
-                                <h4 className="text-xl font-semibold">{board.members[focusedMember].name}</h4>
-                                <p className="text-sm text-muted-foreground mb-3">{board.members[focusedMember].role}</p>
-                                
-                                {/* Find the original member data to get the full, accurate bio */}
-                                {(() => {
-                                  const originalMember = allTeamMembers.find(m => 
-                                    m.name === board.members[focusedMember].name
-                                  );
-                                  return originalMember?.bio ? (
-                                    <p className="text-sm mb-4">{originalMember.bio}</p>
-                                  ) : board.members[focusedMember].bio ? (
-                                    <p className="text-sm mb-4">{board.members[focusedMember].bio}</p>
-                                  ) : null;
-                                })()}
-                                
-                                {renderFocusedMemberRoleHistory(board.members[focusedMember])}
-                                
-                                <div className="flex gap-2 mt-3">
-                                  {board.members[focusedMember].linkedin && (
-                                    <Link 
-                                      href={board.members[focusedMember].linkedin!} 
-                                      target="_blank" 
-                                      rel="noopener noreferrer"
-                                      onClick={(e) => e.stopPropagation()}
-                                      onMouseEnter={(e) => handleSocialHover('linkedin', board.members[focusedMember].linkedin!, e)}
-                                      onMouseLeave={handleSocialLeave}
-                                    >
-                                      <div className="p-1 text-muted-foreground hover:text-primary">
-                                        <Linkedin className="h-3 w-3" />
-                                      </div>
-                                    </Link>
-                                  )}
-                                  {board.members[focusedMember].github && (
-                                    <Link 
-                                      href={board.members[focusedMember].github!} 
-                                      target="_blank" 
-                                      rel="noopener noreferrer"
-                                      onClick={(e) => e.stopPropagation()}
-                                      onMouseEnter={(e) => handleSocialHover('github', board.members[focusedMember].github!, e)}
-                                      onMouseLeave={handleSocialLeave}
-                                    >
-                                      <div className="p-1 text-muted-foreground hover:text-primary">
-                                        <Github className="h-3 w-3" />
-                                      </div>
-                                    </Link>
-                                  )}
-                                  {board.members[focusedMember].website && (
-                                    <Link 
-                                      href={board.members[focusedMember].website!} 
-                                      target="_blank" 
-                                      rel="noopener noreferrer"
-                                      onClick={(e) => e.stopPropagation()}
-                                      onMouseEnter={(e) => handleSocialHover('website', board.members[focusedMember].website!, e)}
-                                      onMouseLeave={handleSocialLeave}
-                                    >
-                                      <div className="p-1 text-muted-foreground hover:text-primary">
-                                        <Globe className="h-3 w-3" />
-                                      </div>
-                                    </Link>
-                                  )}
-                                  {board.members[focusedMember].twitter && (
-                                    <Link 
-                                      href={board.members[focusedMember].twitter!} 
-                                      target="_blank" 
-                                      rel="noopener noreferrer"
-                                      onClick={(e) => e.stopPropagation()}
-                                      onMouseEnter={(e) => handleSocialHover('twitter', board.members[focusedMember].twitter!, e)}
-                                      onMouseLeave={handleSocialLeave}
-                                    >
-                                      <div className="p-1 text-muted-foreground hover:text-primary">
-                                        <Twitter className="h-3 w-3" />
-                                      </div>
-                                    </Link>
-                                  )}
-                                </div>
-                              </motion.div>
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-
-                      {/* Team photo if available */}
-                      {teamPhoto && focusedMember === null && (
-                        <motion.div
-                          initial={{ opacity: 0, scale: 0.98 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          transition={{ duration: 0.3 }}
-                          className="mb-6"
-                        >
-                          <div className="relative aspect-video overflow-hidden rounded-lg border mb-2">
-                            <Image 
-                              src={teamPhoto.image} 
-                              alt={teamPhoto.description}
-                              width={800}
-                              height={450}
-                              className="object-cover"
-                            />
-                          </div>
-                          <p className="text-sm text-center text-muted-foreground">
-                            {teamPhoto.description}
-                          </p>
-                        </motion.div>
-                      )}
-
-                      {/* Show all members with AnimatedTooltip hover effect */}
-                      <div className="mt-4">
-                        <h4 className="text-sm font-medium mb-3">{board.members.length} Team Members</h4>
-                        <div className={cn(
-                          "grid gap-3",
-                          isMobile ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4" 
-                        )}>
-                          {board.members.map((member, i) => (
-                            <motion.div
-                              key={i}
-                              initial={{ opacity: 0, y: 10 }}
-                              animate={{ 
-                                opacity: 1, 
-                                y: 0,
-                                transition: { 
-                                  delay: i * 0.05,
-                                  duration: 0.3
-                                }
-                              }}
-                              whileHover={{ 
-                                y: isMobile ? 0 : -4,
-                                transition: { duration: 0.2 }
-                              }}
-                              className={cn(
-                                "transition-opacity duration-200 relative",
-                                focusedMember === i ? "opacity-70" : "opacity-100"
-                              )}
-                              onMouseEnter={(e) => handleMouseEnter(i, e)}
-                              onMouseLeave={handleMouseLeave}
-                              onMouseMove={handleMouseMove}
-                            >
-                              <Card 
-                                className="overflow-hidden shadow-sm hover:shadow-md hover:border-primary/20 cursor-pointer transition-all duration-200"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setFocusedMember(i);
-                                }}
-                              >
-                                <div className="flex items-center p-3 gap-3 relative group">
-                                  <Avatar 
-                                    className={cn(
-                                      "transition-transform duration-200 cursor-pointer",
-                                      isMobile ? "h-14 w-14" : "h-12 w-12 hover:scale-110"
-                                    )}
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      setFocusedMember(i);
-                                    }}
-                                  >
-                                    {member.image ? (
-                                      <AvatarImage src={member.circularImage || member.image} alt={member.name} className="object-cover object-center" />
-                                    ) : (
-                                      <AvatarFallback>
-                                        {member.name.split(" ").map(n => n[0]).join("")}
-                                      </AvatarFallback>
-                                    )}
-                                  </Avatar>
-                                  <div className="flex-1 min-w-0">
-                                    <h4 className={cn(
-                                      "font-medium truncate",
-                                      isMobile ? "text-base" : "text-sm"
-                                    )}>{member.name}</h4>
-                                    <p className={cn(
-                                      "text-muted-foreground truncate",
-                                      isMobile ? "text-sm" : "text-xs"
-                                    )}>{member.role}</p>
-                                  </div>
-                                  <div className={cn(
-                                    "flex",
-                                    isMobile ? "gap-2" : "gap-1"
-                                  )}>
-                                    {member.linkedin && (
-                                      <Link 
-                                        href={member.linkedin} 
-                                        target="_blank" 
-                                        rel="noopener noreferrer"
-                                        onClick={(e) => e.stopPropagation()}
-                                        onMouseEnter={(e) => handleSocialHover('linkedin', member.linkedin!, e)}
-                                        onMouseLeave={handleSocialLeave}
-                                      >
-                                        <div className={cn(
-                                          "text-muted-foreground hover:text-primary",
-                                          isMobile ? "p-2" : "p-1"
-                                        )}>
-                                          <Linkedin className={cn(
-                                            isMobile ? "h-4 w-4" : "h-3 w-3"
-                                          )} />
-                                        </div>
-                                      </Link>
-                                    )}
-                                    {member.github && (
-                                      <Link 
-                                        href={member.github} 
-                                        target="_blank" 
-                                        rel="noopener noreferrer"
-                                        onClick={(e) => e.stopPropagation()}
-                                        onMouseEnter={(e) => handleSocialHover('github', member.github!, e)}
-                                        onMouseLeave={handleSocialLeave}
-                                      >
-                                        <div className={cn(
-                                          "text-muted-foreground hover:text-primary",
-                                          isMobile ? "p-2" : "p-1"
-                                        )}>
-                                          <Github className={cn(
-                                            isMobile ? "h-4 w-4" : "h-3 w-3"
-                                          )} />
-                                        </div>
-                                      </Link>
-                                    )}
-                                    {member.website && (
-                                      <Link 
-                                        href={member.website} 
-                                        target="_blank" 
-                                        rel="noopener noreferrer"
-                                        onClick={(e) => e.stopPropagation()}
-                                        onMouseEnter={(e) => handleSocialHover('website', member.website!, e)}
-                                        onMouseLeave={handleSocialLeave}
-                                      >
-                                        <div className={cn(
-                                          "text-muted-foreground hover:text-primary",
-                                          isMobile ? "p-2" : "p-1"
-                                        )}>
-                                          <Globe className={cn(
-                                            isMobile ? "h-4 w-4" : "h-3 w-3"
-                                          )} />
-                                        </div>
-                                      </Link>
-                                    )}
-                                    {member.twitter && (
-                                      <Link 
-                                        href={member.twitter} 
-                                        target="_blank" 
-                                        rel="noopener noreferrer"
-                                        onClick={(e) => e.stopPropagation()}
-                                        onMouseEnter={(e) => handleSocialHover('twitter', member.twitter!, e)}
-                                        onMouseLeave={handleSocialLeave}
-                                      >
-                                        <div className={cn(
-                                          "text-muted-foreground hover:text-primary",
-                                          isMobile ? "p-2" : "p-1"
-                                        )}>
-                                          <Twitter className={cn(
-                                            isMobile ? "h-4 w-4" : "h-3 w-3"
-                                          )} />
-                                        </div>
-                                      </Link>
-                                    )}
-                                  </div>
-                                </div>
-                              </Card>
-                            </motion.div>
-                          ))}
-                        </div>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-                
-                {!isExpanded && !isMobile && (
-                  <div className="text-xs text-muted-foreground mt-4">
-                    <span className="font-medium">{board.members.length} members</span> • Click to expand
-                  </div>
-                )}
-              </motion.div>
-            </Card>
-          </motion.div>
-        </div>
-      </div>
-      
-      {/* Member tooltip using ClassicTooltip - only show on desktop */}
-      {!isMobile && hoveredMemberIndex !== null && cardTooltipRect && isExpanded && (
-        <div>
-          <ClassicTooltip
-            position={cardTooltipRect}
-            title={board.members[hoveredMemberIndex]?.name}
-            subtitle={hoveredSocialUrl || board.members[hoveredMemberIndex]?.role}
-            visible={memberTooltipVisible}
-            id={`member-${hoveredMemberIndex}`}
-          />
-        </div>
-      )}
-      
-      {/* Info tooltip for Revival Team */}
-      {isRevivalTeam && infoTooltipPosition && (
-        <BlurTooltip
-          position={infoTooltipPosition}
-          content="As the only active members during this year, this team revitalized the club from the ground up and established the foundation for what FirstByte is today."
-          visible={infoTooltipVisible}
-          id="revival-team-info"
-          className="max-w-[250px]"
-          hideIcon={true}
-        />
-      )}
-    </motion.div>
-  )
-}
-
-export const TeamSection = forwardRef<HTMLElement, TeamSectionProps>(({ className }, ref) => {
-  const [visibleCount, setVisibleCount] = useState(8)
-  const [showingMore, setShowingMore] = useState(false)
-  const isMobile = useIsMobile();
-  
-  const handleShowMore = () => {
-    setShowingMore(true)
-    setVisibleCount(currentExecutiveBoard.length)
-  }
-  
-  const handleShowLess = () => {
-    setShowingMore(false)
-    setVisibleCount(8)
-  }
-
-  // const currentVisible = currentExecutiveBoard.slice(0, visibleCount)
-
-  return (
-    <section ref={ref} id="team" className={cn("bg-[hsl(var(--gray-50))] text-foreground pt-32 pb-10 overflow-hidden bg-dots-light", className)}>
-      <div className="container mx-auto px-4 md:px-6 lg:px-8">
-        <div className="grid md:grid-cols-2 gap-4 md:gap-8 mb-12">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="text-3xl font-semibold leading-tight sm:text-5xl sm:leading-tight">Our Team</h2>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <p className="text-md font-medium text-muted-foreground sm:text-xl">
-              Meet the talented individuals behind FirstByte who make our mission of coding education possible.
-            </p>
-          </motion.div>
-        </div>
-
-        {/* Current Executive Board */}
-        <div className="mb-20">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="flex justify-between items-end mb-8"
-          >
-            <h3 className="text-2xl font-semibold">Current Executive Board</h3>
-            <div className="text-sm text-muted-foreground">2026-2027</div>
-          </motion.div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
-            {/* {currentVisible.map((member, index) => ( */}
-            {currentExecutiveBoard.map((member, index) => (
-              <TeamMemberCard 
-                key={member.name} 
-                member={member} 
-                index={index} 
-                noStaggerDelay={showingMore}
-              />
-            ))}
+              <h2 className="text-3xl font-semibold leading-tight sm:text-5xl sm:leading-tight">
+                Our Team
+              </h2>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              <p className="text-md font-medium text-muted-foreground sm:text-xl">
+                Meet the talented individuals behind FirstByte who make our
+                mission of coding education possible.
+              </p>
+            </motion.div>
           </div>
-          
-          {/* {currentExecutiveBoard.length > visibleCount ? (
+
+          {/* Current Executive Board */}
+          <div className="mb-20">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="flex justify-between items-end mb-8"
+            >
+              <h3 className="text-2xl font-semibold">
+                Current Executive Board
+              </h3>
+              <div className="text-sm text-muted-foreground">2026-2027</div>
+            </motion.div>
+
+            <div className="flex overflow-x-auto snap-x snap-mandatory -mx-4 px-4 sm:grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 sm:auto-rows-fr sm:overflow-visible sm:mx-0 sm:px-0 gap-6 md:gap-8">
+              {currentExecutiveBoard.map((member, index) => (
+                <div
+                  key={member.name}
+                  className="snap-center shrink-0 w-[80%] sm:w-auto sm:shrink sm:h-full"
+                >
+                  <TeamMemberCard
+                    member={member}
+                    index={index}
+                    noStaggerDelay={showingMore}
+                  />
+                </div>
+              ))}
+            </div>
+
+            {/* {currentExecutiveBoard.length > visibleCount ? (
             <div className="flex justify-center mt-8">
               <AnimatedGlowButton
                 color="green"
@@ -1636,7 +802,7 @@ export const TeamSection = forwardRef<HTMLElement, TeamSectionProps>(({ classNam
                 <ChevronDown className="h-4 w-4" />
               </AnimatedGlowButton>
             </div>
-          ) 
+          )
           : currentExecutiveBoard.length > 8 && visibleCount > 8 ? (
             <div className="flex justify-center mt-8">
               <AnimatedGlowButton
@@ -1648,53 +814,56 @@ export const TeamSection = forwardRef<HTMLElement, TeamSectionProps>(({ classNam
                 <ChevronDown className="h-4 w-4 rotate-180" />
               </AnimatedGlowButton>
             </div>
-          ) 
+          )
           :
            null} */}
-        </div>
+          </div>
 
-        {/* Past Boards */}
-        <div>
+          {/* Past Boards */}
+          <div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="flex items-center mb-8"
+            >
+              <div className="h-px flex-grow bg-border"></div>
+              <h3 className="text-xl font-semibold px-4">
+                Previous Leadership
+              </h3>
+              <div className="h-px flex-grow bg-border"></div>
+            </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {pastBoards.map((board, index) => (
+                <CardStack key={board.year} board={board} index={index} />
+              ))}
+            </div>
+          </div>
+
+          {/* Call to action */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="flex items-center mb-8"
+            transition={{ duration: 0.6 }}
+            className="flex justify-center mt-20"
           >
-            <div className="h-px flex-grow bg-border"></div>
-            <h3 className="text-xl font-semibold px-4">Previous Leadership</h3>
-            <div className="h-px flex-grow bg-border"></div>
+            <Link href="/team">
+              <AnimatedGlowButton
+                color="green"
+                className="flex items-center gap-2 text-sm font-medium"
+              >
+                See Full Team Directory
+                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+              </AnimatedGlowButton>
+            </Link>
           </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {pastBoards.map((board, index) => (
-              <CardStack key={board.year} board={board} index={index} />
-            ))}
-          </div>
         </div>
+      </section>
+    );
+  },
+);
 
-        {/* Call to action */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="flex justify-center mt-20"
-        >
-          <Link href="/team">
-            <AnimatedGlowButton
-              color="green"
-              className="flex items-center gap-2 text-sm font-medium"
-            >
-              See Full Team Directory
-              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-            </AnimatedGlowButton>
-          </Link>
-        </motion.div>
-      </div>
-    </section>
-  )
-})
-
-TeamSection.displayName = "TeamSection"; 
+TeamSection.displayName = "TeamSection";
