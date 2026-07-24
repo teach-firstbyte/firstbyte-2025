@@ -27,7 +27,10 @@ export async function MemberDashboard({ user }: { user: User }) {
                 { teamId: null },
             ],
         },
-        include: { team: true },
+        include: { 
+            team: true,
+            attendance: { where: { userId: user.id } },
+        },
         orderBy: { scheduledAt: "asc" },
     });
 
@@ -82,7 +85,9 @@ export async function MemberDashboard({ user }: { user: User }) {
                             No upcoming meetings.
                         </p>
                     ) : (
-                        meetings.map((meeting) => (
+                        meetings.map((meeting) => {
+                        const attended = meeting.attendance[0]?.status === "PRESENT";
+                        return (
                             <div
                                 key={meeting.id}
                                 className="flex flex-col  gap-2 rounded-md border px-3 py-2 sm:flex-row sm:items-center sm:justify-between sm:gap3"
@@ -103,9 +108,16 @@ export async function MemberDashboard({ user }: { user: User }) {
                                     <Button asChild size="sm">
                                         <Link href={`/check-in/${meeting.id}`}>Check in</Link>
                                     </Button>
+                                    {attended ? (
+                                        <Button asChild size="sm">
+                                            <Link href={`/feedback/${meeting.id}`}>Feedback</Link>
+                                        </Button>  
+                                    ) : (
+                                        <Button size="sm" variant="outline" disabled>Feedback</Button>
+                                    )}             
                                 </div>
                             </div>
-                        ))
+                        )})
                     )}
                 </CardContent>
             </Card>
