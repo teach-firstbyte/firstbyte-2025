@@ -501,22 +501,6 @@ function TeamMemberCard({
                   {member.role}
                 </p>
               </div>
-              {hasRoleHistory && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setShowRoleHistory(!showRoleHistory);
-                  }}
-                  className="text-xs text-primary flex items-center ml-2 hover:underline"
-                >
-                  <ChevronDown
-                    className={cn(
-                      "h-3 w-3 transition-transform",
-                      showRoleHistory ? "rotate-180" : "",
-                    )}
-                  />
-                </button>
-              )}
             </div>
             {renderYearBadges()}
             {renderRoleHistory()}
