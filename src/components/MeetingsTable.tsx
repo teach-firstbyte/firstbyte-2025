@@ -198,9 +198,11 @@ export function MeetingsTable({ meetings }: MeetingsTableProps) {
                       Attendance
                     </Link>
                     <Link href={`/meetings/${meeting.id}/check-in-display`} className="text-sm text-primary underline">
-                      QR Code
+                      Check-in QR Code
                     </Link>
-
+                    <Link href={`/meetings/${meeting.id}/feedback-display`} className="text-sm text-primary underline">
+                      Feedback QR Code
+                    </Link>
                   </div>
                 </TableCell>
               </TableRow>

@@ -11,6 +11,7 @@ import { AttendanceStatus } from "@prisma/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { redactAnonymous } from "@/lib/feedback/redactAnonymous";
 
 export async function OfficerDashboard() {
     const emptyData = {
@@ -56,7 +57,6 @@ export async function OfficerDashboard() {
                   user: true,
                 },
               },
-              feedback: true,
             },
           }),
           prisma.attendance.groupBy({
@@ -92,7 +92,7 @@ export async function OfficerDashboard() {
                 present: counts.PRESENT,
                 absent: counts.ABSENT
             },
-            feedback };
+            feedback: redactAnonymous(feedback) };
       } catch (error) {
         dbUnavailable = true;
         console.error("Database unavailable, rendering empty dashboard state:", error);

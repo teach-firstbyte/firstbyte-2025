@@ -4,13 +4,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { QRCodeSVG } from "qrcode.react";
 import { useEffect, useState } from "react";
 
-interface CheckInQRProps {
+interface FeedbackQRProps {
     meetingTitle: string;
-    code: string;
     path: string;
 }
 
-export function CheckInQR({ meetingTitle, code, path } : CheckInQRProps) {
+export function FeedbackQR({ meetingTitle, path } : FeedbackQRProps) {
     const [url, setUrl] = useState<string | null>(null);
 
     useEffect(() => {
@@ -21,19 +20,15 @@ export function CheckInQR({ meetingTitle, code, path } : CheckInQRProps) {
     return (
         <Card>
             <CardHeader className="text-center">
-                <CardTitle>Check in</CardTitle>
+                <CardTitle>Leave Feedback</CardTitle>
                 <CardDescription>{meetingTitle}</CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col items-center space-y-6">
                 {url ? (
-                    <QRCodeSVG value={url} size={240} />
+                    <QRCodeSVG className="mb-4" value={url} size={240} />
                 ) : (
                     <div className="h-[240px] w-[240px] animate-pulse rounded-md bg-muted" />
                 )}
-                <div className="text-center">
-                    <p className="text-sm text-muted-foreground">Or enter this code:</p>
-                    <p className="text-3xl font-bold tracking-widest">{code}</p>
-                </div>
             </CardContent>
         </Card>
     )
