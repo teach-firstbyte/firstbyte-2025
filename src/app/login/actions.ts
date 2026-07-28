@@ -26,11 +26,11 @@ export async function signUp(formData: FormData) {
         redirect(`/login?error=${encodeURIComponent(error.message)}`);
     }
 
-    if (data.user) {
-        await syncUserToDb(data.user);
+    if (data.user && data.user.identities?.length === 0) {
+        redirect(`/login?error=An account with this email already exists. Try logging in.`)
     }
 
-    redirect('/');
+    redirect(`/check-email?email=${encodeURIComponent(email)}`);
 }
 
 export async function logIn(formData: FormData) {
