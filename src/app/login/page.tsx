@@ -1,16 +1,5 @@
 import Image from "next/image"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { signUp, logIn } from "./actions"
-import { GoogleButton } from "./GoogleButton"
-import { SubmitButton } from "@/components/SubmitButton"
+import { AuthForm } from "./AuthForm"
 
 export default async function LoginPage({
   searchParams,
@@ -32,46 +21,7 @@ export default async function LoginPage({
         <h1 className="text-3xl font-bold">FirstByte Dashboard</h1>
         <p className="text-muted-foreground">Sign in to continue</p>
       </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Log In</CardTitle>
-          <CardDescription>
-            Use your email, or sign up if you're new.
-          </CardDescription>
-        </CardHeader>
-        
-        <CardContent>
-          {error && (
-            <div className="mb-4 rounded-md border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-900">
-              {error}
-            </div>
-          )}
-
-        <GoogleButton />
-        <div className="my-4 text-center text-sm text-muted-foreground">or</div>
-          <form className="space-y-3">
-            <Input name="email" type="email" placeholder="Email" required />
-            <Input
-              name="password"
-              type="password"
-              placeholder="Password"
-              required
-              minLength={6}
-            />
-            <Input name="name" type="text" placeholder="Full name (signup only)" />
-
-            <div className="flex gap-2 pt-2">
-              <SubmitButton formAction={logIn} className="flex-1">
-                Log in
-              </SubmitButton>
-              <SubmitButton formAction={signUp} variant="secondary" className="flex-1">
-                Sign Up
-              </SubmitButton>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
+      <AuthForm error={error} />
     </div>
   )
 }
