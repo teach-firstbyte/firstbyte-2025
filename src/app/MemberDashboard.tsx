@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { MeetingStatusBadge } from "@/components/MeetingStatusBadge";
 import { SubmitButton } from "@/components/SubmitButton";
+import { SuggestionBoxLink } from "@/components/SuggestionBoxLink";
 
 export async function MemberDashboard({ user }: { user: User }) {
     // Gets the users own memberships to display.
@@ -137,6 +138,7 @@ export async function MemberDashboard({ user }: { user: User }) {
                             Log out
                         </SubmitButton>
                     </form>
+                    <SuggestionBoxLink />
                 </div>
             </CardFooter>
             

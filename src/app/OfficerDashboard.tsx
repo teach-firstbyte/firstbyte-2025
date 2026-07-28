@@ -12,6 +12,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { redactAnonymous } from "@/lib/feedback/redactAnonymous";
+import { SuggestionBoxLink } from "@/components/SuggestionBoxLink";
 
 export async function OfficerDashboard() {
     const emptyData = {
@@ -151,6 +152,9 @@ export async function OfficerDashboard() {
                 </CardContent>
             </Card>
             <FeedbackTable feedback={data.feedback} />
+          </div>
+          <div className="flex justify-center border-t pt-6">
+              <SuggestionBoxLink />
           </div>
         </div>
       );
