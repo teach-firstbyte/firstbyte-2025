@@ -1,4 +1,4 @@
-import { Meeting, User } from "@prisma/client";
+import { AttendanceStatus, Meeting, User } from "@prisma/client";
 import { logOut } from "./login/actions";
 import Image from "next/image";
 import { prisma } from "@/lib/prisma";
@@ -9,6 +9,7 @@ import Link from "next/link";
 import { MeetingStatusBadge } from "@/components/MeetingStatusBadge";
 import { SubmitButton } from "@/components/SubmitButton";
 import { SuggestionBoxLink } from "@/components/SuggestionBoxLink";
+import { TWO_HOURS_MS } from "@/lib/attendance/cutoff";
 
 export async function MemberDashboard({ user }: { user: User }) {
     // Gets the users own memberships to display.
@@ -18,22 +19,49 @@ export async function MemberDashboard({ user }: { user: User }) {
     })
     const teamIds = memberships.map((m) => m.teamId);
 
-    const TWO_HOURS_MS = 2 * 60 * 60 * 1000;
-    // Gets the users own upcoming meeting of the teams they are apart of.
-    const meetings = await prisma.meeting.findMany({
-        where: {
-            scheduledAt: { gt: new Date(Date.now() - TWO_HOURS_MS) },
-            OR: [
-                { teamId: { in: teamIds } },
-                { teamId: null },
-            ],
-        },
-        include: { 
-            team: true,
-            attendance: { where: { userId: user.id } },
-        },
-        orderBy: { scheduledAt: "asc" },
-    });
+    const cutoff = new Date(Date.now() - TWO_HOURS_MS);
+
+    const [meetings, attendanceGrouped, notRecorded] = await Promise.all([
+        prisma.meeting.findMany({
+            where: {
+                scheduledAt: { gt: cutoff },
+                OR: [
+                    { teamId: { in: teamIds } },
+                    { teamId: null }
+                ]
+            },
+            include: {
+                team: true,
+                attendance: { where: { userId: user.id } }
+            },
+            orderBy: { scheduledAt: "asc" }
+        }),
+        prisma.attendance.groupBy({
+            by: ["status"],
+            where: { userId: user.id },
+            _count: { _all: true },
+        }),
+        prisma.attendance.count({
+            where: {
+                userId: user.id,
+                status: AttendanceStatus.REGISTERED,
+                meeting: { scheduledAt: { lt: cutoff } },
+            },
+        }),
+    ]);
+
+    const counts: Record<AttendanceStatus, number> = {
+        REGISTERED: 0,
+        PRESENT: 0,
+        ABSENT: 0,
+    };
+
+    for (const row of attendanceGrouped) {
+        counts[row.status] = row._count._all;
+    }
+
+    const decided = counts.PRESENT + counts.ABSENT;
+    const rate = decided > 0 ? counts.PRESENT / decided : null;
 
     return (
         <div className="container mx-auto p-6 space-y-6">
@@ -72,6 +100,30 @@ export async function MemberDashboard({ user }: { user: User }) {
                             ))}
                         </div>
                     )}
+                </CardContent>
+            </Card>
+
+            {/* Attendance Summary */}
+            <Card>
+                <CardHeader>
+                    <CardTitle>Your attendance</CardTitle>
+                    <CardDescription>
+                        Present out of all recorded (present + absent  )
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <div className="text-3xl font-bold">
+                        {rate !== null ? `${Math.round(rate * 100)}%` : "-"}
+                    </div>
+                    <p className="text-sm text-muted-foreground mt-1">
+                        {counts.PRESENT} Present · {counts.ABSENT} Absent · {notRecorded} Not recorded     
+                     </p>
+                     <Link
+                        href="/attendance"
+                        className="text-sm text-primary hover:underline mt-3 inline-block"
+                     >
+                        View your records
+                     </Link>
                 </CardContent>
             </Card>
 

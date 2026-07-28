@@ -1,3 +1,5 @@
+import type { MemberAttendanceKey } from "@/lib/attendance/member-status";
+
 export interface User {
   id: number;
   email: string;
@@ -90,5 +92,16 @@ export interface Feedback {
   author: {
     name: string | null;
     email: string | null;
+  };
+}
+
+export interface MemberAttendanceRow {
+  id: number;
+  meetingId: number;
+  displayStatus: MemberAttendanceKey;
+  hasFeedback: boolean;
+  meeting: {
+    title: string;
+    scheduledAt: Date;
   };
 }
