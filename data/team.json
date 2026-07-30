@@ -15,8 +15,8 @@
       "linkedin": "https://www.linkedin.com/in/landynsparacino",
       "years": ["2022", "2023", "2024", "2025"],
       "previousRoles": [
-        {"role": "Software Team Lead", "year": "2022"},
-        {"role": "Software Team Lead", "year": "2023"},
+        {"role": "Software Website Lead", "year": "2022"},
+        {"role": "Software Website Lead", "year": "2023"},
         {"role": "President", "year": "2024"}
       ]
     },
@@ -29,14 +29,14 @@
       "github": "https://github.com/caleblee12694",
       "years": ["2022", "2023", "2024", "2025"],
       "previousRoles": [
-        {"role": "Camp Harbor View Team Lead", "year": "2022"},
-        {"role": "Camp Harbor View Team Lead", "year": "2023"},
+        {"role": "CS Curricula Lead", "year": "2022"},
+        {"role": "CS Curricula Lead", "year": "2023"},
         {"role": "Vice President", "year": "2024"}
       ]
     },
     {
       "name": "Win Tongtawee",
-      "role": "CS Curricula Lead, React Team Lead, Brand & Marketing Lead",
+      "role": "CS Curricula Lead, Brand & Marketing Lead",
       "image": "/teamMemberPhotos/Win Tongtawee.jpg",
       "circularImage": "/teamMemberPhotos/WinAlt.JPEG",
       "bio": "Hello! I'm Win, I've had the honor of being a part of FirstByte when we only had 7 members. The club holds a special place in my heart and I'm looking forward to seeing what the future holds for FirstByte and its members. Currently Founding Engineer @ Delve, Founding Engineer @ Pagent, and publishing a paper on how we can use ML to predict depression.",
@@ -47,7 +47,7 @@
       "previousRoles": [
         {"role": "Brand & Marketing Lead", "year": "2022"},
         {"role": "CS Curricula Lead, Brand & Marketing Lead", "year": "2023"},
-        {"role": "CS Curricula Lead, React Team Lead, Brand & Marketing Lead", "year": "2024"}
+        {"role": "CS Curricula Lead, Brand & Marketing Lead", "year": "2024"}
       ]
     },
     {
@@ -115,14 +115,14 @@
     },
     {
       "name": "Srikar Ananthoju",
-      "role": "Curricula Lead",
+      "role": "CS Curricula Lead",
       "bio": "I recently graduated with a degree in CS from Northeastern University with a concentration in AI. In the past, I've worked at a SAAS startup, taught CS curricula for under resourced kids, and developed software for a Brain Computer Interface lab. Currently, I'm working at Atlassian as a Software engineer, exploring my interests.",
       "image": "/teamMemberPhotos/Srikar Ananthoju.jpg",
       "linkedin": "https://linkedin.com/in/srikar-ananthoju",
       "years": ["2022", "2023"],
       "previousRoles": [
-        {"role": "Curricula Lead", "year": "2022"},
-        {"role": "Curricula Lead", "year": "2023"}
+        {"role": "CS Curricula Lead", "year": "2022"},
+        {"role": "CS Curricula Lead", "year": "2023"}
       ]
     },
     {
@@ -176,7 +176,7 @@
     },
     {
       "name": "Amoli Patel",
-      "role": "CS Curricula Team Co-Lead",
+      "role": "CS Curricula Lead",
       "image": "/teamMemberPhotos/Amoli Patel.jpg",
       "bio": "Hi! My name is Amoli Patel and I am a combined Computer Science and Business Administration major. I am a rising sophomore and have been a part of FirstByte since my first semester at Northeastern. I have thoroughly enjoyed working with the CS Curricula Team and am excited to be a Co-Lead for the team this coming semester!",
       "linkedin": "www.linkedin.com/in/amoli-patel",
@@ -185,12 +185,12 @@
       "previousRoles": [
         {"role": "CS Curricula Team Member", "year": "2024"},
         {"role": "Software Team Member", "year": "2024"},
-        {"role": "CS Curricula Team Co-Lead", "year": "2025"}
+        {"role": "CS Curricula Lead", "year": "2025"}
       ]
     },
     {
       "name": "Ameeka Patel",
-      "role": "Software Website Team Lead",
+      "role": "Software Website Lead",
       "image": "/teamMemberPhotos/Ameeka Patel.jpg",
       "bio": "Hi! I'm Ameeka Patel, a combined Computer Science and Business Administration major. I first joined FirstByte because I enjoy helping others learn and was drawn to FirstByte's mission of making STEM education more accessible to all students. Ever since joining, I've enjoyed fruthering my own education while also meaningfully supporting others on their learning journey.",
       "linkedin": "www.linkedin.com/in/ameeka-patel",
@@ -199,7 +199,7 @@
       "previousRoles": [
         {"role": "CS Curricula Team Member", "year": "2024"},
         {"role": "Software Team Member", "year": "2024"},
-        {"role": "Software Website Team Lead", "year": "2025"}
+        {"role": "Software Website Lead", "year": "2025"}
       ]
     },
     {
@@ -218,7 +218,7 @@
     },
     {
       "name": "Gavin Normand",
-      "role": "CS Curricula Co-Lead",
+      "role": "CS Curricula Lead",
       "image": "/teamMemberPhotos/Gavin Normand.png",
       "bio": "I am a second year Computer Science major with a minor in Math. I was born and raised in rural Central New Jersey and in my free time I love to mountain bike, ski, play basketball and tennis, and hangout with my dog, friends, and family.",
       "linkedin": "https://www.linkedin.com/in/gavin-normand",
@@ -226,7 +226,7 @@
       "years": ["2024", "2025"],
       "previousRoles": [
         {"role": "CS Curricula Team Member", "year": "2024"},
-        {"role": "CS Curricula Co-Lead", "year": "2025"}
+        {"role": "CS Curricula Lead", "year": "2025"}
       ]
     },
     {
@@ -257,56 +257,56 @@
     },
     {
       "name": "Inesh Parikh",
-      "role": "STEM Curricula Team Lead",
+      "role": "STEM Curricula Lead",
       "image": "/teamMemberPhotos/Inesh Parikh.jpg",
       "bio": "I don't have a bio yet!",
       "linkedin": "https://www.linkedin.com/in/inesh-parikh/",
       "years": ["2024", "2025", "2026"],
       "previousRoles": [
-        {"role": "STEM Curricula Team Lead", "year": "2024"},
-        {"role": "STEM Curricula Team Lead", "year": "2025"}
+        {"role": "STEM Curricula Lead", "year": "2024"},
+        {"role": "STEM Curricula Lead", "year": "2025"}
       ]
     },
     {
       "name": "Shreyashi Kalakuntla",
-      "role": "STEM Curricula Team Lead",
+      "role": "STEM Curricula Lead",
       "image": "/teamMemberPhotos/Shreyashi Kalakuntla.jpg",
       "bio": "Hey Everyone! My name is Shreyashi Kalakuntla and I am a third year studying Business Administration and Data Science with a concentration in finance.",
       "linkedin": "https://www.linkedin.com/in/shreyashi-kalakuntla",
       "years": ["2023", "2024", "2025", "2026"],
       "previousRoles": [
-        {"role": "STEM Curricula Team Lead", "year": "2023"},
-        {"role": "STEM Curricula Team Lead", "year": "2024"},
-        {"role": "STEM Curricula Team Lead", "year": "2025"}
+        {"role": "STEM Curricula Lead", "year": "2023"},
+        {"role": "STEM Curricula Lead", "year": "2024"},
+        {"role": "STEM Curricula Lead", "year": "2025"}
       ]
     },
     {
       "name": "Amy Tran",
-      "role": "CS Curricula Co-Lead",
+      "role": "CS Curricula Lead",
       "image": "/teamMemberPhotos/Amy Tran.jpg",
       "bio": "Hi hi! I'm Amy, a rising sophomore pursuing Computer Science and Business Administration. I'm from Cedar Falls, Iowa, and in my free time I love gaming, dancing, reading, taking photos, napping, and going on whatever side quests come my way.",
       "linkedin": "https://www.linkedin.com/in/amy-tran-1a7196273",
       "years": ["2025", "2026"],
       "previousRoles": [
         {"role": "CS Curricula Team Member", "year": "2025"},
-        {"role": "Brand and Marketing Team Member", "year": "2025"}
+        {"role": "Brand & Marketing Team Member", "year": "2025"}
       ]
     },
     {
       "name": "Ananya Pochinapeddi",
-      "role": "Brand & Marketing Co-Lead",
+      "role": "Brand & Marketing Lead",
       "image": "/teamMemberPhotos/Ananya Pochinapeddi.png",
       "bio": "Hi! I’m Ananya, a third-year student studying Computer Science and Design with a minor in Marketing and I am a Branding & Marketing Lead. I joined FirstByte because I’ve always loved teaching and wanted a way to give back to my community. In my free time I enjoy reading, going on long walks, and doing my nails!",
       "linkedin": "https://www.linkedin.com/in/ananya-pochinapeddi/",
       "years": ["2025", "2026"],
       "previousRoles": [
         {"role": "CS Curricula Team Member", "year": "2025"},
-        {"role": "Brand and Marketing Team Member", "year": "2025"}
+        {"role": "Brand & Marketing Team Member", "year": "2025"}
       ]
     },
     {
       "name": "Chayil Mauristhene",
-      "role": "Software Events Co-Lead",
+      "role": "Software Events Lead",
       "image": "/teamMemberPhotos/default-pfp.jpg",
       "bio": "I don't have a bio yet!",
       "years": ["2025", "2026"],
@@ -327,7 +327,7 @@
     },
     {
       "name": "Himasri Cheerla",
-      "role": "Brand & Marketing Co-Lead",
+      "role": "Brand & Marketing Lead",
       "image": "/teamMemberPhotos/Himasri Cheerla.png",
       "bio": "Hey! My name is Himasri Cheerla and I am a fourth year studying Behavioral Neuroscience.",
       "years": ["2025", "2026"],
@@ -337,7 +337,7 @@
     },
     {
       "name": "Jason Chao",
-      "role": "CS Curricula Co-Lead",
+      "role": "CS Curricula Lead",
       "image": "/teamMemberPhotos/Jason Chao.png",
       "bio": "Hi! I'm Jason and I am a second-year studying Computer Science and Business Administration. I have been a member of FirstByte since my first semester and am happy to be CS Curricula Lead this year. My favorite sports are bouldering, baseball, tennis, and ping pong. I also love to eat food and travel!",
       "linkedin": "https://www.linkedin.com/in/jason-chao-neu",
@@ -349,7 +349,7 @@
     },
     {
       "name": "Koena Gupta",
-      "role": "Software Events Co-Lead",
+      "role": "Software Events Lead",
       "image": "/teamMemberPhotos/Koena Gupta.JPEG",
       "bio": "My name is Koena Gupta, and I am a fourth-year student studying Computer Science and Business Administration with a concentration in Marketing Analytics. I joined FirstByte to further pursue my passion for teaching and making STEM education more accessible to communities around me. This year, I am excited to serve as the Software Events Lead and continue creating meaningful opportunities for students to engage with STEM.",
       "linkedin": "https://www.linkedin.com/in/koena-gupta/",

@@ -47,6 +47,22 @@ Each team member has the following structure:
 
 No need to remove them! Simply ensure their `years` array doesn't include the current year.
 
+### Allowed Roles
+
+`role` (and each entry in `previousRoles`) should contain a value(s) of one of the following teams. Either under the role `Member` or `Lead`. 
+
+- President
+- Vice President
+- Treasurer
+- Logistics Coordinator (Legacy)
+- CS Curricula 
+- STEM Curricula 
+- Software Events 
+- Software Website 
+- Brand & Marketing 
+
+If FirstByte's team structure changes, add/rename roles in this list so it stays the source of truth. Note that this is **not enforced in code** — there's no strict value checking when rendering, so a typo'd or missing role will silently show up as free text rather than causing an error. Keep new entries consistent with this list please!!!
+
 ### Filtering Logic
 
 The components automatically filter members based on their years:
