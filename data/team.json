@@ -286,21 +286,33 @@
       "image": "/teamMemberPhotos/Amy Tran.jpg",
       "bio": "Hi hi! I'm Amy, a rising sophomore pursuing Computer Science and Business Administration. I'm from Cedar Falls, Iowa, and in my free time I love gaming, dancing, reading, taking photos, napping, and going on whatever side quests come my way.",
       "linkedin": "https://www.linkedin.com/in/amy-tran-1a7196273",
-      "years": ["2026"]
+      "years": ["2025", "2026"],
+      "previousRoles": [
+        {"role": "CS Curricula Team Member", "year": "2025"},
+        {"role": "Brand and Marketing Team Member", "year": "2025"}
+      ]
     },
     {
       "name": "Ananya Pochinapeddi",
       "role": "Brand & Marketing Co-Lead",
-      "image": "/teamMemberPhotos/default-pfp.jpg",
-      "bio": "I don't have a bio yet!",
-      "years": ["2026"]
+      "image": "/teamMemberPhotos/Ananya Pochinapeddi.png",
+      "bio": "Hi! I’m Ananya, a third-year student studying Computer Science and Design with a minor in Marketing and I am a Branding & Marketing Lead. I joined FirstByte because I’ve always loved teaching and wanted a way to give back to my community. In my free time I enjoy reading, going on long walks, and doing my nails!",
+      "linkedin": "https://www.linkedin.com/in/ananya-pochinapeddi/",
+      "years": ["2025", "2026"],
+      "previousRoles": [
+        {"role": "CS Curricula Team Member", "year": "2025"},
+        {"role": "Brand and Marketing Team Member", "year": "2025"}
+      ]
     },
     {
       "name": "Chayil Mauristhene",
       "role": "Software Events Co-Lead",
       "image": "/teamMemberPhotos/default-pfp.jpg",
       "bio": "I don't have a bio yet!",
-      "years": ["2026"]
+      "years": ["2025", "2026"],
+      "previousRoles": [
+        {"role": "Software Events Team Member", "year": "2025"}
+      ]
     },
     {
       "name": "Hector Batista",
@@ -308,14 +320,20 @@
       "image": "/teamMemberPhotos/Hector Batista.jpg",
       "bio": "Hi, I'm Hector, a third year CS & Business Admin major and the Software Website Lead. I joined FirstByte because I love teaching others as I find it enhances my own skills as a mentor and a learner! In my free time I love to explore the city, hang out with friends, and try new restaurants.",
       "linkedin": "https://www.linkedin.com/in/hectorbatistajr",
-      "years": ["2026"]
+      "years": ["2025", "2026"],
+      "previousRoles": [
+        {"role": "Software Website Team Member", "year": "2025"}
+      ]
     },
     {
       "name": "Himasri Cheerla",
       "role": "Brand & Marketing Co-Lead",
       "image": "/teamMemberPhotos/Himasri Cheerla.png",
       "bio": "Hey! My name is Himasri Cheerla and I am a fourth year studying Behavioral Neuroscience.",
-      "years": ["2026"]
+      "years": ["2025", "2026"],
+      "previousRoles": [
+        {"role": "STEM Curricula Team Member", "year": "2025"}
+      ]
     },
     {
       "name": "Jason Chao",
@@ -324,7 +342,10 @@
       "bio": "Hi! I'm Jason and I am a second-year studying Computer Science and Business Administration. I have been a member of FirstByte since my first semester and am happy to be CS Curricula Lead this year. My favorite sports are bouldering, baseball, tennis, and ping pong. I also love to eat food and travel!",
       "linkedin": "https://www.linkedin.com/in/jason-chao-neu",
       "github": "https://github.com/jsonano",
-      "years": ["2026"]
+      "years": ["2025", "2026"],
+      "previousRoles": [
+        {"role": "CS Curricula Team Member", "year": "2025"}
+      ]
     },
     {
       "name": "Koena Gupta",
@@ -339,7 +360,10 @@
       "role": "Treasurer",
       "image": "/teamMemberPhotos/Meera Patel.jpeg",
       "bio": "Hi! My name is Meera, and I am a Chemical Engineering and Biochemistry major. I am going into my fourth year, and have been a part of FirstByte since the Spring semester.",
-      "years": ["2026"]
+      "years": ["2025", "2026"],
+      "previousRoles": [
+        {"role": "STEM Curricula Team Member", "year": "2025"}
+      ]
     }
   ]
   
