@@ -1,62 +1,63 @@
-'use server'
+"use server";
 
 import { createClient } from "@/lib/supabase/server";
 import { syncUserToDb } from "@/lib/auth/sync-user";
 import { redirect } from "next/navigation";
 
-
 export async function signUp(formData: FormData) {
-    const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
-    const name = formData.get('name') as string;
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+  const name = formData.get("name") as string;
 
-    const supabase = await createClient();
+  const supabase = await createClient();
 
-    const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-            data: {
-                full_name: name ?? undefined,
-            },
-        },
-    });
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: {
+        full_name: name ?? undefined,
+      },
+    },
+  });
 
-    if (error) {
-        redirect(`/login?error=${encodeURIComponent(error.message)}`);
-    }
+  if (error) {
+    redirect(`/login?error=${encodeURIComponent(error.message)}`);
+  }
 
-    if (data.user && data.user.identities?.length === 0) {
-        redirect(`/login?error=An account with this email already exists. Try logging in.`)
-    }
+  if (data.user && data.user.identities?.length === 0) {
+    redirect(
+      `/login?error=An account with this email already exists. Try logging in.`,
+    );
+  }
 
-    redirect(`/check-email?email=${encodeURIComponent(email)}`);
+  redirect(`/check-email?email=${encodeURIComponent(email)}`);
 }
 
 export async function logIn(formData: FormData) {
-    const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
 
-    const supabase = await createClient();
+  const supabase = await createClient();
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-    });
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
 
-    if (error) {
-        redirect(`/login?error=${encodeURIComponent(error.message)}`);
-    }
+  if (error) {
+    redirect(`/login?error=${encodeURIComponent(error.message)}`);
+  }
 
-    if (data.user) {
-        await syncUserToDb(data.user);
-    }
+  if (data.user) {
+    await syncUserToDb(data.user);
+  }
 
-    redirect('/');
+  redirect("/");
 }
 
 export async function logOut() {
-    const supabase = await createClient();
-    await supabase.auth.signOut();
-    redirect('/login');
+  const supabase = await createClient();
+  await supabase.auth.signOut();
+  redirect("/login");
 }

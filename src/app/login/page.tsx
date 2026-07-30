@@ -1,12 +1,12 @@
-import Image from "next/image"
-import { AuthForm } from "./AuthForm"
+import Image from "next/image";
+import { AuthForm } from "./AuthForm";
 
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string }>
+  searchParams: Promise<{ error?: string }>;
 }) {
-  const { error } = await searchParams
+  const { error } = await searchParams;
 
   return (
     <div className="container mx-auto flex min-h-screen max-w-sm flex-col justify-center p-6">
@@ -23,5 +23,5 @@ export default async function LoginPage({
       </div>
       <AuthForm error={error} />
     </div>
-  )
+  );
 }

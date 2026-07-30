@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import {
   Table,
@@ -7,7 +7,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
 import {
   Card,
   CardContent,
@@ -15,9 +15,9 @@ import {
   CardButton,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import React, { useEffect, useState } from "react"
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import React, { useEffect, useState } from "react";
 import {
   Modal,
   ModalHeader,
@@ -25,13 +25,13 @@ import {
   ModalButton,
   ModalDropdown,
   ModalCheckboxes,
-} from "@/components/ui/modal"
+} from "@/components/ui/modal";
 import { User } from "@/types/dashboard";
-import { useRouter } from "next/navigation"
-import { TableEmptyState } from "./ui/TableEmptyState"
+import { useRouter } from "next/navigation";
+import { TableEmptyState } from "./ui/TableEmptyState";
 
 interface UsersTableProps {
-  users: User[]
+  users: User[];
 }
 
 export function UsersTable({ users }: UsersTableProps) {
@@ -47,7 +47,7 @@ export function UsersTable({ users }: UsersTableProps) {
   const [teamsLoading, setTeamsLoading] = useState(false);
 
   useEffect(() => {
-    if(!showAssignModal) return;
+    if (!showAssignModal) return;
 
     setTeamsLoading(true);
     fetch("/api/teams")
@@ -62,17 +62,17 @@ export function UsersTable({ users }: UsersTableProps) {
   const [selectedTeams, setSelectedTeams] = useState<number[]>([]);
 
   const [originalTeamIds, setOriginalTeamIds] = useState<number[]>([]);
-  const [membershipIdByTeam, setMembershipIdByTeam] = useState<Record<number, number>>({});
+  const [membershipIdByTeam, setMembershipIdByTeam] = useState<
+    Record<number, number>
+  >({});
 
   // for the checkboxes
   const toggleTeam = (teamId: string | number) => {
     const id = typeof teamId === "string" ? Number(teamId) : teamId;
     setSelectedTeams((prev) =>
-      prev.includes(id)
-        ? prev.filter((tid) => tid !== id)
-        : [...prev, id]
+      prev.includes(id) ? prev.filter((tid) => tid !== id) : [...prev, id],
     );
-  }
+  };
 
   const handleAssignSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -85,13 +85,19 @@ export function UsersTable({ users }: UsersTableProps) {
       fetch("/api/team-members", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: selectedUserId, teamId, role: "MEMBER" }),
-      })
-    )
+        body: JSON.stringify({
+          userId: selectedUserId,
+          teamId,
+          role: "MEMBER",
+        }),
+      }),
+    );
 
     const removeCalls = removed.map((teamId) =>
-      fetch(`/api/team-members/${membershipIdByTeam[teamId]}`, { method: "DELETE" })
-    )
+      fetch(`/api/team-members/${membershipIdByTeam[teamId]}`, {
+        method: "DELETE",
+      }),
+    );
 
     await Promise.allSettled([...addCalls, ...removeCalls]);
 
@@ -100,7 +106,6 @@ export function UsersTable({ users }: UsersTableProps) {
     // close modal
     setShowAssignModal(false);
   };
-
 
   const handleUserSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const userId = Number(e.target.value);
@@ -115,9 +120,7 @@ export function UsersTable({ users }: UsersTableProps) {
     setSelectedTeams(teamIds);
     setOriginalTeamIds(teamIds);
     setMembershipIdByTeam(idMap);
-
   };
-
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -142,8 +145,12 @@ export function UsersTable({ users }: UsersTableProps) {
           <CardDescription>All registered users in the system</CardDescription>
         </div>
         <div data-slot="card-action" className="flex gap-2">
-          <CardButton onClick={() => setShowAssignModal(true)}>Assign Teams</CardButton>
-          <CardButton onClick={() => setShowAddModal(true)}>+ Add User</CardButton>
+          <CardButton onClick={() => setShowAssignModal(true)}>
+            Assign Teams
+          </CardButton>
+          <CardButton onClick={() => setShowAddModal(true)}>
+            + Add User
+          </CardButton>
         </div>
       </CardHeader>
       <CardContent>
@@ -158,31 +165,34 @@ export function UsersTable({ users }: UsersTableProps) {
           </TableHeader>
           <TableBody>
             {users.length === 0 ? (
-              <TableEmptyState colSpan={4} message="No users yet."/>
+              <TableEmptyState colSpan={4} message="No users yet." />
             ) : (
-            users.map((user) => (
-              <TableRow key={user.id}>
-                <TableCell>{user.name || 'N/A'}</TableCell>
-                <TableCell>
-                  <a
-                    href={`mailto:${user.email}`}
-                    className="text-blue-600 hover:underline"
-                  >
-                    {user.email}
-                  </a>
-                </TableCell>
-                <TableCell>
-                  <div className="flex flex-wrap gap-1">
-                    {user.teamMemberships.map((membership, index) => (
-                      <Badge key={index} variant="secondary">
-                        {membership.team.name} ({membership.role})
-                      </Badge>
-                    ))}
-                  </div>
-                </TableCell>
-                <TableCell className="hidden md:table-cell">{new Date(user.createdAt).toLocaleDateString()}</TableCell>
-              </TableRow>
-            )))}
+              users.map((user) => (
+                <TableRow key={user.id}>
+                  <TableCell>{user.name || "N/A"}</TableCell>
+                  <TableCell>
+                    <a
+                      href={`mailto:${user.email}`}
+                      className="text-blue-600 hover:underline"
+                    >
+                      {user.email}
+                    </a>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex flex-wrap gap-1">
+                      {user.teamMemberships.map((membership, index) => (
+                        <Badge key={index} variant="secondary">
+                          {membership.team.name} ({membership.role})
+                        </Badge>
+                      ))}
+                    </div>
+                  </TableCell>
+                  <TableCell className="hidden md:table-cell">
+                    {new Date(user.createdAt).toLocaleDateString()}
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
         {showAddModal && (
@@ -193,7 +203,10 @@ export function UsersTable({ users }: UsersTableProps) {
               onChange={handleChange}
               onSubmit={handleSubmit}
             >
-              <ModalButton variant="cancel" onClick={() => setShowAddModal(false)}>
+              <ModalButton
+                variant="cancel"
+                onClick={() => setShowAddModal(false)}
+              >
                 Cancel
               </ModalButton>
               <ModalButton variant="primary" type="submit">
@@ -211,7 +224,10 @@ export function UsersTable({ users }: UsersTableProps) {
                 value={selectedUserId ?? ""}
                 onChange={handleUserSelect}
                 required
-                options={users.map((u) => ({ value: u.id, label: u.name || `User ${u.id}` }))}
+                options={users.map((u) => ({
+                  value: u.id,
+                  label: u.name || `User ${u.id}`,
+                }))}
               />
               <ModalCheckboxes
                 label={teamsLoading ? "Loading teams…" : "Assign to Teams"}
@@ -221,18 +237,20 @@ export function UsersTable({ users }: UsersTableProps) {
                 disabled={!selectedUserId || teamsLoading}
               />
               <div className="flex justify-end gap-2 mt-4">
-                <ModalButton variant="cancel" onClick={() => setShowAssignModal(false)}>
+                <ModalButton
+                  variant="cancel"
+                  onClick={() => setShowAssignModal(false)}
+                >
                   Cancel
                 </ModalButton>
                 <ModalButton variant="primary" type="submit">
                   Save
                 </ModalButton>
               </div>
-
             </form>
           </Modal>
         )}
       </CardContent>
     </Card>
-  )
+  );
 }

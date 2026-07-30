@@ -5,31 +5,33 @@ import { requireOfficer } from "@/lib/auth/requireOfficer";
 import { BackLink } from "@/components/BackLink";
 
 export default async function CheckInDisplayPage({
-    params,
-} : {
-    params: Promise<{ meetingId: string }>;
+  params,
+}: {
+  params: Promise<{ meetingId: string }>;
 }) {
-    const officer = await requireOfficer();
-    const { meetingId } = await params;
+  await requireOfficer();
+  const { meetingId } = await params;
 
-    const parsedMeetingId = parseInt(meetingId);
-    if (isNaN(parsedMeetingId)) {
-        return <p className="p-6 text-center">Invalid meeting.</p>
-    }
+  const parsedMeetingId = parseInt(meetingId);
+  if (isNaN(parsedMeetingId)) {
+    return <p className="p-6 text-center">Invalid meeting.</p>;
+  }
 
-    const meeting = await prisma.meeting.findUnique({ where: { id: parsedMeetingId } });
-    if (!meeting) {
-        return <p className="p-6 text-center">Meeting not found.</p>
-    }
+  const meeting = await prisma.meeting.findUnique({
+    where: { id: parsedMeetingId },
+  });
+  if (!meeting) {
+    return <p className="p-6 text-center">Meeting not found.</p>;
+  }
 
-    //Server-only: generate the code with the secret. Only 'code' + 'path' cross to the client.
-    const code = generateCheckInCode(parsedMeetingId);
-    const path = `/check-in/${parsedMeetingId}?code=${code}`;
+  //Server-only: generate the code with the secret. Only 'code' + 'path' cross to the client.
+  const code = generateCheckInCode(parsedMeetingId);
+  const path = `/check-in/${parsedMeetingId}?code=${code}`;
 
-    return (
-        <div className="container mx-auto max-w-md p-6 space-y-6">
-            <BackLink />
-            <CheckInQR meetingTitle={meeting.title} code={code} path={path} />
-        </div>
-    );
+  return (
+    <div className="container mx-auto max-w-md p-6 space-y-6">
+      <BackLink />
+      <CheckInQR meetingTitle={meeting.title} code={code} path={path} />
+    </div>
+  );
 }

@@ -19,17 +19,23 @@ export async function GET(): Promise<NextResponse> {
       where,
       include: {
         meeting: true,
-        author: true
-      }
+        author: true,
+      },
     });
-    
+
     const cleaned = feedback.map((f) =>
-      f.isAnonymous && f.authorId !== user.id ? { ...f, author: null, authorId: null } : f
+      f.isAnonymous && f.authorId !== user.id
+        ? { ...f, author: null, authorId: null }
+        : f,
     );
 
     return NextResponse.json(cleaned, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to get feedback' }, { status: 500 });
+    console.error("GET /api/feedback failed:", error);
+    return NextResponse.json(
+      { error: "Failed to get feedback" },
+      { status: 500 },
+    );
   }
 }
 
@@ -42,23 +48,23 @@ export async function POST(request: Request): Promise<NextResponse> {
   try {
     const { user, error } = await requireUserApi();
     if (error) return error;
-    
+
     const { meetingId, rating, comment, category, isAnonymous } =
       await request.json(); // no authorId pulled yet
 
     // meetingId is required
     if (!meetingId) {
       return NextResponse.json(
-        { error: 'meetingId is required' },
-        { status: 400 }
+        { error: "meetingId is required" },
+        { status: 400 },
       );
     }
 
     const parsedMeetingId = parseInt(meetingId);
     if (isNaN(parsedMeetingId)) {
       return NextResponse.json(
-        { error: 'meetingId must be a valid integer' },
-        { status: 400 }
+        { error: "meetingId must be a valid integer" },
+        { status: 400 },
       );
     }
 
@@ -68,8 +74,8 @@ export async function POST(request: Request): Promise<NextResponse> {
       parsedRating = parseInt(rating);
       if (isNaN(parsedRating) || parsedRating < 1 || parsedRating > 5) {
         return NextResponse.json(
-          { error: 'rating must be an integer between 1 and 5' },
-          { status: 400 }
+          { error: "rating must be an integer between 1 and 5" },
+          { status: 400 },
         );
       }
     }
@@ -79,8 +85,10 @@ export async function POST(request: Request): Promise<NextResponse> {
       const validCategories = Object.values(FeedbackCategory);
       if (!validCategories.includes(category as FeedbackCategory)) {
         return NextResponse.json(
-          { error: `Invalid category. Must be one of: ${validCategories.join(', ')}` },
-          { status: 400 }
+          {
+            error: `Invalid category. Must be one of: ${validCategories.join(", ")}`,
+          },
+          { status: 400 },
         );
       }
     }
@@ -98,6 +106,10 @@ export async function POST(request: Request): Promise<NextResponse> {
 
     return NextResponse.json(feedback, { status: 201 });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to submit feedback' }, { status: 500 });
+    console.error("POST /api/feedback failed:", error);
+    return NextResponse.json(
+      { error: "Failed to submit feedback" },
+      { status: 500 },
+    );
   }
 }

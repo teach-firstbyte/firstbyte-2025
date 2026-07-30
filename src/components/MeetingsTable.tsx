@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import {
   Table,
@@ -7,7 +7,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
 import {
   Card,
   CardContent,
@@ -15,23 +15,23 @@ import {
   CardButton,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { useRouter } from "next/navigation"
-import Link from "next/link"
-import React, { useEffect, useState } from "react"
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
 import {
   Modal,
   ModalHeader,
   ModalButton,
   ModalDropdown,
-} from "@/components/ui/modal"
+} from "@/components/ui/modal";
 import { Meeting } from "@/types/dashboard";
-import { TableEmptyState } from "./ui/TableEmptyState"
-import { MeetingStatusBadge } from "./MeetingStatusBadge"
+import { TableEmptyState } from "./ui/TableEmptyState";
+import { MeetingStatusBadge } from "./MeetingStatusBadge";
 
 interface MeetingsTableProps {
-  meetings: Meeting[]
+  meetings: Meeting[];
 }
 
 // Mirrors the MeetingType enum in prisma/schema.prisma. The POST /api/meetings
@@ -83,10 +83,13 @@ export function MeetingsTable({ meetings }: MeetingsTableProps) {
         const res = await fetch(`/api/teams`);
         if (!res.ok) return;
         const data = await res.json();
-        setTeams(data.map((t: { id: number; name: string }) => ({ id: t.id, name: t.name })));
-      } catch {
-
-      }  
+        setTeams(
+          data.map((t: { id: number; name: string }) => ({
+            id: t.id,
+            name: t.name,
+          })),
+        );
+      } catch {}
     }
     loadTeams();
   }, [showAddModal, teams.length]);
@@ -98,7 +101,7 @@ export function MeetingsTable({ meetings }: MeetingsTableProps) {
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value, type, checked } = e.target as HTMLInputElement;
     setNewMeeting((prev) => ({
@@ -123,12 +126,15 @@ export function MeetingsTable({ meetings }: MeetingsTableProps) {
         body: JSON.stringify({
           title: newMeeting.title,
           type: newMeeting.type,
-          teamId: newMeeting.teamId === "none"? null : Number(newMeeting.teamId),
+          teamId:
+            newMeeting.teamId === "none" ? null : Number(newMeeting.teamId),
           scheduledAt: new Date(newMeeting.scheduledAt).toISOString(),
           description: newMeeting.description || null,
           location: newMeeting.location || null,
           isRequired: newMeeting.isRequired,
-          maxCapacity: newMeeting.maxCapacity ? Number(newMeeting.maxCapacity) : null,
+          maxCapacity: newMeeting.maxCapacity
+            ? Number(newMeeting.maxCapacity)
+            : null,
         }),
       });
 
@@ -156,7 +162,9 @@ export function MeetingsTable({ meetings }: MeetingsTableProps) {
           <CardDescription>All meetings and events</CardDescription>
         </div>
         <div data-slot="card-action" className="flex gap-2">
-          <CardButton onClick={() => setShowAddModal(true)}>+ Add Meeting</CardButton>
+          <CardButton onClick={() => setShowAddModal(true)}>
+            + Add Meeting
+          </CardButton>
         </div>
       </CardHeader>
       <CardContent>
@@ -174,39 +182,60 @@ export function MeetingsTable({ meetings }: MeetingsTableProps) {
           </TableHeader>
           <TableBody>
             {meetings.length === 0 ? (
-              <TableEmptyState colSpan={7} message="No meetings scheduled yet." />
+              <TableEmptyState
+                colSpan={7}
+                message="No meetings scheduled yet."
+              />
             ) : (
-            meetings.map((meeting) => (
-              <TableRow key={meeting.id}>
-                <TableCell>{meeting.title}</TableCell>
-                <TableCell>
-                  <Badge variant="outline">{meeting.type.replace(/_/g, ' ')}</Badge>
-                </TableCell>
-                <TableCell>{meeting.team?.name || 'N/A'}</TableCell>
-                <TableCell>{new Date(meeting.scheduledAt).toLocaleString()}</TableCell>
-                <TableCell>
-                  <MeetingStatusBadge scheduledAt={meeting.scheduledAt} />
-                </TableCell>
-                <TableCell>
-                  <div className="text-sm">
-                    {meeting.attendance.filter(a => a.status === 'PRESENT').length} / {meeting.attendance.length}
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="flex gap-3">
-                    <Link href={`/meetings/${meeting.id}/attendance`} className="text-sm text-primary underline">
-                      Attendance
-                    </Link>
-                    <Link href={`/meetings/${meeting.id}/check-in-display`} className="text-sm text-primary underline">
-                      Check-in QR Code
-                    </Link>
-                    <Link href={`/meetings/${meeting.id}/feedback-display`} className="text-sm text-primary underline">
-                      Feedback QR Code
-                    </Link>
-                  </div>
-                </TableCell>
-              </TableRow>
-            )))}
+              meetings.map((meeting) => (
+                <TableRow key={meeting.id}>
+                  <TableCell>{meeting.title}</TableCell>
+                  <TableCell>
+                    <Badge variant="outline">
+                      {meeting.type.replace(/_/g, " ")}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>{meeting.team?.name || "N/A"}</TableCell>
+                  <TableCell>
+                    {new Date(meeting.scheduledAt).toLocaleString()}
+                  </TableCell>
+                  <TableCell>
+                    <MeetingStatusBadge scheduledAt={meeting.scheduledAt} />
+                  </TableCell>
+                  <TableCell>
+                    <div className="text-sm">
+                      {
+                        meeting.attendance.filter((a) => a.status === "PRESENT")
+                          .length
+                      }{" "}
+                      / {meeting.attendance.length}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex gap-3">
+                      <Link
+                        href={`/meetings/${meeting.id}/attendance`}
+                        className="text-sm text-primary underline"
+                      >
+                        Attendance
+                      </Link>
+                      <Link
+                        href={`/meetings/${meeting.id}/check-in-display`}
+                        className="text-sm text-primary underline"
+                      >
+                        Check-in QR Code
+                      </Link>
+                      <Link
+                        href={`/meetings/${meeting.id}/feedback-display`}
+                        className="text-sm text-primary underline"
+                      >
+                        Feedback QR Code
+                      </Link>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
         {showAddModal && (
@@ -232,10 +261,12 @@ export function MeetingsTable({ meetings }: MeetingsTableProps) {
                   label: t.replace(/_/g, " "),
                 }))}
               />
-              <ModalDropdown 
+              <ModalDropdown
                 label="Team (optional)"
                 value={newMeeting.teamId}
-                onChange={(e) => setNewMeeting((prev) => ({ ...prev, teamId: e.target.value }))}
+                onChange={(e) =>
+                  setNewMeeting((prev) => ({ ...prev, teamId: e.target.value }))
+                }
                 options={[
                   { value: "none", label: "General - all members" },
                   ...teams.map((t) => ({ value: String(t.id), label: t.name })),
@@ -287,10 +318,18 @@ export function MeetingsTable({ meetings }: MeetingsTableProps) {
               {error && <p className="text-sm text-red-600">{error}</p>}
 
               <div className="flex justify-end space-x-2 pt-2">
-                <ModalButton variant="cancel" type="button" onClick={closeModal}>
+                <ModalButton
+                  variant="cancel"
+                  type="button"
+                  onClick={closeModal}
+                >
                   Cancel
                 </ModalButton>
-                <ModalButton variant="primary" type="submit" disabled={submitting}>
+                <ModalButton
+                  variant="primary"
+                  type="submit"
+                  disabled={submitting}
+                >
                   {submitting ? "Saving..." : "Save"}
                 </ModalButton>
               </div>
@@ -299,5 +338,5 @@ export function MeetingsTable({ meetings }: MeetingsTableProps) {
         )}
       </CardContent>
     </Card>
-  )
+  );
 }

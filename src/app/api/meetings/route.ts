@@ -14,24 +14,24 @@ export async function GET(): Promise<NextResponse> {
     const { user, error } = await requireUserApi();
     if (error) return error;
 
-    if(isOfficer(user)) {
+    if (isOfficer(user)) {
       const meetings = await prisma.meeting.findMany({
         include: {
           attendance: {
-              include: {
-                  user: true
-              }
+            include: {
+              user: true,
+            },
           },
-          feedback: true
-        }
+          feedback: true,
+        },
       });
       return NextResponse.json(meetings, { status: 200 });
     }
-    
+
     const memberships = await prisma.teamMember.findMany({
       where: { userId: user.id },
       select: { teamId: true },
-    })
+    });
 
     const teamIds = memberships.map((m) => m.teamId);
 
@@ -41,16 +41,17 @@ export async function GET(): Promise<NextResponse> {
     const meetings = await prisma.meeting.findMany({
       where: {
         scheduledAt: { gt: new Date(Date.now() - TWO_HOURS_MS) },
-        OR: [
-          { teamId: null },
-          { teamId: { in: teamIds } }
-        ]
-      }
-    })
+        OR: [{ teamId: null }, { teamId: { in: teamIds } }],
+      },
+    });
 
     return NextResponse.json(meetings, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to get meetings' }, { status: 500 });
+    console.error("GET /api/meetings failed:", error);
+    return NextResponse.json(
+      { error: "Failed to get meetings" },
+      { status: 500 },
+    );
   }
 }
 
@@ -63,7 +64,7 @@ export async function POST(request: Request): Promise<NextResponse> {
   try {
     const { error } = await requireOfficerApi();
     if (error) return error;
-    
+
     // Validate the request body
     const {
       title,
@@ -79,8 +80,8 @@ export async function POST(request: Request): Promise<NextResponse> {
     // title, type, and scheduledAt are the required fields on the model
     if (!title || !type || !scheduledAt) {
       return NextResponse.json(
-        { error: 'title, type, and scheduledAt are required' },
-        { status: 400 }
+        { error: "title, type, and scheduledAt are required" },
+        { status: 400 },
       );
     }
 
@@ -88,8 +89,8 @@ export async function POST(request: Request): Promise<NextResponse> {
     const validTypes = Object.values(MeetingType);
     if (!validTypes.includes(type as MeetingType)) {
       return NextResponse.json(
-        { error: `Invalid type. Must be one of: ${validTypes.join(', ')}` },
-        { status: 400 }
+        { error: `Invalid type. Must be one of: ${validTypes.join(", ")}` },
+        { status: 400 },
       );
     }
 
@@ -97,8 +98,8 @@ export async function POST(request: Request): Promise<NextResponse> {
     const parsedScheduledAt = new Date(scheduledAt);
     if (isNaN(parsedScheduledAt.getTime())) {
       return NextResponse.json(
-        { error: 'scheduledAt must be a valid date' },
-        { status: 400 }
+        { error: "scheduledAt must be a valid date" },
+        { status: 400 },
       );
     }
 
@@ -108,8 +109,8 @@ export async function POST(request: Request): Promise<NextResponse> {
       parsedTeamId = parseInt(teamId);
       if (isNaN(parsedTeamId)) {
         return NextResponse.json(
-          { error: 'teamId must be a valid integer' },
-          { status: 400 }
+          { error: "teamId must be a valid integer" },
+          { status: 400 },
         );
       }
     }
@@ -119,8 +120,8 @@ export async function POST(request: Request): Promise<NextResponse> {
       parsedMaxCapacity = parseInt(maxCapacity);
       if (isNaN(parsedMaxCapacity)) {
         return NextResponse.json(
-          { error: 'maxCapacity must be a valid integer' },
-          { status: 400 }
+          { error: "maxCapacity must be a valid integer" },
+          { status: 400 },
         );
       }
     }
@@ -154,7 +155,7 @@ export async function POST(request: Request): Promise<NextResponse> {
       const allUsers = await prisma.user.findMany({
         select: { id: true },
       });
-      expectedUserIds = allUsers.map((u) => u.id)
+      expectedUserIds = allUsers.map((u) => u.id);
     }
 
     if (expectedUserIds.length > 0) {
@@ -162,14 +163,18 @@ export async function POST(request: Request): Promise<NextResponse> {
         data: expectedUserIds.map((userId) => ({
           userId,
           meetingId: meeting.id,
-          status: "REGISTERED" as const
+          status: "REGISTERED" as const,
         })),
         skipDuplicates: true,
-      })
+      });
     }
 
     return NextResponse.json(meeting, { status: 201 });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to create meeting' }, { status: 500 });
+    console.error("POST /api/meetings failed:", error);
+    return NextResponse.json(
+      { error: "Failed to create meeting" },
+      { status: 500 },
+    );
   }
 }

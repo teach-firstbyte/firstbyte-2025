@@ -1,9 +1,15 @@
-'use client'
+"use client";
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 
 interface CheckInFormProps {
   meetingId: number;
@@ -13,7 +19,11 @@ interface CheckInFormProps {
 
 type Status = "idle" | "submitting" | "success" | "error";
 
-export function CheckInForm({ meetingId, meetingTitle, initialCode }: CheckInFormProps) {
+export function CheckInForm({
+  meetingId,
+  meetingTitle,
+  initialCode,
+}: CheckInFormProps) {
   const [code, setCode] = useState(initialCode);
   const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState("");
@@ -51,7 +61,9 @@ export function CheckInForm({ meetingId, meetingTitle, initialCode }: CheckInFor
         ) : (
           <>
             <div className="space-y-2">
-              <label htmlFor="code" className="text-sm font-medium">Check-in code</label>
+              <label htmlFor="code" className="text-sm font-medium">
+                Check-in code
+              </label>
               <Input
                 id="code"
                 value={code}

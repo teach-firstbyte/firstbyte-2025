@@ -4,27 +4,32 @@ import { requireOfficer } from "@/lib/auth/requireOfficer";
 import { BackLink } from "@/components/BackLink";
 
 export default async function MeetingAttendancePage({
-    params,
+  params,
 }: {
-    params: Promise<{ meetingId: string }>
+  params: Promise<{ meetingId: string }>;
 }) {
-    const officer = await requireOfficer();
-    const { meetingId } = await params;
+  await requireOfficer();
+  const { meetingId } = await params;
 
-    const parsedMeetingId = parseInt(meetingId);
-    if (isNaN(parsedMeetingId)) {
-        return <p className="p-6 text-center">Invalid meeting.</p>
-    }
+  const parsedMeetingId = parseInt(meetingId);
+  if (isNaN(parsedMeetingId)) {
+    return <p className="p-6 text-center">Invalid meeting.</p>;
+  }
 
-    const meeting = await prisma.meeting.findUnique({ where: { id: parsedMeetingId } });
-    if (!meeting) {
-        return <p className="p-6 text-center">Meeting not found.</p>
-    }
+  const meeting = await prisma.meeting.findUnique({
+    where: { id: parsedMeetingId },
+  });
+  if (!meeting) {
+    return <p className="p-6 text-center">Meeting not found.</p>;
+  }
 
-    return (
-        <div className="container mx-auto max-w-2xl p-6 space-y-6">
-            <BackLink />
-            <AttendanceToggle meetingId={parsedMeetingId} meetingTitle={meeting.title} />
-        </div>
-    )
+  return (
+    <div className="container mx-auto max-w-2xl p-6 space-y-6">
+      <BackLink />
+      <AttendanceToggle
+        meetingId={parsedMeetingId}
+        meetingTitle={meeting.title}
+      />
+    </div>
+  );
 }

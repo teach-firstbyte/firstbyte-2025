@@ -16,7 +16,9 @@ export default async function CheckInPage({
 
   // Server-only: session gate
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) {
     const returnPath = `/check-in/${meetingId}${code ? `?code=${code}` : ""}`;
     redirect(`/login?redirect=${encodeURIComponent(returnPath)}`);
@@ -28,7 +30,9 @@ export default async function CheckInPage({
   }
 
   // Server-only: fetch the meeting to show its title
-  const meeting = await prisma.meeting.findUnique({ where: { id: parsedMeetingId } });
+  const meeting = await prisma.meeting.findUnique({
+    where: { id: parsedMeetingId },
+  });
   if (!meeting) {
     return <p className="p-6 text-center">Meeting not found.</p>;
   }

@@ -10,15 +10,16 @@ export async function GET(): Promise<NextResponse> {
     const teams = await prisma.team.findMany({
       include: {
         members: {
-            include: {
-                user: true
-            }
-        }
-      }
+          include: {
+            user: true,
+          },
+        },
+      },
     });
     return NextResponse.json(teams, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to get teams' }, { status: 500 });
+    console.error("GET /api/teams failed:", error);
+    return NextResponse.json({ error: "Failed to get teams" }, { status: 500 });
   }
 }
 
@@ -31,13 +32,13 @@ export async function POST(request: Request): Promise<NextResponse> {
   try {
     const { error } = await requireOfficerApi();
     if (error) return error;
-    
+
     // Validate the request body
     const { name, description, isActive } = await request.json();
 
     // name is the only required field on the model
     if (!name) {
-      return NextResponse.json({ error: 'name is required' }, { status: 400 });
+      return NextResponse.json({ error: "name is required" }, { status: 400 });
     }
 
     // Create the team
@@ -52,7 +53,10 @@ export async function POST(request: Request): Promise<NextResponse> {
 
     return NextResponse.json(team, { status: 201 });
   } catch (error) {
-
-    return NextResponse.json({ error: 'Failed to create team' }, { status: 500 });
+    console.error("POST /api/teams failed:", error);
+    return NextResponse.json(
+      { error: "Failed to create team" },
+      { status: 500 },
+    );
   }
 }

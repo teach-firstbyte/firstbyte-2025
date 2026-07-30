@@ -1,10 +1,9 @@
 ---
 name: Feature Addition
 about: Suggest an added feature for this project
-title: '[FEATURE]'
-labels: ''
-assignees: ''
-
+title: "[FEATURE]"
+labels: ""
+assignees: ""
 ---
 
 ## 📋 Description
@@ -14,7 +13,8 @@ assignees: ''
 ## ✅ Acceptance Criteria
 
 (What are the specific condition for this ticket to be considered “done”? Ex: A user can do this.)
-* A user can…
+
+- A user can…
 
 ## 🧪 Testing
 

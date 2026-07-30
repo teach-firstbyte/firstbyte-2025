@@ -104,10 +104,20 @@ interface ModalDropdownProps {
   className?: string;
 }
 
-function ModalDropdown({ label, value, options, onChange, required, disabled, className }: ModalDropdownProps) {
+function ModalDropdown({
+  label,
+  value,
+  options,
+  onChange,
+  required,
+  disabled,
+  className,
+}: ModalDropdownProps) {
   return (
     <div className={cn("flex flex-col gap-1", className)}>
-      {label && <label className="block text-sm font-medium mb-1">{label}</label>}
+      {label && (
+        <label className="block text-sm font-medium mb-1">{label}</label>
+      )}
       <select
         className="border rounded-md p-2 w-full"
         value={value ?? ""}
@@ -115,9 +125,13 @@ function ModalDropdown({ label, value, options, onChange, required, disabled, cl
         required={required}
         disabled={disabled}
       >
-        <option value="" disabled>Select an option...</option>
+        <option value="" disabled>
+          Select an option...
+        </option>
         {options.map((opt) => (
-          <option key={opt.value} value={opt.value}>{opt.label}</option>
+          <option key={opt.value} value={opt.value}>
+            {opt.label}
+          </option>
         ))}
       </select>
     </div>
@@ -133,10 +147,19 @@ interface ModalCheckboxesProps {
   className?: string;
 }
 
-function ModalCheckboxes({ label, options, selected, onToggle, disabled, className }: ModalCheckboxesProps) {
+function ModalCheckboxes({
+  label,
+  options,
+  selected,
+  onToggle,
+  disabled,
+  className,
+}: ModalCheckboxesProps) {
   return (
     <div className={cn("flex flex-col gap-2", className)}>
-      {label && <label className="block text-sm font-medium mb-1">{label}</label>}
+      {label && (
+        <label className="block text-sm font-medium mb-1">{label}</label>
+      )}
       {options.map((opt) => (
         <label key={opt.value} className="flex items-center gap-2">
           <input
@@ -152,4 +175,11 @@ function ModalCheckboxes({ label, options, selected, onToggle, disabled, classNa
   );
 }
 
-export { Modal, ModalHeader, ModalForm, ModalButton, ModalDropdown, ModalCheckboxes };
+export {
+  Modal,
+  ModalHeader,
+  ModalForm,
+  ModalButton,
+  ModalDropdown,
+  ModalCheckboxes,
+};

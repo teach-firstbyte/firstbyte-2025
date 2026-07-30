@@ -6,17 +6,17 @@ A dashboard for tracking FirstByte club participation, attendance, projects, and
 
 ## 🚀 Tech Stack
 
-- **Frontend:** Next.js 15, React, TypeScript, Tailwind CSS  
-- **Backend:** Prisma ORM, Supabase PostgreSQL  
-- **UI Components:** shadcn/ui  
+- **Frontend:** Next.js 15, React, TypeScript, Tailwind CSS
+- **Backend:** Prisma ORM, Supabase PostgreSQL
+- **UI Components:** shadcn/ui
 - **Deployment:** Vercel
 
 ---
 
 ## 📋 Prerequisites
 
-- Node.js 18.x or 20.x  
-- npm (or your preferred package manager)  
+- Node.js 18.x or 20.x
+- npm (or your preferred package manager)
 - Access to the shared Supabase database (ask a project admin for credentials)
 
 ---
@@ -24,6 +24,7 @@ A dashboard for tracking FirstByte club participation, attendance, projects, and
 ## 🔐 Environment Setup
 
 1. **Clone the repository**
+
    ```bash
    git clone [REPO_URL]
    cd [REPO_NAME]
@@ -40,14 +41,15 @@ A dashboard for tracking FirstByte club participation, attendance, projects, and
      NEXT_PUBLIC_SUPABASE_URL="https://[URL].supabase.co"
      NEXT_PUBLIC_SUPABASE_ANON_KEY="[ANON_KEY]"
      ```
-  - Generate a `CHECKIN_SECRET` for the attendance check-in codes:
-    ```bash
-    openssl rand -hex 32
-    ```
-     Add it to `.env.local`. **This is a server-only secret — do NOT prefix it with `NEXT_PUBLIC_`.** It signs the check-in codes; if it leaks to the browser, anyone could forge attendance codes.
-    ```.env.local
-     CHECKIN_SECRET="[GENERATED_SECRET]"
-    ```
+
+- Generate a `CHECKIN_SECRET` for the attendance check-in codes:
+  ```bash
+  openssl rand -hex 32
+  ```
+  Add it to `.env.local`. **This is a server-only secret — do NOT prefix it with `NEXT_PUBLIC_`.** It signs the check-in codes; if it leaks to the browser, anyone could forge attendance codes.
+  ```.env.local
+   CHECKIN_SECRET="[GENERATED_SECRET]"
+  ```
 
 3. **Install dependencies**
    ```bash
@@ -80,20 +82,20 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## 📦 Project Features
 
-- **User Management:** Track club members and team memberships  
-- **Team Organization:** Manage different club teams  
-- **Meeting Tracking:** Schedule and track meetings, workshops, and events  
-- **Attendance System:** Record and monitor member attendance  
-- **Feedback Collection:** Gather feedback on meetings and events  
+- **User Management:** Track club members and team memberships
+- **Team Organization:** Manage different club teams
+- **Meeting Tracking:** Schedule and track meetings, workshops, and events
+- **Attendance System:** Record and monitor member attendance
+- **Feedback Collection:** Gather feedback on meetings and events
 - **Analytics Dashboard:** View participation and engagement metrics
 
 ---
 
 ## 📝 Development Notes
 
-- All database operations go through Prisma ORM  
-- UI components use shadcn/ui and Tailwind CSS  
-- Dashboard is responsive and accessible  
+- All database operations go through Prisma ORM
+- UI components use shadcn/ui and Tailwind CSS
+- Dashboard is responsive and accessible
 - Use TypeScript throughout
 
 ---
@@ -102,33 +104,34 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 **Common Issues:**
 
-- `"Environment variable not found: DATABASE_URL"`  
-  - Make sure `.env.local` exists and is filled out  
+- `"Environment variable not found: DATABASE_URL"`
+  - Make sure `.env.local` exists and is filled out
   - Restart the dev server after any changes
 
-- `"Can't reach database server"`  
-  - Confirm your Supabase project is active and credentials are correct  
+- `"Can't reach database server"`
+  - Confirm your Supabase project is active and credentials are correct
   - Try using the pooled connection string
 
-- `"Module not found" errors`  
+- `"Module not found" errors`
   - Run `npm install` to ensure all dependencies are present
 
-- `"CHECKIN_SECRET is not set"`  
-  - The attendance check-in feature needs this variable in `.env.local`  
+- `"CHECKIN_SECRET is not set"`
+  - The attendance check-in feature needs this variable in `.env.local`
   - Generate one with `openssl rand -hex 32`, then restart the dev server
 
-**If you’re stuck:**  
-- Check terminal output for error messages  
-- Verify your environment variables  
+**If you’re stuck:**
+
+- Check terminal output for error messages
+- Verify your environment variables
 - Contact Ameeka and Nick
 
 ---
 
 ## 🎯 Future Roadmap
- 
-- File upload capabilities  
-- Some form of Jira board integration for task management  
-- Admin dashboard for content management  
+
+- File upload capabilities
+- Some form of Jira board integration for task management
+- Admin dashboard for content management
 - Individual user workspaces
 
 ---

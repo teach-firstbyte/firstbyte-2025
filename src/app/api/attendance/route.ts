@@ -16,15 +16,18 @@ export async function GET(request: Request): Promise<NextResponse> {
     const officer = isOfficer(user);
 
     const { searchParams } = new URL(request.url);
-    const meetingIdParam = searchParams.get("meetingId");
+    const meetingIdParam = searchParams.get('meetingId');
     const userIdParam = searchParams.get("userId");
-    
+
     const where: { meetingId?: number; userId?: number } = {};
 
     if (meetingIdParam != null) {
       const meetingId = parseInt(meetingIdParam);
       if (isNaN(meetingId)) {
-        return NextResponse.json({ error: "meetingId must be a valid integer" }, { status: 400 });
+        return NextResponse.json(
+          { error: "meetingId must be a valid integer" },
+          { status: 400 },
+        );
       }
       where.meetingId = meetingId;
     }
@@ -34,24 +37,31 @@ export async function GET(request: Request): Promise<NextResponse> {
       if (userIdParam !== null) {
         const userId = parseInt(userIdParam);
         if (isNaN(userId)) {
-          return NextResponse.json({ error: "userId must be a valid integer"}, { status: 400 });
+          return NextResponse.json(
+            { error: "userId must be a valid integer" },
+            { status: 400 },
+          );
         }
         where.userId = userId;
       }
     } else {
       where.userId = user.id; // overwrites original call in case a user is trying to access another user information.
     }
-    
+
     const attendance = await prisma.attendance.findMany({
       where,
       include: {
         user: true,
-        meeting: true
-      }
+        meeting: true,
+      },
     });
     return NextResponse.json(attendance, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to get attendance' }, { status: 500 });
+    console.error("GET /api/attendance failed:", error);
+    return NextResponse.json(
+      { error: "Failed to get attendance" },
+      { status: 500 },
+    );
   }
 }
 
@@ -71,8 +81,8 @@ export async function POST(request: Request): Promise<NextResponse> {
     // userId, meetingId, and status are required
     if (!userId || !meetingId || !status) {
       return NextResponse.json(
-        { error: 'userId, meetingId, and status are required' },
-        { status: 400 }
+        { error: "userId, meetingId, and status are required" },
+        { status: 400 },
       );
     }
 
@@ -80,8 +90,8 @@ export async function POST(request: Request): Promise<NextResponse> {
     const parsedMeetingId = parseInt(meetingId);
     if (isNaN(parsedUserId) || isNaN(parsedMeetingId)) {
       return NextResponse.json(
-        { error: 'userId and meetingId must be valid integers' },
-        { status: 400 }
+        { error: "userId and meetingId must be valid integers" },
+        { status: 400 },
       );
     }
 
@@ -89,19 +99,23 @@ export async function POST(request: Request): Promise<NextResponse> {
     const validStatuses = Object.values(AttendanceStatus);
     if (!validStatuses.includes(status as AttendanceStatus)) {
       return NextResponse.json(
-        { error: `Invalid status. Must be one of: ${validStatuses.join(', ')}` },
-        { status: 400 }
+        {
+          error: `Invalid status. Must be one of: ${validStatuses.join(", ")}`,
+        },
+        { status: 400 },
       );
     }
 
     // A user can only have one attendance record per meeting (@@unique)
     const existing = await prisma.attendance.findUnique({
-      where: { userId_meetingId: { userId: parsedUserId, meetingId: parsedMeetingId } },
+      where: {
+        userId_meetingId: { userId: parsedUserId, meetingId: parsedMeetingId },
+      },
     });
     if (existing) {
       return NextResponse.json(
-        { error: 'Attendance for this user and meeting already exists' },
-        { status: 409 }
+        { error: "Attendance for this user and meeting already exists" },
+        { status: 409 },
       );
     }
 
@@ -118,6 +132,10 @@ export async function POST(request: Request): Promise<NextResponse> {
 
     return NextResponse.json(attendance, { status: 201 });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to record attendance' }, { status: 500 });
+    console.error("POST /api/attendance failed:", error);
+    return NextResponse.json(
+      { error: "Failed to record attendance" },
+      { status: 500 },
+    );
   }
 }
