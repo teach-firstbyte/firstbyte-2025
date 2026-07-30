@@ -16,7 +16,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     const officer = isOfficer(user);
 
     const { searchParams } = new URL(request.url);
-    const meetingIdParam = searchParams.get('meetingId');
+    const meetingIdParam = searchParams.get("meetingId");
     const userIdParam = searchParams.get("userId");
 
     const where: { meetingId?: number; userId?: number } = {};
