@@ -17,7 +17,7 @@ jobs:
       DATABASE_URL: postgresql://user:pass@localhost:5432/db
       NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
       NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder-anon-key
-      CHECKIN_SECRET: 15eefdd1bcf6556faae83a8abb2375295085fbec2548e9274e657d9c20f1c018
+      CHECKIN_SECRET: ci-placeholder-not-a-real-secret
     steps:
       - uses: actions/checkout@v4
 
