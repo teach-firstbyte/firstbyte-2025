@@ -9,7 +9,6 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   ArrowRight,
-  ChevronDown,
   Linkedin,
   Twitter,
   Github,
@@ -133,7 +132,6 @@ function TeamMemberCard({
   noStaggerDelay = false,
 }: TeamMemberCardProps) {
   const [isHovered, setIsHovered] = useState(false);
-  const [showRoleHistory, setShowRoleHistory] = useState(false);
   const [memberTooltipPosition, setMemberTooltipPosition] =
     useState<TooltipPosition | null>(null);
   const [tooltipVisible, setTooltipVisible] = useState(false);
@@ -209,126 +207,6 @@ function TeamMemberCard({
   // Open modal when card is clicked
   const handleCardClick = () => {
     setIsModalOpen(true);
-  };
-
-  // Helper function to sort years if there is a semester, Fall will show before Spring
-  const sortYears = (a: string, b: string) => {
-    const semAndYear = (str: string) => {
-      const yearMatch = str.match(/\d{4}/);
-      const year = yearMatch ? parseInt(yearMatch[0], 10) : 0;
-
-      const semPrio = str.includes("Fall") ? 1 : 0;
-
-      return { year, semPrio };
-    };
-
-    const year = semAndYear(a);
-    const sem = semAndYear(b);
-
-    if (sem.year !== year.year) {
-      return sem.year - year.year;
-    }
-
-    return sem.semPrio - year.semPrio;
-  };
-
-  // Generate year badges for each year with FirstByte
-  const renderYearBadges = () => {
-    if (!member.years || member.years.length === 0) return null;
-
-    // Use the new custom sorting function
-    const sortedYears = [...member.years].sort(sortYears);
-
-    return (
-      <div className="flex flex-wrap gap-1 mt-1">
-        {sortedYears.map((year) => (
-          <div
-            key={year}
-            className="inline-flex items-center justify-center h-5 px-2 text-xs font-semibold text-foreground bg-muted rounded-full"
-          >
-            {year}
-          </div>
-        ))}
-      </div>
-    );
-  };
-
-  // Create role history display
-  const renderRoleHistory = () => {
-    if (!member.previousRoles || member.previousRoles.length === 0) return null;
-
-    // Sort roles by year (oldest first)
-    const sortedRoles = [...member.previousRoles].sort((a, b) =>
-      a.year.localeCompare(b.year),
-    );
-
-    // Group consecutive years with the same role
-    const consolidatedRoles: {
-      startYear: string;
-      endYear: string;
-      role: string;
-    }[] = [];
-    let currentGroup: {
-      startYear: string;
-      endYear: string;
-      role: string;
-    } | null = null;
-
-    sortedRoles.forEach((roleObj, index) => {
-      // If this is a new role or first item
-      if (!currentGroup || currentGroup.role !== roleObj.role) {
-        // Add previous group if exists
-        if (currentGroup) {
-          consolidatedRoles.push(currentGroup);
-        }
-
-        // Start new group
-        currentGroup = {
-          startYear: roleObj.year,
-          endYear: roleObj.year,
-          role: roleObj.role,
-        };
-      } else {
-        // Continue current group
-        currentGroup.endYear = roleObj.year;
-      }
-
-      // If this is the last item, add the current group
-      if (index === sortedRoles.length - 1 && currentGroup) {
-        consolidatedRoles.push(currentGroup);
-      }
-    });
-
-    return (
-      <motion.div
-        initial={{ opacity: 0, height: 0 }}
-        animate={{
-          opacity: showRoleHistory ? 1 : 0,
-          height: showRoleHistory ? "auto" : 0,
-        }}
-        transition={{ duration: 0.3 }}
-        className="overflow-hidden"
-      >
-        <div className="mt-3 pt-3 border-t border-border">
-          <h4 className="text-xs font-medium mb-1 text-muted-foreground">
-            Previous Roles:
-          </h4>
-          <ul className="space-y-1">
-            {consolidatedRoles.map((roleGroup, idx) => (
-              <li key={idx} className="text-xs flex items-center">
-                <div className="h-1.5 w-1.5 rounded-full bg-primary/70 mr-1.5" />
-                <span>{roleGroup.role}</span>
-                <span className="ml-1 text-muted-foreground">
-                  {roleGroup.startYear === roleGroup.endYear
-                    ? `(${roleGroup.startYear})`
-                    : `(${roleGroup.startYear} - ${roleGroup.endYear})`}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </motion.div>
-    );
   };
 
   // Navigate to profile when clicking on the avatar
@@ -502,8 +380,6 @@ function TeamMemberCard({
                 </p>
               </div>
             </div>
-            {renderYearBadges()}
-            {renderRoleHistory()}
           </CardContent>
         </Card>
       </motion.div>
