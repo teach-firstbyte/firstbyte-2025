@@ -18,12 +18,18 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Feedback } from "@/types/dashboard";
 import { TableEmptyState } from "./ui/TableEmptyState";
+import { useDetailRow } from "@/hooks/useDetailRow";
+import { FeedbackDetailSheet } from "./FeedbackDetailSheet";
 
 interface FeedbackTableProps {
   feedback: Feedback[];
 }
 
 export function FeedbackTable({ feedback }: FeedbackTableProps) {
+  // Rows arrive already redacted by OfficerDashboard; the panel below renders
+  // straight from this prop so anonymous authors stay stripped.
+  const detail = useDetailRow<Feedback>();
+
   const getRatingStars = (rating: number | null) => {
     if (!rating) return "N/A";
     return "★".repeat(rating) + "☆".repeat(5 - rating);
@@ -58,7 +64,7 @@ export function FeedbackTable({ feedback }: FeedbackTableProps) {
               <TableEmptyState colSpan={7} message="No feedback yet." />
             ) : (
               feedback.map((item) => (
-                <TableRow key={item.id}>
+                <TableRow key={item.id} {...detail.getRowProps(item)}>
                   <TableCell>
                     {item.isAnonymous ? (
                       <div className="text-muted-foreground">Anonymous</div>
@@ -103,6 +109,11 @@ export function FeedbackTable({ feedback }: FeedbackTableProps) {
             )}
           </TableBody>
         </Table>
+        <FeedbackDetailSheet
+          feedback={detail.selected}
+          onOpenChange={detail.onOpenChange}
+          onCloseAutoFocus={detail.onCloseAutoFocus}
+        />
       </CardContent>
     </Card>
   );

@@ -15,9 +15,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Attendance } from "@/types/dashboard";
 import { TableEmptyState } from "./ui/TableEmptyState";
+import { AttendanceStatusBadge } from "./AttendanceStatusBadge";
 
 interface AttendanceTableProps {
   attendance: Attendance[];
@@ -28,19 +28,6 @@ export function AttendanceTable({
   attendance,
   emptyMessage = "No attendance records yet.",
 }: AttendanceTableProps) {
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "PRESENT":
-        return <Badge variant="default">Present</Badge>;
-      case "ABSENT":
-        return <Badge variant="destructive">Absent</Badge>;
-      case "REGISTERED":
-        return <Badge variant="outline">Registered</Badge>;
-      default:
-        return <Badge variant="secondary">{status}</Badge>;
-    }
-  };
-
   return (
     <Card>
       <CardHeader>
@@ -83,7 +70,9 @@ export function AttendanceTable({
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell>{getStatusBadge(record.status)}</TableCell>
+                  <TableCell>
+                    <AttendanceStatusBadge status={record.status} />
+                  </TableCell>
                   <TableCell>
                     {record.checkedInAt
                       ? new Date(record.checkedInAt).toLocaleString()

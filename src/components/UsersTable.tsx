@@ -29,6 +29,8 @@ import {
 import { User } from "@/types/dashboard";
 import { useRouter } from "next/navigation";
 import { TableEmptyState } from "./ui/TableEmptyState";
+import { useDetailRow } from "@/hooks/useDetailRow";
+import { UserDetailSheet } from "./UserDetailSheet";
 
 interface UsersTableProps {
   users: User[];
@@ -42,6 +44,10 @@ export function UsersTable({ users }: UsersTableProps) {
   });
   const [showAssignModal, setShowAssignModal] = useState(false);
   const router = useRouter();
+
+  // Detail panel state lives alongside the modal state above; opening a row
+  // doesn't touch either, so the table keeps whatever the officer had set up.
+  const detail = useDetailRow<User>();
 
   const [teams, setTeams] = useState<{ id: number; name: string }[]>([]);
   const [teamsLoading, setTeamsLoading] = useState(false);
@@ -168,7 +174,7 @@ export function UsersTable({ users }: UsersTableProps) {
               <TableEmptyState colSpan={4} message="No users yet." />
             ) : (
               users.map((user) => (
-                <TableRow key={user.id}>
+                <TableRow key={user.id} {...detail.getRowProps(user)}>
                   <TableCell>{user.name || "N/A"}</TableCell>
                   <TableCell>
                     <a
@@ -195,6 +201,11 @@ export function UsersTable({ users }: UsersTableProps) {
             )}
           </TableBody>
         </Table>
+        <UserDetailSheet
+          user={detail.selected}
+          onOpenChange={detail.onOpenChange}
+          onCloseAutoFocus={detail.onCloseAutoFocus}
+        />
         {showAddModal && (
           <Modal onClose={() => setShowAddModal(false)}>
             <ModalHeader>Add New User</ModalHeader>
