@@ -173,7 +173,7 @@ export function UsersTable({ users }: UsersTableProps) {
                   <TableCell>
                     <a
                       href={`mailto:${user.email}`}
-                      className="text-blue-600 hover:underline"
+                      className="text-primary hover:underline"
                     >
                       {user.email}
                     </a>

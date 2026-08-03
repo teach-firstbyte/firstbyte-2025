@@ -8,6 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Banner } from "@/components/ui/banner";
 import { SubmitButton } from "@/components/SubmitButton";
 import { updatePassword } from "./actions";
 
@@ -39,9 +40,9 @@ export default async function ResetPasswordPage({
         </CardHeader>
         <CardContent>
           {error && (
-            <div className="mb-4 rounded-md border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-900">
+            <Banner variant="destructive" role="alert" className="mb-4">
               {error}
-            </div>
+            </Banner>
           )}
           <form action={updatePassword} className="space-y-3">
             <Input

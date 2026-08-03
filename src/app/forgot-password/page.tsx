@@ -8,6 +8,7 @@ import {
 import { requestPasswordReset } from "./actions";
 import { SubmitButton } from "@/components/SubmitButton";
 import { Input } from "@/components/ui/input";
+import { Banner } from "@/components/ui/banner";
 import { BackLink } from "@/components/BackLink";
 
 export default async function ForgotPasswordPage({
@@ -38,9 +39,9 @@ export default async function ForgotPasswordPage({
           ) : (
             <>
               {error && (
-                <div className="mb-4 rounded-md border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-900">
+                <Banner variant="destructive" role="alert" className="mb-4">
                   {error}
-                </div>
+                </Banner>
               )}
               <form action={requestPasswordReset} className="space-y-3">
                 <Input name="email" type="email" placeholder="Email" required />

@@ -31,7 +31,11 @@ export function FeedbackQR({ meetingTitle, path }: FeedbackQRProps) {
       </CardHeader>
       <CardContent className="flex flex-col items-center space-y-6">
         {url ? (
-          <QRCodeSVG className="mb-4" value={url} size={240} />
+          // QR stays black-on-white for scanner reliability; the explicit plate
+          // keeps it looking deliberate rather than stray on a dark background.
+          <div className="mb-4 rounded-lg bg-white p-3">
+            <QRCodeSVG value={url} size={240} />
+          </div>
         ) : (
           <div className="h-[240px] w-[240px] animate-pulse rounded-md bg-muted" />
         )}

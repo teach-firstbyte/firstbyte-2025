@@ -17,6 +17,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -242,13 +243,12 @@ export function MeetingsTable({ meetings }: MeetingsTableProps) {
           <Modal onClose={closeModal}>
             <ModalHeader>Add New Meeting</ModalHeader>
             <form onSubmit={handleSubmit} className="flex flex-col space-y-3">
-              <input
+              <Input
                 type="text"
                 name="title"
                 value={newMeeting.title}
                 onChange={handleChange}
                 placeholder="Title"
-                className="border rounded p-2"
                 required
               />
               <ModalDropdown
@@ -273,12 +273,11 @@ export function MeetingsTable({ meetings }: MeetingsTableProps) {
                 ]}
               />
               <label className="block text-sm font-medium">Scheduled at</label>
-              <input
+              <Input
                 type="datetime-local"
                 name="scheduledAt"
                 value={newMeeting.scheduledAt}
                 onChange={handleChange}
-                className="border rounded p-2"
                 required
               />
               <textarea
@@ -286,23 +285,21 @@ export function MeetingsTable({ meetings }: MeetingsTableProps) {
                 value={newMeeting.description}
                 onChange={handleChange}
                 placeholder="Description (optional)"
-                className="border rounded p-2"
+                className="min-h-16 w-full min-w-0 resize-y rounded-md border border-input bg-transparent px-3 py-2 text-base shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 md:text-sm dark:bg-input/30"
               />
-              <input
+              <Input
                 type="text"
                 name="location"
                 value={newMeeting.location}
                 onChange={handleChange}
                 placeholder="Location (optional)"
-                className="border rounded p-2"
               />
-              <input
+              <Input
                 type="number"
                 name="maxCapacity"
                 value={newMeeting.maxCapacity}
                 onChange={handleChange}
                 placeholder="Max capacity (optional)"
-                className="border rounded p-2"
                 min={0}
               />
               <label className="flex items-center gap-2">
@@ -315,7 +312,7 @@ export function MeetingsTable({ meetings }: MeetingsTableProps) {
                 Required
               </label>
 
-              {error && <p className="text-sm text-red-600">{error}</p>}
+              {error && <p className="text-sm text-destructive">{error}</p>}
 
               <div className="flex justify-end space-x-2 pt-2">
                 <ModalButton

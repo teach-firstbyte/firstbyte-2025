@@ -53,7 +53,7 @@ function CardButton({ className, ...props }: React.ComponentProps<"button">) {
     <button
       data-slot="card-button"
       className={cn(
-        "bg-[rgb(76,111,78)] text-white px-4 py-2 rounded-md hover:opacity-90 transition",
+        "bg-brand text-brand-foreground px-4 py-2 rounded-md hover:bg-brand/90 transition",
         className,
       )}
       {...props}

@@ -22,7 +22,9 @@ export function MeetingStatusBadge({
   if (now >= start)
     return (
       <Badge variant="default">
-        <span className="inline-block size-2 rounded-full bg-green-500 animate-pulse" />
+        {/* bg-current tracks the badge's own foreground, so the dot keeps contrast
+            against bg-primary in both themes (dark --primary is near-white). */}
+        <span className="inline-block size-2 rounded-full bg-current animate-pulse" />
         In Progress
       </Badge>
     );

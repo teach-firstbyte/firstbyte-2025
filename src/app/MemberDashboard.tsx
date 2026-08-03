@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { MeetingStatusBadge } from "@/components/MeetingStatusBadge";
 import { SubmitButton } from "@/components/SubmitButton";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { SuggestionBoxLink } from "@/components/SuggestionBoxLink";
 import { TWO_HOURS_MS } from "@/lib/attendance/cutoff";
 
@@ -191,6 +192,7 @@ export async function MemberDashboard({ user }: { user: User }) {
       {/* Logout */}
       <CardFooter className="px-0">
         <div className="flex items-center gap-2">
+          <ThemeToggle />
           <Button
             asChild
             variant="outline"
@@ -201,7 +203,8 @@ export async function MemberDashboard({ user }: { user: User }) {
           <form>
             <SubmitButton
               formAction={logOut}
-              className="text-sm px-3 py-1.5 rounded-md bg-[rgb(76,111,78)] text-white hover:opacity-90 transition"
+              variant="brand"
+              className="text-sm px-3 py-1.5 rounded-md"
               pendingLabel="Logging Out..."
             >
               Log out
