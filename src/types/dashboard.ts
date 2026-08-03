@@ -48,12 +48,19 @@ export interface Meeting {
   team?: {
     name: string;
   };
+  // The dashboard's Prisma query already selects whole Attendance rows, so the
+  // check-in/out timestamps and notes come along for free -- the detail panel's
+  // roster reads them from here rather than issuing its own query.
   attendance: Array<{
+    id: number;
     user: {
       name: string | null;
       email: string;
     };
     status: string;
+    checkedInAt: Date | null;
+    checkedOutAt: Date | null;
+    notes: string | null;
   }>;
 }
 

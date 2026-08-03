@@ -18,12 +18,16 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Team } from "@/types/dashboard";
 import { TableEmptyState } from "./ui/TableEmptyState";
+import { useDetailRow } from "@/hooks/useDetailRow";
+import { TeamDetailSheet } from "./TeamDetailSheet";
 
 interface TeamsTableProps {
   teams: Team[];
 }
 
 export function TeamsTable({ teams }: TeamsTableProps) {
+  const detail = useDetailRow<Team>();
+
   return (
     <Card>
       <CardHeader>
@@ -49,7 +53,7 @@ export function TeamsTable({ teams }: TeamsTableProps) {
               />
             ) : (
               teams.map((team) => (
-                <TableRow key={team.id}>
+                <TableRow key={team.id} {...detail.getRowProps(team)}>
                   <TableCell>{team.name}</TableCell>
                   <TableCell>{team.description || "N/A"}</TableCell>
                   <TableCell>
@@ -75,6 +79,11 @@ export function TeamsTable({ teams }: TeamsTableProps) {
             )}
           </TableBody>
         </Table>
+        <TeamDetailSheet
+          team={detail.selected}
+          onOpenChange={detail.onOpenChange}
+          onCloseAutoFocus={detail.onCloseAutoFocus}
+        />
       </CardContent>
     </Card>
   );

@@ -30,6 +30,8 @@ import {
 import { Meeting } from "@/types/dashboard";
 import { TableEmptyState } from "./ui/TableEmptyState";
 import { MeetingStatusBadge } from "./MeetingStatusBadge";
+import { useDetailRow } from "@/hooks/useDetailRow";
+import { MeetingDetailSheet } from "./MeetingDetailSheet";
 
 interface MeetingsTableProps {
   meetings: Meeting[];
@@ -75,6 +77,7 @@ export function MeetingsTable({ meetings }: MeetingsTableProps) {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [teams, setTeams] = useState<{ id: number; name: string }[]>([]);
+  const detail = useDetailRow<Meeting>();
 
   useEffect(() => {
     if (!showAddModal) return;
@@ -189,7 +192,7 @@ export function MeetingsTable({ meetings }: MeetingsTableProps) {
               />
             ) : (
               meetings.map((meeting) => (
-                <TableRow key={meeting.id}>
+                <TableRow key={meeting.id} {...detail.getRowProps(meeting)}>
                   <TableCell>{meeting.title}</TableCell>
                   <TableCell>
                     <Badge variant="outline">
@@ -239,6 +242,11 @@ export function MeetingsTable({ meetings }: MeetingsTableProps) {
             )}
           </TableBody>
         </Table>
+        <MeetingDetailSheet
+          meeting={detail.selected}
+          onOpenChange={detail.onOpenChange}
+          onCloseAutoFocus={detail.onCloseAutoFocus}
+        />
         {showAddModal && (
           <Modal onClose={closeModal}>
             <ModalHeader>Add New Meeting</ModalHeader>
