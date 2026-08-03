@@ -2,6 +2,15 @@
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
+// Shared styling for the native <select> below. It stays a native control rather
+// than the Radix Select primitive because callers pass native onChange handlers
+// and rely on native form submission; `color-scheme` (set by next-themes) is what
+// darkens the OS-rendered option popup.
+const nativeControl =
+  "h-9 w-full min-w-0 rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-xs outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm dark:bg-input/30";
 
 interface ModalProps extends React.ComponentProps<"div"> {
   onClose?: () => void;
@@ -20,12 +29,15 @@ function Modal({
   return (
     <div
       data-slot="modal-overlay"
-      className="fixed inset-0 flex items-center justify-center bg-white/10 backdrop-blur-sm z-50"
+      className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50"
       onClick={onClose}
     >
       <div
         data-slot="modal"
-        className={cn("bg-white rounded-lg shadow-lg p-6 w-96", className)}
+        className={cn(
+          "bg-popover text-popover-foreground border rounded-lg shadow-lg p-6 w-96",
+          className,
+        )}
         onClick={(e) => e.stopPropagation()} // prevent closing on inner clicks
         {...props}
       >
@@ -55,22 +67,20 @@ interface ModalFormProps {
 function ModalForm({ newUser, onChange, onSubmit, children }: ModalFormProps) {
   return (
     <form onSubmit={onSubmit} className="flex flex-col space-y-3">
-      <input
+      <Input
         type="text"
         name="name"
         value={newUser.name ?? ""}
         onChange={onChange}
         placeholder="Name"
-        className="border rounded p-2"
         required
       />
-      <input
+      <Input
         type="email"
         name="email"
         value={newUser.email}
         onChange={onChange}
         placeholder="Email"
-        className="border rounded p-2"
         required
       />
 
@@ -84,14 +94,14 @@ function ModalButton({
   className,
   ...props
 }: React.ComponentProps<"button"> & { variant?: "primary" | "cancel" }) {
-  const base = "px-3 py-1 rounded transition font-medium";
-
-  const styles =
-    variant === "primary"
-      ? "bg-[rgb(76,111,78)] text-white hover:opacity-90"
-      : "bg-gray-300 text-gray-800 hover:bg-gray-400";
-
-  return <button className={cn(base, styles, className)} {...props} />;
+  return (
+    <Button
+      variant={variant === "primary" ? "brand" : "secondary"}
+      size="sm"
+      className={className}
+      {...props}
+    />
+  );
 }
 
 interface ModalDropdownProps {
@@ -119,7 +129,7 @@ function ModalDropdown({
         <label className="block text-sm font-medium mb-1">{label}</label>
       )}
       <select
-        className="border rounded-md p-2 w-full"
+        className={nativeControl}
         value={value ?? ""}
         onChange={onChange}
         required={required}

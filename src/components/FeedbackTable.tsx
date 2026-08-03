@@ -82,7 +82,7 @@ export function FeedbackTable({ feedback }: FeedbackTableProps) {
                     </div>
                   </TableCell>
                   <TableCell>
-                    <div className="text-yellow-500">
+                    <div className="text-warning">
                       {getRatingStars(item.rating)}
                     </div>
                   </TableCell>

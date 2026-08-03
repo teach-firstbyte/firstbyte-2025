@@ -57,7 +57,9 @@ export function CheckInForm({
       </CardHeader>
       <CardContent className="space-y-4">
         {status === "success" ? (
-          <p className="text-center font-medium text-green-700">{message}</p>
+          <p className="text-center font-medium text-success-foreground">
+            {message}
+          </p>
         ) : (
           <>
             <div className="space-y-2">

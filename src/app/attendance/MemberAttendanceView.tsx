@@ -2,6 +2,7 @@ import { BackLink } from "@/components/BackLink";
 import { MemberAttendanceTable } from "@/components/MemberAttendanceTable";
 import { MemberStatusFilter } from "@/components/MemberStatusFilter";
 import { PaginationControls } from "@/components/PaginationControls";
+import { Banner } from "@/components/ui/banner";
 import { getAttendanceCutoff } from "@/lib/attendance/cutoff";
 import {
   keyToWhere,
@@ -111,10 +112,10 @@ export async function MemberAttendanceView({
   return (
     <div className="container mx-auto p-6">
       {dbUnavailable && (
-        <div className="rounded-md border border-yellow-300 bg-yellow-50 px-4 py-3 text-sm text-yellow-900 mb-4">
+        <Banner variant="warning" className="mb-4">
           Could not load your attendance right now. Showing an empty view until
           the connection is restored.
-        </div>
+        </Banner>
       )}
       <BackLink />
       <div className="mt-4 mb-4">

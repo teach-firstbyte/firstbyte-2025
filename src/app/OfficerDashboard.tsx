@@ -7,6 +7,7 @@ import { prisma } from "@/lib/prisma";
 import type { Feedback, Meeting, Team, User } from "@/types/dashboard";
 import { logOut } from "./login/actions";
 import { SubmitButton } from "@/components/SubmitButton";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { AttendanceStatus } from "@prisma/client";
 import {
   Card,
@@ -17,6 +18,7 @@ import {
 } from "@/components/ui/card";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Banner } from "@/components/ui/banner";
 import { redactAnonymous } from "@/lib/feedback/redactAnonymous";
 import { SuggestionBoxLink } from "@/components/SuggestionBoxLink";
 
@@ -126,6 +128,7 @@ export async function OfficerDashboard() {
         </p>
       </div>
       <div className="flex items-center gap-2">
+        <ThemeToggle />
         <Button
           asChild
           variant="outline"
@@ -136,7 +139,8 @@ export async function OfficerDashboard() {
         <form>
           <SubmitButton
             formAction={logOut}
-            className="text-sm px-3 py-1.5 rounded-md bg-[rgb(76,111,78)] text-white hover:opacity-90 transition"
+            variant="brand"
+            className="text-sm px-3 py-1.5 rounded-md"
             pendingLabel="Logging Out..."
           >
             Log out
@@ -144,10 +148,10 @@ export async function OfficerDashboard() {
         </form>
       </div>
       {dbUnavailable && (
-        <div className="rounded-md border border-yellow-300 bg-yellow-50 px-4 py-3 text-sm text-yellow-900">
+        <Banner variant="warning">
           Could not load database data right now. Showing an empty dashboard
           until the connection is restored.
-        </div>
+        </Banner>
       )}
 
       <div className="grid gap-6 [*&>*]:min-w-0">

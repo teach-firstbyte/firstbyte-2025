@@ -32,7 +32,11 @@ export function CheckInQR({ meetingTitle, code, path }: CheckInQRProps) {
       </CardHeader>
       <CardContent className="flex flex-col items-center space-y-6">
         {url ? (
-          <QRCodeSVG value={url} size={240} />
+          // QR stays black-on-white for scanner reliability; the explicit plate
+          // keeps it looking deliberate rather than stray on a dark background.
+          <div className="rounded-lg bg-white p-3">
+            <QRCodeSVG value={url} size={240} />
+          </div>
         ) : (
           <div className="h-[240px] w-[240px] animate-pulse rounded-md bg-muted" />
         )}
