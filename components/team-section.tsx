@@ -370,7 +370,9 @@ function TeamMemberCard({
             </div>
           </div>
           <CardHeader className="p-4 pb-0">
-            <h3 className="text-lg font-semibold">{member.name}</h3>
+            <h3 className="text-lg font-semibold whitespace-pre-line">
+              {member.name.replace(" ", "\n")}
+            </h3>
           </CardHeader>
           <CardContent className="p-4 pt-1 pb-4">
             <div className="flex items-start justify-between">
