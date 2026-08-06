@@ -31,6 +31,7 @@ import { Meeting } from "@/types/dashboard";
 import { TableEmptyState } from "./ui/TableEmptyState";
 import { MeetingStatusBadge } from "./MeetingStatusBadge";
 import { useDetailRow } from "@/hooks/useDetailRow";
+import { useAsyncAction } from "@/hooks/useAsyncAction";
 import { MeetingDetailSheet } from "./MeetingDetailSheet";
 
 interface MeetingsTableProps {
@@ -74,18 +75,21 @@ export function MeetingsTable({ meetings }: MeetingsTableProps) {
   const router = useRouter();
   const [showAddModal, setShowAddModal] = useState(false);
   const [newMeeting, setNewMeeting] = useState<NewMeeting>(emptyMeeting);
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [teams, setTeams] = useState<{ id: number; name: string }[]>([]);
+  const [teamsLoading, setTeamsLoading] = useState(false);
+  const [teamsError, setTeamsError] = useState<string | null>(null);
   const detail = useDetailRow<Meeting>();
+  const save = useAsyncAction();
 
   useEffect(() => {
     if (!showAddModal) return;
     if (teams.length > 0) return;
     async function loadTeams() {
+      setTeamsLoading(true);
+      setTeamsError(null);
       try {
         const res = await fetch(`/api/teams`);
-        if (!res.ok) return;
+        if (!res.ok) throw new Error(`Request failed: ${res.status}`);
         const data = await res.json();
         setTeams(
           data.map((t: { id: number; name: string }) => ({
@@ -93,7 +97,13 @@ export function MeetingsTable({ meetings }: MeetingsTableProps) {
             name: t.name,
           })),
         );
-      } catch {}
+      } catch {
+        // Previously an empty catch, which left the Team dropdown looking merely
+        // empty rather than broken.
+        setTeamsError("Could not load teams.");
+      } finally {
+        setTeamsLoading(false);
+      }
     }
     loadTeams();
   }, [showAddModal, teams.length]);
@@ -101,7 +111,7 @@ export function MeetingsTable({ meetings }: MeetingsTableProps) {
   const closeModal = () => {
     setShowAddModal(false);
     setNewMeeting(emptyMeeting);
-    setError(null);
+    save.setError(null);
   };
 
   const handleChange = (
@@ -118,12 +128,10 @@ export function MeetingsTable({ meetings }: MeetingsTableProps) {
     setNewMeeting((prev) => ({ ...prev, type: e.target.value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitting(true);
-    setError(null);
 
-    try {
+    save.run(async () => {
       const res = await fetch("/api/meetings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -144,18 +152,15 @@ export function MeetingsTable({ meetings }: MeetingsTableProps) {
 
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        setError(data.error || "Failed to create meeting");
-        return;
+        throw new Error(data.error || "Failed to create meeting");
       }
 
-      // Re-fetch the server component data so the new meeting renders.
-      closeModal();
+      // Re-fetch the server component data so the new meeting renders. Closing
+      // after the refresh, inside the transition, keeps Save spinning until the
+      // new row is actually on screen -- it used to close over a stale table.
       router.refresh();
-    } catch {
-      setError("Something went wrong. Please try again.");
-    } finally {
-      setSubmitting(false);
-    }
+      closeModal();
+    });
   };
 
   return (
@@ -271,6 +276,7 @@ export function MeetingsTable({ meetings }: MeetingsTableProps) {
               />
               <ModalDropdown
                 label="Team (optional)"
+                loading={teamsLoading}
                 value={newMeeting.teamId}
                 onChange={(e) =>
                   setNewMeeting((prev) => ({ ...prev, teamId: e.target.value }))
@@ -280,6 +286,9 @@ export function MeetingsTable({ meetings }: MeetingsTableProps) {
                   ...teams.map((t) => ({ value: String(t.id), label: t.name })),
                 ]}
               />
+              {teamsError && (
+                <p className="text-sm text-destructive">{teamsError}</p>
+              )}
               <label className="block text-sm font-medium">Scheduled at</label>
               <Input
                 type="datetime-local"
@@ -320,12 +329,15 @@ export function MeetingsTable({ meetings }: MeetingsTableProps) {
                 Required
               </label>
 
-              {error && <p className="text-sm text-destructive">{error}</p>}
+              {save.error && (
+                <p className="text-sm text-destructive">{save.error}</p>
+              )}
 
               <div className="flex justify-end space-x-2 pt-2">
                 <ModalButton
                   variant="cancel"
                   type="button"
+                  disabled={save.pending}
                   onClick={closeModal}
                 >
                   Cancel
@@ -333,9 +345,10 @@ export function MeetingsTable({ meetings }: MeetingsTableProps) {
                 <ModalButton
                   variant="primary"
                   type="submit"
-                  disabled={submitting}
+                  pending={save.pending}
+                  pendingLabel="Saving..."
                 >
-                  {submitting ? "Saving..." : "Save"}
+                  Save
                 </ModalButton>
               </div>
             </form>

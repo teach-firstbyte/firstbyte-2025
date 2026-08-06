@@ -2,10 +2,17 @@
 
 import { supabase } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 export function GoogleButton({ label }: { label: string }) {
+  // A plain boolean rather than useAsyncAction: on success the browser navigates
+  // away, so pending must stay true for the rest of the redirect. Only a failure
+  // returns us to an interactive button.
+  const [pending, setPending] = useState(false);
+
   const handleGoogleLogin = async () => {
-    await supabase.auth.signInWithOAuth({
+    setPending(true);
+    const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
         redirectTo: `${window.location.origin}/auth/callback`,
@@ -14,12 +21,17 @@ export function GoogleButton({ label }: { label: string }) {
         },
       },
     });
+    if (error) setPending(false);
   };
 
   return (
     <Button
       type="button"
       variant="outline"
+      pending={pending}
+      // Replaces the Google mark as well as the label, so the spinner takes the
+      // icon's slot instead of sitting beside it.
+      pendingLabel={label}
       onClick={handleGoogleLogin}
       className="w-full gap-2"
     >

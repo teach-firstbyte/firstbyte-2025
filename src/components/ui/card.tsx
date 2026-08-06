@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
+import { Button, type ButtonProps } from "@/components/ui/button";
 
 function Card({ className, ...props }: React.ComponentProps<"div">) {
   return (
@@ -48,14 +49,19 @@ function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-function CardButton({ className, ...props }: React.ComponentProps<"button">) {
+// Delegates to Button rather than restyling a bare <button>, so it inherits the
+// disabled styling, the focus ring, `pending`, and the type="button" default. The
+// old hand-rolled classes were buttonVariants({ variant: "brand" }) minus exactly
+// those things.
+function CardButton({
+  className,
+  ...props
+}: Omit<ButtonProps, "variant" | "asChild">) {
   return (
-    <button
+    <Button
       data-slot="card-button"
-      className={cn(
-        "bg-brand text-brand-foreground px-4 py-2 rounded-md hover:bg-brand/90 transition",
-        className,
-      )}
+      variant="brand"
+      className={className}
       {...props}
     />
   );
