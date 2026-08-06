@@ -1,0 +1,97 @@
+# FirstByte
+
+Monorepo for the FirstByte website and club dashboard.
+
+## Layout
+
+```
+apps/
+├── web/          Public marketing site      Next 16, Tailwind v4, static
+└── dashboard/    Club participation dashboard  Next 15, Tailwind v4, Supabase auth + Prisma/Postgres
+```
+
+The two apps are **independently built and deployed** and stitched together at
+the URL level using [Next.js Multi-Zones](https://nextjs.org/docs/app/guides/multi-zones):
+
+- `apps/dashboard` sets `basePath: "/dashboard"`.
+- `apps/web` rewrites `/dashboard/:path*` to the dashboard deployment.
+
+Visitors see a single site at `firstbyte.org`, with the dashboard under
+`firstbyte.org/dashboard`. Neither app imports the other, so each keeps its own
+`next.config`, root layout, middleware, and dependency versions.
+
+## Getting started
+
+Install once from the repo root — this is an npm workspace, so there is a single
+lockfile and a single `node_modules` tree:
+
+```bash
+npm install
+```
+
+Run the marketing site:
+
+```bash
+npm run dev:web
+```
+
+Run the dashboard (needs `apps/dashboard/.env` and `.env.local`; ask an officer):
+
+```bash
+npm run dev:dashboard
+```
+
+To exercise the two together, run both and browse **only** the web app's port.
+Hitting the dashboard's port directly bypasses the rewrite and hides
+proxy-specific bugs.
+
+## Scripts
+
+Run from the repo root:
+
+| Script | What it does |
+| --- | --- |
+| `npm run dev:web` | Marketing site dev server |
+| `npm run dev:dashboard` | Dashboard dev server |
+| `npm run build` | Build both apps |
+| `npm run build:web` / `build:dashboard` | Build one app |
+| `npm run lint:dashboard` | ESLint, `--max-warnings=0` |
+| `npm run typecheck:dashboard` | `tsc --noEmit` |
+| `npm run format:check:dashboard` | Prettier check |
+
+To run any other script in one workspace: `npm run <script> -w @firstbyte/web`.
+
+> `apps/web` has no ESLint config yet, and `next.config.mjs` sets
+> `typescript.ignoreBuildErrors: true`, so its type errors do not fail builds.
+> Both are tracked as follow-up work.
+
+## Deployment
+
+Two Vercel projects share one Git repository:
+
+| Project | Root Directory | Domain |
+| --- | --- | --- |
+| `firstbyte-web` | `apps/web` | `firstbyte.org` |
+| `firstbyte-dashboard` | `apps/dashboard` | internal `.vercel.app` URL only |
+
+Because this is a real npm workspace, Vercel automatically **skips builds for
+the app you didn't touch** — change only `apps/dashboard/**` and the marketing
+site is not redeployed. Editing the root lockfile rebuilds both.
+
+Two settings are load-bearing and easy to get wrong:
+
+- **Deployment Protection must be off on the dashboard project.** Left on, the
+  rewrite returns Vercel's login wall instead of the dashboard.
+- The dashboard's `serverActions.allowedOrigins` must include the public domain,
+  or every form submission fails with "Invalid Server Actions request" while
+  pages still render normally.
+
+Auth redirect URLs (`/dashboard/auth/callback`) must be registered in both the
+Supabase and Google Cloud OAuth consoles.
+
+## CI
+
+`.github/workflows/ci.yml` runs on every PR. Path filtering happens at the
+**job** level via `dorny/paths-filter`, not in the `on:` trigger — a workflow
+skipped by trigger-level `paths:` leaves required checks pending forever, while a
+job skipped by an `if:` reports success.

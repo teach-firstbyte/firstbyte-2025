@@ -1,3 +1,9 @@
 package-lock.json
 prisma/migrations
 *.md
+
+# Build output and dependencies. Without these, `format:check` fails on ~221
+# generated files whenever it runs after a build (CI only passed because it
+# runs format:check before build).
+.next/
+node_modules/
