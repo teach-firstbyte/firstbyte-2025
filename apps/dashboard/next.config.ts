@@ -23,7 +23,11 @@ const nextConfig: NextConfig = {
     // break login, settings, password reset, and feedback submission with
     // "Invalid Server Actions request" while every page still rendered fine.
     serverActions: {
-      allowedOrigins: ["firstbyte.org", "www.firstbyte.org", "localhost:3000"],
+      allowedOrigins: [
+        "teachfirstbyte.com",
+        "www.teachfirstbyte.com",
+        "localhost:3000",
+      ],
     },
   },
 };

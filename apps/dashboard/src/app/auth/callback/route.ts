@@ -13,8 +13,8 @@ import { withBasePath } from "@/lib/paths";
  * This route is reached through apps/web's rewrite, so `new URL(request.url)`
  * reports the dashboard's own internal host (its .vercel.app URL in production),
  * not the public domain. Building an absolute redirect from it ejected users
- * from firstbyte.org onto the raw internal deployment URL partway through login,
- * and leaked that URL publicly.
+ * from teachfirstbyte.com onto the raw internal deployment URL partway through
+ * login, and leaked that URL publicly.
  *
  * A relative Location is resolved by the browser against the URL it actually
  * requested, so the public origin is preserved without having to trust

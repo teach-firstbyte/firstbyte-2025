@@ -16,8 +16,8 @@ the URL level using [Next.js Multi-Zones](https://nextjs.org/docs/app/guides/mul
 - `apps/dashboard` sets `basePath: "/dashboard"`.
 - `apps/web` rewrites `/dashboard/:path*` to the dashboard deployment.
 
-Visitors see a single site at `firstbyte.org`, with the dashboard under
-`firstbyte.org/dashboard`. Neither app imports the other, so each keeps its own
+Visitors see a single site at `teachfirstbyte.com`, with the dashboard under
+`teachfirstbyte.com/dashboard`. Neither app imports the other, so each keeps its own
 `next.config`, root layout, middleware, and dependency versions.
 
 ## Getting started
@@ -71,7 +71,7 @@ Two Vercel projects share one Git repository:
 
 | Project | Root Directory | Domain |
 | --- | --- | --- |
-| `firstbyte-web` | `apps/web` | `firstbyte.org` |
+| `firstbyte-web` | `apps/web` | `teachfirstbyte.com` |
 | `firstbyte-dashboard` | `apps/dashboard` | internal `.vercel.app` URL only |
 
 Because this is a real npm workspace, Vercel automatically **skips builds for

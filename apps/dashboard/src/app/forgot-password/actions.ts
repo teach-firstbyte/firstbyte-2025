@@ -11,7 +11,7 @@ import { withBasePath } from "@/lib/paths";
  * This app runs as a Multi-Zone behind apps/web, so the request's own `host` and
  * `origin` headers are the dashboard's INTERNAL host (its .vercel.app URL in
  * production). A password-reset link built from those would arrive in someone's
- * inbox pointing at the internal deployment rather than firstbyte.org.
+ * inbox pointing at the internal deployment rather than teachfirstbyte.com.
  *
  * NEXT_PUBLIC_APP_URL is the explicit, deterministic answer and must be set to
  * the public origin. The x-forwarded-host fallback covers the case where it is
