@@ -16,7 +16,7 @@ const BentoGrid = ({
   return (
     <div
       className={cn(
-        "grid w-full auto-rows-[18rem] grid-cols-3 gap-4",
+        "grid w-full auto-rows-72 grid-cols-3 gap-4",
         className,
       )}
     >
@@ -91,7 +91,7 @@ const BentoCard = ({
       </div>
     </div>
     
-    <div className="pointer-events-none absolute inset-0 transform-gpu transition-all duration-300 md:group-hover:bg-black/[.03] md:group-hover:dark:bg-neutral-800/10" />
+    <div className="pointer-events-none absolute inset-0 transform-gpu transition-all duration-300 md:group-hover:bg-black/3 md:dark:group-hover:bg-neutral-800/10" />
   </motion.div>
 );
 

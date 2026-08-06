@@ -68,7 +68,7 @@ function ClassicTooltip({
   return (
     <TooltipPortal>
       <div
-        className="pointer-events-none fixed left-0 top-0 z-[9999]"
+        className="pointer-events-none fixed left-0 top-0 z-9999"
         id={`STALKER-${id}`}
         style={{ transform: `translate(${position.x}px, ${position.y}px)` }}
       >
@@ -81,8 +81,8 @@ function ClassicTooltip({
             transitionTimingFunction: "cubic-bezier(0.32, 0.72, 0, 1)",
           }}
         >
-          <div className="absolute inset-x-10 w-[20%] -bottom-px bg-gradient-to-r from-transparent via-primary to-transparent h-px" />
-          <div className="absolute left-10 w-[40%] z-30 -bottom-px bg-gradient-to-r from-transparent via-primary/70 to-transparent h-px" />
+          <div className="absolute inset-x-10 w-[20%] -bottom-px bg-linear-to-r from-transparent via-primary to-transparent h-px" />
+          <div className="absolute left-10 w-[40%] z-30 -bottom-px bg-linear-to-r from-transparent via-primary/70 to-transparent h-px" />
           <div className="font-bold text-base text-popover-foreground">
             {title}
           </div>
@@ -272,7 +272,7 @@ function RoleProgression({
       </h4>
       <div className="relative pl-6 pt-1">
         {/* Timeline line */}
-        <div className="absolute left-2 top-2 bottom-0 w-0.5 bg-gradient-to-b from-muted-foreground/30 to-primary" />
+        <div className="absolute left-2 top-2 bottom-0 w-0.5 bg-linear-to-b from-muted-foreground/30 to-primary" />
 
         {consolidatedRoles.map((item, idx) => (
           <div key={idx} className="mb-3 relative">
@@ -460,7 +460,7 @@ function MemberGridCard({
       onMouseMove={onMouseMove}
     >
       <Card
-        className="overflow-hidden shadow-sm hover:shadow-md hover:border-primary/20 cursor-pointer transition-all duration-200"
+        className="overflow-hidden shadow-xs hover:shadow-md hover:border-primary/20 cursor-pointer transition-all duration-200"
         onClick={(e) => {
           e.stopPropagation();
           onFocus();
@@ -746,14 +746,14 @@ export function CardStack({
                   initial={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.3 }}
-                  className="absolute -bottom-2 -right-2 w-full h-full bg-muted/30 rounded-lg rotate-2 shadow-sm"
+                  className="absolute -bottom-2 -right-2 w-full h-full bg-muted/30 rounded-lg rotate-2 shadow-xs"
                 />
                 <motion.div
                   key="bg-card-2"
                   initial={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.3 }}
-                  className="absolute -bottom-1 -left-2 w-full h-full bg-muted/50 rounded-lg -rotate-1 shadow-sm"
+                  className="absolute -bottom-1 -left-2 w-full h-full bg-muted/50 rounded-lg -rotate-1 shadow-xs"
                 />
               </>
             )}

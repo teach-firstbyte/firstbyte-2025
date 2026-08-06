@@ -214,7 +214,7 @@ export function Navbar({ activeSection }: NavbarProps) {
           {/* Pill navbar in top right */}
           <motion.div
             ref={navRef}
-            className={`pointer-events-auto backdrop-blur-lg border border-border/60 shadow-sm overflow-hidden z-50 ml-auto flex max-w-[95%]`}
+            className={`pointer-events-auto backdrop-blur-lg border border-border/60 shadow-xs overflow-hidden z-50 ml-auto flex max-w-[95%]`}
             initial="initial"
             animate={pastHero ? "scrolled" : "initial"}
             variants={pillVariants}
@@ -428,7 +428,7 @@ export function Navbar({ activeSection }: NavbarProps) {
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
-            className="md:hidden pointer-events-auto fixed top-0 left-0 right-0 bg-background/90 backdrop-blur-lg border-b border-border/60 shadow-sm w-full z-40"
+            className="md:hidden pointer-events-auto fixed top-0 left-0 right-0 bg-background/90 backdrop-blur-lg border-b border-border/60 shadow-xs w-full z-40"
             initial="closed"
             animate="open"
             exit="closed"

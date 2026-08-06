@@ -28,7 +28,7 @@ export const ContactSection = forwardRef<HTMLElement>((props, ref) => {
 
         <div className="grid md:grid-cols-2 gap-12">
           <motion.div
-            className="bg-card rounded-lg p-8 shadow-sm border"
+            className="bg-card rounded-lg p-8 shadow-xs border"
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}

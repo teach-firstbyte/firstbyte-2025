@@ -61,7 +61,7 @@ const GreenLampContainer = ({
       <div 
         className={cn(
           "absolute inset-0 flex w-full items-center justify-center isolate z-0 -translate-x-16", 
-          isMobile ? "-translate-y-[-8rem]" : "-translate-y-[-5rem]"
+          isMobile ? "translate-y-32" : "translate-y-20"
         )}
       >
           <>
@@ -76,10 +76,10 @@ const GreenLampContainer = ({
               style={{
                 backgroundImage: `conic-gradient(var(--conic-position), var(--tw-gradient-stops))`,
               }}
-              className="absolute inset-auto right-1/2 h-[30rem] overflow-visible w-[26rem] bg-gradient-conic from-green-700 via-transparent to-transparent text-white [--conic-position:from_70deg_at_center_top]"
+              className="absolute inset-auto right-1/2 h-120 overflow-visible w-104 bg-gradient-conic from-green-700 via-transparent to-transparent text-white [--conic-position:from_70deg_at_center_top]"
             >
-              <div className="absolute w-[100%] left-0 bg-background h-40 bottom-0 z-20 [mask-image:linear-gradient(to_top,white,transparent)]" />
-              <div className="absolute w-40 h-[100%] left-0 bg-background bottom-0 z-20 [mask-image:linear-gradient(to_right,white,transparent)]" />
+              <div className="absolute w-full left-0 bg-background h-40 bottom-0 z-20 mask-[linear-gradient(to_top,white,transparent)]" />
+              <div className="absolute w-40 h-full left-0 bg-background bottom-0 z-20 mask-[linear-gradient(to_right,white,transparent)]" />
             </motion.div>
             <motion.div
               initial={{ opacity: 0.3, width: isMobile ? "4rem" : "5rem" }}
@@ -92,14 +92,14 @@ const GreenLampContainer = ({
               style={{
                 backgroundImage: `conic-gradient(var(--conic-position), var(--tw-gradient-stops))`,
               }}
-              className="absolute inset-auto left-1/2 h-[30rem] w-[26rem] bg-gradient-conic from-transparent via-transparent to-green-700 text-white [--conic-position:from_290deg_at_center_top]"
+              className="absolute inset-auto left-1/2 h-120 w-104 bg-gradient-conic from-transparent via-transparent to-green-700 text-white [--conic-position:from_290deg_at_center_top]"
             >
-              <div className="absolute w-40 h-[100%] right-0 bg-background bottom-0 z-20 [mask-image:linear-gradient(to_left,white,transparent)]" />
-              <div className="absolute w-[100%] right-0 bg-background h-40 bottom-0 z-20 [mask-image:linear-gradient(to_top,white,transparent)]" />
+              <div className="absolute w-40 h-full right-0 bg-background bottom-0 z-20 mask-[linear-gradient(to_left,white,transparent)]" />
+              <div className="absolute w-full right-0 bg-background h-40 bottom-0 z-20 mask-[linear-gradient(to_top,white,transparent)]" />
             </motion.div>
             <div className="absolute top-1/2 h-48 w-full translate-y-12 scale-x-150 bg-background blur-2xl"></div>
             <div className="absolute top-1/2 z-0 h-48 w-full bg-transparent opacity-10 backdrop-blur-md"></div>
-            <div className="absolute inset-auto z-0 h-36 w-[28rem] -translate-y-[15rem] rounded-full bg-green-300 opacity-30 blur-3xl"></div>
+            <div className="absolute inset-auto z-0 h-36 w-md -translate-y-60 rounded-full bg-green-300 opacity-30 blur-3xl"></div>
             <motion.div
               initial={{ width: isMobile ? "4rem" : "5rem" }}
               whileInView={{ width: isMobile ? "16rem" : "26rem" }}
@@ -108,7 +108,7 @@ const GreenLampContainer = ({
                 duration: 0.8,
                 ease: "easeInOut",
               }}
-              className="absolute inset-auto z-0 h-28 w-64 -translate-y-[15rem] rounded-full bg-green-600 opacity-30 blur-2xl"
+              className="absolute inset-auto z-0 h-28 w-64 -translate-y-60 rounded-full bg-green-600 opacity-30 blur-2xl"
             ></motion.div>
             <motion.div
               initial={{ width: isMobile ? "4rem" : "6rem" }}
@@ -118,7 +118,7 @@ const GreenLampContainer = ({
                 duration: 0.8,
                 ease: "easeInOut",
               }}
-              className="absolute inset-auto z-0 h-0.5 w-[26rem] -translate-y-[15rem] bg-green-500 opacity-70"
+              className="absolute inset-auto z-0 h-0.5 w-104 -translate-y-60 bg-green-500 opacity-70"
             >
             </motion.div>
           </>
@@ -148,7 +148,7 @@ export const HeroSection = forwardRef<HTMLElement, HeroSectionProps>(
     }, [])
 
     return (
-      <section ref={ref} id="home" className="min-h-[100vh] w-full relative pt-24 md:pt-32 pb-32 overflow-x-hidden">
+      <section ref={ref} id="home" className="min-h-screen w-full relative pt-24 md:pt-32 pb-32 overflow-x-hidden">
         {/* Background particles - only render on client */}
         {isClient && (
           <Particles

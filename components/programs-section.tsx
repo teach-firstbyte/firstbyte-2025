@@ -82,7 +82,7 @@ export const ProgramsSection = forwardRef<HTMLElement>((props, ref) => {
         <div className="absolute inset-0 w-full h-full" style={{ maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%)' }}>
           {/* First Line - Horizontal */}
           <div 
-            className="absolute h-[1px] bg-green-400 opacity-70"
+            className="absolute h-px bg-green-400 opacity-70"
             style={{
               width: '360px',
               left: 'calc(80px - 1px)',
@@ -95,7 +95,7 @@ export const ProgramsSection = forwardRef<HTMLElement>((props, ref) => {
           
           {/* Second Line - Vertical */}
           <div 
-            className="absolute w-[1px] bg-green-400 opacity-70"
+            className="absolute w-px bg-green-400 opacity-70"
             style={{
               height: '240px',
               left: 'calc(320px - 1px)',
@@ -111,7 +111,7 @@ export const ProgramsSection = forwardRef<HTMLElement>((props, ref) => {
           <div className="absolute" style={{ right: 'calc(200px - 1px)', top: 'calc(120px - 1px)' }}>
             {/* Horizontal part of L */}
             <div 
-              className="absolute h-[1px] bg-green-400 opacity-70"
+              className="absolute h-px bg-green-400 opacity-70"
               style={{
                 width: '160px',
                 boxShadow: '0 0 6px 1px rgba(74, 222, 128, 0.7)',
@@ -122,7 +122,7 @@ export const ProgramsSection = forwardRef<HTMLElement>((props, ref) => {
             />
             {/* Vertical part of L */}
             <div 
-              className="absolute w-[1px] bg-green-400 opacity-70"
+              className="absolute w-px bg-green-400 opacity-70"
               style={{
                 height: '200px',
                 left: 'calc(160px - 1px)',
@@ -136,7 +136,7 @@ export const ProgramsSection = forwardRef<HTMLElement>((props, ref) => {
           
           {/* Fourth Line - Horizontal */}
           <div 
-            className="absolute h-[1px] bg-green-400 opacity-70"
+            className="absolute h-px bg-green-400 opacity-70"
             style={{
               width: '240px',
               right: 'calc(80px - 1px)',
@@ -150,7 +150,7 @@ export const ProgramsSection = forwardRef<HTMLElement>((props, ref) => {
           
           {/* Fifth Line - Vertical */}
           <div 
-            className="absolute w-[1px] bg-green-400 opacity-70"
+            className="absolute w-px bg-green-400 opacity-70"
             style={{
               height: '280px',
               left: 'calc(160px - 1px)',
@@ -166,7 +166,7 @@ export const ProgramsSection = forwardRef<HTMLElement>((props, ref) => {
           <div className="absolute" style={{ left: 'calc(400px - 1px)', top: 'calc(240px - 1px)' }}>
             {/* Top horizontal part of Z */}
             <div 
-              className="absolute h-[1px] bg-green-400 opacity-70"
+              className="absolute h-px bg-green-400 opacity-70"
               style={{
                 width: '120px',
                 boxShadow: '0 0 6px 1px rgba(74, 222, 128, 0.7)',
@@ -177,7 +177,7 @@ export const ProgramsSection = forwardRef<HTMLElement>((props, ref) => {
             />
             {/* Diagonal part of Z - using transforms */}
             <div 
-              className="absolute h-[1px] bg-green-400 opacity-70"
+              className="absolute h-px bg-green-400 opacity-70"
               style={{
                 width: '141px',
                 left: 'calc(120px - 1px)',
@@ -191,7 +191,7 @@ export const ProgramsSection = forwardRef<HTMLElement>((props, ref) => {
             />
             {/* Bottom horizontal part of Z */}
             <div 
-              className="absolute h-[1px] bg-green-400 opacity-70"
+              className="absolute h-px bg-green-400 opacity-70"
               style={{
                 width: '120px',
                 top: 'calc(120px - 1px)',
@@ -310,7 +310,7 @@ export const ProgramsSection = forwardRef<HTMLElement>((props, ref) => {
           </motion.div>
         </div>
 
-        <BentoGrid className="md:auto-rows-[16rem] grid-cols-1 md:grid-cols-4 gap-3 sm:gap-4">
+        <BentoGrid className="md:auto-rows-64 grid-cols-1 md:grid-cols-4 gap-3 sm:gap-4">
           {programs.map((program, index) => {
             const Icon = program.icon;
             
@@ -365,7 +365,7 @@ export const ProgramsSection = forwardRef<HTMLElement>((props, ref) => {
                 initialY={initialY}
                 background={
                   <div className="absolute inset-0 h-full w-full">
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/40 z-20 transition-opacity duration-300 group-hover:opacity-75" />
+                    <div className="absolute inset-0 bg-linear-to-b from-black/40 via-black/20 to-black/40 z-20 transition-opacity duration-300 group-hover:opacity-75" />
                     <Image
                       src={program.image}
                       alt={program.title}

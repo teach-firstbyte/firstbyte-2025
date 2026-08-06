@@ -196,7 +196,7 @@ export function AnimatedGlowButton<T extends ElementType = "button">({
           whileTap={!isDisabled ? { scale: 0.98 } : undefined}
         >
           <motion.div
-            className={`absolute inset-0 rounded-xl bg-gradient-to-r from-${color}-600/40 via-${color}-400/40 to-${color}-600/40 blur-xl`}
+            className={`absolute inset-0 rounded-xl bg-linear-to-r from-${color}-600/40 via-${color}-400/40 to-${color}-600/40 blur-xl`}
             style={{
               backgroundImage: `linear-gradient(to right, ${colors.from}, ${colors.via}, ${colors.to})`,
             }}
@@ -229,7 +229,7 @@ export function AnimatedGlowButton<T extends ElementType = "button">({
           )}
 
           <div
-            className={cn("relative flex w-full items-center overflow-hidden rounded-xl border border-border bg-card/90 p-4 backdrop-blur-sm", className)}
+            className={cn("relative flex w-full items-center overflow-hidden rounded-xl border border-border bg-card/90 p-4 backdrop-blur-xs", className)}
           >
             <motion.div
               className="absolute inset-0 opacity-50"
@@ -415,7 +415,7 @@ export function AnimatedGlowButton<T extends ElementType = "button">({
 
           <div
             className={cn(
-              "relative flex items-center justify-center overflow-hidden rounded-[20px] border border-border/40 bg-card/90 py-2.5 px-5 text-sm backdrop-blur-sm transition-all",
+              "relative flex items-center justify-center overflow-hidden rounded-[20px] border border-border/40 bg-card/90 py-2.5 px-5 text-sm backdrop-blur-xs transition-all",
               className
             )}
           >

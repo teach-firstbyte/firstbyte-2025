@@ -27,7 +27,7 @@ export const AboutSection = forwardRef<HTMLElement>((props, ref) => {
         <div className="absolute inset-0 w-full h-full" style={{ maskImage: 'linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%)' }}>
           {/* First Line - Horizontal */}
           <div 
-            className="absolute h-[1px] bg-green-400 opacity-70"
+            className="absolute h-px bg-green-400 opacity-70"
             style={{
               width: '280px',
               left: 'calc(120px - 1px)',
@@ -40,7 +40,7 @@ export const AboutSection = forwardRef<HTMLElement>((props, ref) => {
           
           {/* Second Line - Horizontal */}
           <div 
-            className="absolute h-[1px] bg-green-400 opacity-70"
+            className="absolute h-px bg-green-400 opacity-70"
             style={{
               width: '320px',
               right: 'calc(160px - 1px)',
@@ -54,7 +54,7 @@ export const AboutSection = forwardRef<HTMLElement>((props, ref) => {
           
           {/* Third Line - Vertical */}
           <div 
-            className="absolute w-[1px] bg-green-400 opacity-70"
+            className="absolute w-px bg-green-400 opacity-70"
             style={{
               height: '320px',
               right: 'calc(240px - 1px)',
@@ -68,7 +68,7 @@ export const AboutSection = forwardRef<HTMLElement>((props, ref) => {
           
           {/* Fourth Line - Horizontal shorter */}
           <div 
-            className="absolute h-[1px] bg-green-400 opacity-70"
+            className="absolute h-px bg-green-400 opacity-70"
             style={{
               width: '200px',
               left: 'calc(40px - 1px)',
@@ -82,7 +82,7 @@ export const AboutSection = forwardRef<HTMLElement>((props, ref) => {
           
           {/* Fifth Line - Vertical */}
           <div 
-            className="absolute w-[1px] bg-green-400 opacity-70"
+            className="absolute w-px bg-green-400 opacity-70"
             style={{
               height: '240px',
               left: 'calc(200px - 1px)',
@@ -98,7 +98,7 @@ export const AboutSection = forwardRef<HTMLElement>((props, ref) => {
           <div className="absolute" style={{ left: 'calc(280px - 1px)', bottom: 'calc(240px - 1px)' }}>
             {/* Horizontal part of L */}
             <div 
-              className="absolute h-[1px] bg-green-400 opacity-70"
+              className="absolute h-px bg-green-400 opacity-70"
               style={{
                 width: '160px',
                 boxShadow: '0 0 6px 1px rgba(74, 222, 128, 0.7)',
@@ -109,7 +109,7 @@ export const AboutSection = forwardRef<HTMLElement>((props, ref) => {
             />
             {/* Vertical part of L */}
             <div 
-              className="absolute w-[1px] bg-green-400 opacity-70"
+              className="absolute w-px bg-green-400 opacity-70"
               style={{
                 height: '160px',
                 left: 'calc(160px - 1px)',
