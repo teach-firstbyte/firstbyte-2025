@@ -1,0 +1,172 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  //fields
+  id        Int   @id @default(autoincrement())
+  email     String   @unique
+  name      String?
+  role      Role  @default(NORTHEASTERN_STUDENT)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  //relationships
+  teamMemberships TeamMember[]
+  attendanceRecords Attendance[]
+  feedbackGiven   Feedback[] @relation("FeedbackAuthor")
+  
+  @@map("users")
+}
+
+model Team {
+  //fields
+  id          Int   @id @default(autoincrement())
+  name        String
+  description String?
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  //relationships
+  members   TeamMember[]
+  meetings  Meeting[]
+  
+  @@map("teams")
+}
+
+model TeamMember {
+  //fields
+  id     Int @id @default(autoincrement())
+  userId Int @map("user_id")
+  teamId Int @map("team_id")
+  role   TeamRole @default(MEMBER)
+  joinedAt DateTime @default(now()) @map("joined_at")
+
+  //relationships
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, teamId])
+  @@map("team_members")
+}
+
+model Meeting {
+  //fields
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  type        MeetingType
+  teamId      Int? @map("team_id")
+  scheduledAt DateTime @map("scheduled_at")
+  startedAt   DateTime? @map("started_at")
+  endedAt     DateTime? @map("ended_at")
+  location    String?
+  isRequired  Boolean     @default(false) @map("is_required")
+  maxCapacity Int? @map("max_capacity")
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+
+  //relationships
+  team        Team?        @relation(fields: [teamId], references: [id])
+  attendance  Attendance[]
+  feedback    Feedback[]
+  
+  @@map("meetings")
+}
+
+model Attendance {
+  //fields
+  id        Int           @id @default(autoincrement())
+  userId    Int @map("user_id")
+  meetingId Int @map("meeting_id")
+  status    AttendanceStatus
+  checkedInAt DateTime? @map("checked_in_at")
+  checkedOutAt DateTime? @map("checked_out_at")
+  notes     String?
+  createdAt DateTime         @default(now()) @map("created_at")
+  updatedAt DateTime         @updatedAt @map("updated_at")
+
+  //relationships
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  meeting Meeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, meetingId])
+  @@map("attendance")
+}
+
+model Feedback {
+  //fields 
+  id        Int      @id @default(autoincrement())
+  meetingId Int @map("meeting_id")
+  authorId  Int @map("author_id")
+  rating    Int?        @db.SmallInt // 1-5 scale
+  comment   String?
+  category  FeedbackCategory?
+  isAnonymous Boolean   @default(false) @map("is_anonymous")
+  createdAt DateTime    @default(now()) @map("created_at")
+  updatedAt DateTime    @updatedAt @map("updated_at")
+
+  //relationships
+  meeting Meeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  author  User    @relation("FeedbackAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  
+  @@map("feedback")
+}
+
+
+//ENUMS 
+enum TeamRole {
+  LEAD
+  MEMBER
+
+  @@map("team_role")
+}
+
+enum MeetingType {
+  GENERAL_MEETING
+  BOARD_MEETING
+  SOCIAL_EVENT
+  FIRSTBITES 
+  //for CS Cirricula team
+  CHV_WORKSHOP
+
+  ///for club-wide workshops
+  WORKSHOP
+
+  @@map("meeting_type")
+}
+
+enum AttendanceStatus {
+  REGISTERED
+  PRESENT
+  ABSENT
+
+  @@map("attendance_status")
+}
+
+enum FeedbackCategory {
+  CONTENT
+  LOGISTICS
+  ENGAGEMENT
+  OVERALL
+
+  @@map("feedback_category")
+}
+
+enum Role {
+  NORTHEASTERN_STUDENT
+  NORTHEASTERN_ADMIN
+  SUPER_ADMIN
+
+  @@map("user_role")
+}
