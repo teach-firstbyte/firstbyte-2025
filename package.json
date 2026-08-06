@@ -7,7 +7,7 @@
   ],
   "scripts": {
     "dev:web": "npm run dev -w @firstbyte/web",
-    "dev:dashboard": "npm run dev -w @firstbyte/dashboard",
+    "dev:dashboard": "npm run dev -w @firstbyte/dashboard -- --port 3001",
     "build": "npm run build -w @firstbyte/web && npm run build -w @firstbyte/dashboard",
     "build:web": "npm run build -w @firstbyte/web",
     "build:dashboard": "npm run build -w @firstbyte/dashboard",

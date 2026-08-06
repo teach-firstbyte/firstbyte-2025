@@ -96,10 +96,15 @@ export function Navbar({ activeSection }: NavbarProps) {
     return () => document.removeEventListener("keydown", down)
   }, [])
 
+  // `isRoute` marks a real navigation target rather than an on-page anchor.
+  // Anchor entries are intercepted and smooth-scrolled; route entries must be
+  // left alone so the browser actually follows them.
   const navLinks = [
     { name: "About", href: "/#about", section: "about" },
     { name: "Programs", href: "/#programs", section: "programs" },
     { name: "Team", href: "/#team", section: "team" },
+    // Served by the dashboard zone via the rewrite in next.config.mjs.
+    { name: "Dashboard", href: "/dashboard", section: "dashboard", isRoute: true },
   ]
 
   // Animation variants
@@ -270,6 +275,7 @@ export function Navbar({ activeSection }: NavbarProps) {
                             : "text-foreground/80 hover:text-primary"
                         }`}
                         onClick={(e) => {
+                          if (link.isRoute) return;
                           e.preventDefault();
                           scrollToSection(link.section);
                         }}
@@ -468,6 +474,10 @@ export function Navbar({ activeSection }: NavbarProps) {
                         : "text-foreground/80 hover:text-primary"
                     }`}
                     onClick={(e) => {
+                      if (link.isRoute) {
+                        setIsMenuOpen(false);
+                        return;
+                      }
                       e.preventDefault();
                       scrollToSection(link.section);
                       setIsMenuOpen(false);

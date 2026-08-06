@@ -27,6 +27,7 @@ import {
   ModalCheckboxes,
 } from "@/components/ui/modal";
 import { User } from "@/types/dashboard";
+import { withBasePath } from "@/lib/paths";
 import { useRouter } from "next/navigation";
 import { TableEmptyState } from "./ui/TableEmptyState";
 import { useDetailRow } from "@/hooks/useDetailRow";
@@ -58,7 +59,7 @@ export function UsersTable({ users }: UsersTableProps) {
     if (!showAssignModal) return;
 
     setTeamsLoading(true);
-    fetch("/api/teams")
+    fetch(withBasePath("/api/teams"))
       .then((res) => res.json())
       .then((data) => setTeams(data))
       .catch(() => setTeams([]))
@@ -93,7 +94,7 @@ export function UsersTable({ users }: UsersTableProps) {
 
     assign.run(async () => {
       const addCalls = added.map((teamId) =>
-        fetch("/api/team-members", {
+        fetch(withBasePath("/api/team-members"), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -105,7 +106,7 @@ export function UsersTable({ users }: UsersTableProps) {
       );
 
       const removeCalls = removed.map((teamId) =>
-        fetch(`/api/team-members/${membershipIdByTeam[teamId]}`, {
+        fetch(withBasePath(`/api/team-members/${membershipIdByTeam[teamId]}`), {
           method: "DELETE",
         }),
       );

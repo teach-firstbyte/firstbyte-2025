@@ -8,6 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { QRCodeSVG } from "qrcode.react";
+import { absoluteUrl } from "@/lib/paths";
 import { useEffect, useState } from "react";
 
 interface CheckInQRProps {
@@ -21,7 +22,9 @@ export function CheckInQR({ meetingTitle, code, path }: CheckInQRProps) {
 
   useEffect(() => {
     //window only exists in the browser - build hte absolute URL after mount
-    setUrl(`${window.location.origin}${path}`);
+    // absoluteUrl adds the /dashboard base path; without it this QR points at a
+    // 404 on the marketing site, which is only discoverable by scanning it.
+    setUrl(absoluteUrl(path));
   }, [path]);
 
   return (

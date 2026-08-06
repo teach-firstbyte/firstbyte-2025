@@ -1,5 +1,31 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {/* config options here */};
+const nextConfig: NextConfig = {
+  // This app is a Next.js Multi-Zone served under /dashboard on the marketing
+  // site's domain. apps/web rewrites /dashboard/:path* here; basePath makes this
+  // app generate its own routes and assets under that prefix.
+  basePath: "/dashboard",
+
+  images: {
+    // The image optimizer does not apply basePath to its `url` query param, so
+    // <Image src="/FirstByteBitex4.png" /> made the optimizer fetch
+    // /FirstByteBitex4.png (404) instead of /dashboard/FirstByteBitex4.png,
+    // returning 400 and a broken image. Serving images unoptimized emits a plain
+    // <img src> that basePath does prefix correctly, and it drops the optimizer
+    // as an extra moving part behind the zone rewrite. Matches apps/web.
+    unoptimized: true,
+  },
+
+  experimental: {
+    // Requests arrive proxied through apps/web, so the Origin header is the
+    // marketing domain rather than this deployment's own host. Next rejects
+    // server actions whose Origin does not match x-forwarded-host, which would
+    // break login, settings, password reset, and feedback submission with
+    // "Invalid Server Actions request" while every page still rendered fine.
+    serverActions: {
+      allowedOrigins: ["firstbyte.org", "www.firstbyte.org", "localhost:3000"],
+    },
+  },
+};
 
 export default nextConfig;

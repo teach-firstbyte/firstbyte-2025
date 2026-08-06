@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 import { Attendance } from "@/types/dashboard";
+import { withBasePath } from "@/lib/paths";
 import { useEffect, useRef, useState } from "react";
 
 const STATUSES = ["REGISTERED", "PRESENT", "ABSENT"] as const;
@@ -51,7 +52,9 @@ export function AttendanceToggle({
       setIsLoading(true);
       setLoadError(null);
       try {
-        const res = await fetch(`/api/attendance?meetingId=${meetingId}`);
+        const res = await fetch(
+          withBasePath(`/api/attendance?meetingId=${meetingId}`),
+        );
         if (!res.ok) throw new Error(`Request failed: ${res.status}`);
         setRecords(await res.json());
       } catch {
@@ -83,7 +86,7 @@ export function AttendanceToggle({
     setSavingCount((n) => n + 1);
 
     try {
-      const res = await fetch(`/api/attendance/${recordId}`, {
+      const res = await fetch(withBasePath(`/api/attendance/${recordId}`), {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status }),

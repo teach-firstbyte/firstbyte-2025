@@ -2,6 +2,7 @@
 
 import { supabase } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
+import { absoluteUrl } from "@/lib/paths";
 import { useState } from "react";
 
 export function GoogleButton({ label }: { label: string }) {
@@ -15,7 +16,9 @@ export function GoogleButton({ label }: { label: string }) {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        // Must include the /dashboard base path, and this exact URL has to be
+        // registered in both the Supabase and Google Cloud OAuth consoles.
+        redirectTo: absoluteUrl("/auth/callback"),
         queryParams: {
           prompt: "select_account",
         },

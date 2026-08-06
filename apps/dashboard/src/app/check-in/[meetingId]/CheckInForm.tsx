@@ -10,6 +10,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
+import { withBasePath } from "@/lib/paths";
 
 interface CheckInFormProps {
   meetingId: number;
@@ -32,7 +33,7 @@ export function CheckInForm({
     setStatus("submitting");
     setMessage("");
     try {
-      const res = await fetch("/api/attendance/check-in", {
+      const res = await fetch(withBasePath("/api/attendance/check-in"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ meetingId, code }),

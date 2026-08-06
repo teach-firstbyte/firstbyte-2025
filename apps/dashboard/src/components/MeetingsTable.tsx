@@ -28,6 +28,7 @@ import {
   ModalDropdown,
 } from "@/components/ui/modal";
 import { Meeting } from "@/types/dashboard";
+import { withBasePath } from "@/lib/paths";
 import { TableEmptyState } from "./ui/TableEmptyState";
 import { MeetingStatusBadge } from "./MeetingStatusBadge";
 import { useDetailRow } from "@/hooks/useDetailRow";
@@ -88,7 +89,7 @@ export function MeetingsTable({ meetings }: MeetingsTableProps) {
       setTeamsLoading(true);
       setTeamsError(null);
       try {
-        const res = await fetch(`/api/teams`);
+        const res = await fetch(withBasePath("/api/teams"));
         if (!res.ok) throw new Error(`Request failed: ${res.status}`);
         const data = await res.json();
         setTeams(
@@ -132,7 +133,7 @@ export function MeetingsTable({ meetings }: MeetingsTableProps) {
     e.preventDefault();
 
     save.run(async () => {
-      const res = await fetch("/api/meetings", {
+      const res = await fetch(withBasePath("/api/meetings"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
