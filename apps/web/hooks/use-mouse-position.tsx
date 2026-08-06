@@ -107,7 +107,14 @@ interface HighlighterItemProps {
 export const HighlighterItem: React.FC<PropsWithChildren<HighlighterItemProps>> = ({ children, className = "" }) => {
   return (
     <div
-      className={`relative overflow-hidden p-px before:pointer-events-none before:absolute before:-left-48 before:-top-48 before:z-30 before:h-96 before:w-96 before:translate-x-[var(--mouse-x)] before:translate-y-[var(--mouse-y)] before:rounded-full before:bg-lime-500 before:opacity-0 before:blur-[100px] before:transition-opacity before:duration-500 after:absolute after:inset-0 after:z-10 after:rounded-3xl after:opacity-0 after:transition-opacity after:duration-500  before:hover:opacity-20 after:group-hover:opacity-100 dark:before:bg-white/50  ${className}`}
+      // Both pseudo-elements are purely decorative glow layers and must not take
+      // pointer events. ::after is `absolute inset-0 z-10`, so without
+      // after:pointer-events-none it blankets the whole item and wins the hit
+      // test. A pseudo-element resolves to its originating element -- this
+      // wrapper div, an ANCESTOR of the child link -- and since events only
+      // propagate upward, the link's handler never fired and clicks did nothing.
+      // That silently killed every link wrapped in a HighlighterItem.
+      className={`relative overflow-hidden p-px before:pointer-events-none before:absolute before:-left-48 before:-top-48 before:z-30 before:h-96 before:w-96 before:translate-x-[var(--mouse-x)] before:translate-y-[var(--mouse-y)] before:rounded-full before:bg-lime-500 before:opacity-0 before:blur-[100px] before:transition-opacity before:duration-500 after:pointer-events-none after:absolute after:inset-0 after:z-10 after:rounded-3xl after:opacity-0 after:transition-opacity after:duration-500  before:hover:opacity-20 after:group-hover:opacity-100 dark:before:bg-white/50  ${className}`}
     >
       {children}
     </div>
