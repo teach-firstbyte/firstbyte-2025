@@ -248,7 +248,7 @@ export default function TeamPage() {
                 variant="ghost" 
                 size="icon" 
                 onClick={clearFilters}
-                className="flex-shrink-0"
+                className="shrink-0"
               >
                 <X className="h-4 w-4" />
                 <span className="sr-only">Clear filters</span>
@@ -290,7 +290,7 @@ export default function TeamPage() {
                 <Card className="overflow-hidden h-full">
                   <div className="flex flex-col h-full">
                     <div className="flex p-6 gap-5">
-                      <Avatar className="h-16 w-16 rounded-full border-2 border-primary/10 flex-shrink-0">
+                      <Avatar className="h-16 w-16 rounded-full border-2 border-primary/10 shrink-0">
                         {member.image ? (
                           <AvatarImage src={member.circularImage || member.image} alt={member.name} className="object-cover object-center" />
                         ) : (

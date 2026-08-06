@@ -258,7 +258,7 @@ function TeamMemberCard({
           <div className="aspect-square overflow-hidden relative">
             <div
               className={cn(
-                "absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10 opacity-0 transition-opacity duration-300",
+                "absolute inset-0 bg-linear-to-t from-black/70 to-transparent z-10 opacity-0 transition-opacity duration-300",
                 isHovered ? "opacity-100" : "",
               )}
             />
@@ -405,7 +405,7 @@ function TeamMemberCard({
 
           <button
             onClick={() => setIsModalOpen(false)}
-            className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+            className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2"
           >
             <X className="h-4 w-4" />
             <span className="sr-only">Close</span>
@@ -451,7 +451,7 @@ function TeamMemberCard({
                       Experience at FirstByte
                     </h3>
                     <div className="relative pl-6">
-                      <div className="absolute left-2 top-2 bottom-2 w-0.5 bg-gradient-to-b from-muted-foreground/30 to-primary" />
+                      <div className="absolute left-2 top-2 bottom-2 w-0.5 bg-linear-to-b from-muted-foreground/30 to-primary" />
                       {member.previousRoles?.map((role, idx) => (
                         <div key={idx} className="mb-3 relative">
                           <div className="absolute left-[-18px] top-0.5 h-3 w-3 rounded-full bg-primary ring-2 ring-background" />
@@ -690,11 +690,11 @@ export const TeamSection = forwardRef<HTMLElement, TeamSectionProps>(
               transition={{ duration: 0.5 }}
               className="flex items-center mb-8"
             >
-              <div className="h-px flex-grow bg-border"></div>
+              <div className="h-px grow bg-border"></div>
               <h3 className="text-xl font-semibold px-4">
                 Previous Leadership
               </h3>
-              <div className="h-px flex-grow bg-border"></div>
+              <div className="h-px grow bg-border"></div>
             </motion.div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

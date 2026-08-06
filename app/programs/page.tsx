@@ -255,7 +255,7 @@ export default function ProgramsPage() {
                 variant="ghost" 
                 size="icon" 
                 onClick={clearFilters}
-                className="flex-shrink-0"
+                className="shrink-0"
               >
                 <X className="h-4 w-4" />
                 <span className="sr-only">Clear filters</span>
@@ -323,7 +323,7 @@ export default function ProgramsPage() {
                           height={300}
                           className="object-cover transition-transform hover:scale-105 absolute inset-0 w-full h-full"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                        <div className="absolute inset-0 bg-linear-to-t from-black/70 to-transparent" />
                         <div className="absolute bottom-0 left-0 p-4">
                           <Badge className="mb-2">{program.category}</Badge>
                           <h3 className="text-xl font-bold text-white">{program.title}</h3>
@@ -453,7 +453,7 @@ export default function ProgramsPage() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
                     {program.details?.duration && (
                       <div className="flex items-center gap-3">
-                        <div className="flex-shrink-0 h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+                        <div className="shrink-0 h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
                           <Clock className="h-5 w-5 text-primary" />
                         </div>
                         <div>
@@ -465,7 +465,7 @@ export default function ProgramsPage() {
                     
                     {program.details?.ageRange && (
                       <div className="flex items-center gap-3">
-                        <div className="flex-shrink-0 h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+                        <div className="shrink-0 h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
                           <Users className="h-5 w-5 text-primary" />
                         </div>
                         <div>
@@ -477,7 +477,7 @@ export default function ProgramsPage() {
                     
                     {program.details?.capacity && (
                       <div className="flex items-center gap-3">
-                        <div className="flex-shrink-0 h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+                        <div className="shrink-0 h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
                           <Users className="h-5 w-5 text-primary" />
                         </div>
                         <div>
@@ -489,7 +489,7 @@ export default function ProgramsPage() {
                     
                     {program.details?.location && (
                       <div className="flex items-center gap-3">
-                        <div className="flex-shrink-0 h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+                        <div className="shrink-0 h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
                           <MapPin className="h-5 w-5 text-primary" />
                         </div>
                         <div>
@@ -501,7 +501,7 @@ export default function ProgramsPage() {
                     
                     {program.details?.schedule && (
                       <div className="flex items-center gap-3">
-                        <div className="flex-shrink-0 h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+                        <div className="shrink-0 h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
                           <Calendar className="h-5 w-5 text-primary" />
                         </div>
                         <div>

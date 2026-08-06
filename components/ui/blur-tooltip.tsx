@@ -41,7 +41,7 @@ export function BlurTooltip({ position, content, visible, icon, id = "tooltip", 
   return (
     <TooltipPortal>
       <div 
-        className="pointer-events-none fixed left-0 top-0 z-[9999]" 
+        className="pointer-events-none fixed left-0 top-0 z-9999" 
         id={`STALKER-${id}`}
         style={{ transform: `translate(${position.x}px, ${position.y}px)` }}
       >
