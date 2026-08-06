@@ -1,0 +1,95 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Path filtering deliberately lives in a job rather than in `on: paths:`.
+  #
+  # A workflow skipped by a trigger-level `paths:` filter never reports its
+  # checks, so any required check sits in "Expected — waiting for status" forever
+  # and the PR can never merge. A *job* skipped by an `if:` condition reports
+  # success, which is what branch protection needs.
+  changes:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      web: ${{ steps.filter.outputs.web }}
+      dashboard: ${{ steps.filter.outputs.dashboard }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            shared: &shared
+              - '.github/workflows/ci.yml'
+              - 'package.json'
+              - 'package-lock.json'
+            web:
+              - *shared
+              - 'apps/web/**'
+            dashboard:
+              - *shared
+              - 'apps/dashboard/**'
+
+  dashboard:
+    needs: changes
+    if: needs.changes.outputs.dashboard == 'true'
+    runs-on: ubuntu-latest
+    env:
+      # Placeholders so the build succeeds without real secrets. Prisma parses
+      # DATABASE_URL at generate time but never connects during a build.
+      DATABASE_URL: postgresql://user:pass@localhost:5432/db
+      DIRECT_URL: postgresql://user:pass@localhost:5432/db
+      NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder-anon-key
+      CHECKIN_SECRET: ci-placeholder-not-a-real-secret
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # Installs the whole workspace from the single root lockfile.
+      - run: npm ci
+
+      - run: npm run format:check:dashboard
+
+      - run: npm run lint:dashboard
+
+      - run: npm run typecheck:dashboard
+
+      - run: npm run build:dashboard
+
+  web:
+    needs: changes
+    if: needs.changes.outputs.web == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # No lint or typecheck yet: apps/web has no ESLint config, and
+      # next.config.mjs sets typescript.ignoreBuildErrors while ~56 pre-existing
+      # errors from the unused three.js components remain. Both are tracked
+      # follow-ups; build is the real signal here.
+      - run: npm run build:web
