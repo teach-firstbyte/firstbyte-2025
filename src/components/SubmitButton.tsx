@@ -1,14 +1,13 @@
 "use client";
 
 import { useFormStatus } from "react-dom";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { type VariantProps } from "class-variance-authority";
+import { Button, type ButtonProps } from "@/components/ui/button";
 import { useEffect, useRef } from "react";
 
-type SubmitButtonProps = React.ComponentProps<"button"> &
-  VariantProps<typeof buttonVariants> & {
-    pendingLabel?: string;
-  };
+// A useFormStatus adapter over Button. The spinner and the disabled/aria-busy
+// wiring live in Button so there's a single source of truth; this only decides
+// *when* the form is busy.
+type SubmitButtonProps = Omit<ButtonProps, "pending">;
 
 export function SubmitButton({
   children,
@@ -17,6 +16,7 @@ export function SubmitButton({
   size,
   pendingLabel,
   onClick,
+  disabled,
   ...props
 }: SubmitButtonProps) {
   const { pending } = useFormStatus();
@@ -28,6 +28,8 @@ export function SubmitButton({
     wasPending.current = pending;
   }, [pending]);
 
+  // useFormStatus reports per-form, not per-button, so every submit button in a
+  // form sees pending. Only the one actually clicked should spin.
   const showPending = pending && clickedRef.current;
 
   return (
@@ -36,21 +38,18 @@ export function SubmitButton({
       variant={variant}
       size={size}
       className={className}
-      aria-busy={showPending}
+      pending={showPending}
+      pendingLabel={pendingLabel}
+      // Deliberately the wider `pending`: every submit button in the form locks
+      // while it's in flight, even though only the clicked one spins.
+      disabled={disabled || pending}
       onClick={(e) => {
         clickedRef.current = true;
         onClick?.(e);
       }}
       {...props}
-      disabled={pending}
     >
-      {showPending && (
-        <span
-          aria-hidden="true"
-          className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent"
-        />
-      )}
-      {showPending ? (pendingLabel ?? children) : children}
+      {children}
     </Button>
   );
 }

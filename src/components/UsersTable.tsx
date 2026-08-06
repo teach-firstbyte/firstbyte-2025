@@ -30,6 +30,7 @@ import { User } from "@/types/dashboard";
 import { useRouter } from "next/navigation";
 import { TableEmptyState } from "./ui/TableEmptyState";
 import { useDetailRow } from "@/hooks/useDetailRow";
+import { useAsyncAction } from "@/hooks/useAsyncAction";
 import { UserDetailSheet } from "./UserDetailSheet";
 
 interface UsersTableProps {
@@ -44,6 +45,7 @@ export function UsersTable({ users }: UsersTableProps) {
   });
   const [showAssignModal, setShowAssignModal] = useState(false);
   const router = useRouter();
+  const assign = useAsyncAction();
 
   // Detail panel state lives alongside the modal state above; opening a row
   // doesn't touch either, so the table keeps whatever the officer had set up.
@@ -80,37 +82,49 @@ export function UsersTable({ users }: UsersTableProps) {
     );
   };
 
-  const handleAssignSubmit = async (e: React.FormEvent) => {
+  const handleAssignSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedUserId) return;
+    // No re-entry guard needed here -- useAsyncAction.run ignores a call while one
+    // is already in flight, including a second click in the same tick.
 
     const added = selectedTeams.filter((id) => !originalTeamIds.includes(id));
     const removed = originalTeamIds.filter((id) => !selectedTeams.includes(id));
 
-    const addCalls = added.map((teamId) =>
-      fetch("/api/team-members", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: selectedUserId,
-          teamId,
-          role: "MEMBER",
+    assign.run(async () => {
+      const addCalls = added.map((teamId) =>
+        fetch("/api/team-members", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId: selectedUserId,
+            teamId,
+            role: "MEMBER",
+          }),
         }),
-      }),
-    );
+      );
 
-    const removeCalls = removed.map((teamId) =>
-      fetch(`/api/team-members/${membershipIdByTeam[teamId]}`, {
-        method: "DELETE",
-      }),
-    );
+      const removeCalls = removed.map((teamId) =>
+        fetch(`/api/team-members/${membershipIdByTeam[teamId]}`, {
+          method: "DELETE",
+        }),
+      );
 
-    await Promise.allSettled([...addCalls, ...removeCalls]);
+      const results = await Promise.allSettled([...addCalls, ...removeCalls]);
 
-    router.refresh();
+      // allSettled only rejects on a network failure -- an HTTP 500 arrives as
+      // fulfilled with `ok: false`, so checking status alone reports a failed
+      // save as a success.
+      const failed = results.some(
+        (r) => r.status === "rejected" || !r.value.ok,
+      );
+      if (failed) throw new Error("Some team changes could not be saved.");
 
-    // close modal
-    setShowAssignModal(false);
+      router.refresh();
+      // Queued inside the transition after the refresh, so the modal closes as
+      // the updated table commits rather than over stale rows.
+      setShowAssignModal(false);
+    });
   };
 
   const handleUserSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -216,6 +230,7 @@ export function UsersTable({ users }: UsersTableProps) {
             >
               <ModalButton
                 variant="cancel"
+                type="button"
                 onClick={() => setShowAddModal(false)}
               >
                 Cancel
@@ -241,20 +256,31 @@ export function UsersTable({ users }: UsersTableProps) {
                 }))}
               />
               <ModalCheckboxes
-                label={teamsLoading ? "Loading teams…" : "Assign to Teams"}
+                label="Assign to Teams"
+                loading={teamsLoading}
                 options={teams.map((t) => ({ value: t.id, label: t.name }))}
                 selected={selectedTeams}
                 onToggle={toggleTeam}
-                disabled={!selectedUserId || teamsLoading}
+                disabled={!selectedUserId || teamsLoading || assign.pending}
               />
+              {assign.error && (
+                <p className="text-sm text-destructive">{assign.error}</p>
+              )}
               <div className="flex justify-end gap-2 mt-4">
                 <ModalButton
                   variant="cancel"
+                  type="button"
+                  disabled={assign.pending}
                   onClick={() => setShowAssignModal(false)}
                 >
                   Cancel
                 </ModalButton>
-                <ModalButton variant="primary" type="submit">
+                <ModalButton
+                  variant="primary"
+                  type="submit"
+                  pending={assign.pending}
+                  pendingLabel="Saving…"
+                >
                   Save
                 </ModalButton>
               </div>

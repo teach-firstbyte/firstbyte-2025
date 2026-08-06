@@ -3,6 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { Slot } from "radix-ui";
 
 import { cn } from "@/lib/utils";
+import { Spinner } from "@/components/ui/spinner";
 
 const buttonVariants = cva(
   "inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
@@ -39,26 +40,81 @@ const buttonVariants = cva(
   },
 );
 
+type ButtonBaseProps = React.ComponentProps<"button"> &
+  VariantProps<typeof buttonVariants>;
+
+export type ButtonProps = ButtonBaseProps & {
+  /** Shows a spinner, disables the button, and sets aria-busy. */
+  pending?: boolean;
+  /**
+   * Replaces the children while pending. Omit it to keep the label in place and
+   * only add the spinner; pass `null` for a spinner-only button, which is what
+   * cramped `size="sm"` rows want.
+   */
+  pendingLabel?: React.ReactNode;
+};
+
+// `asChild` renders through Slot.Root, which throws unless its children resolve
+// to exactly one element -- so a spinner can't be injected alongside them. Making
+// that a type error beats a runtime crash. An asChild caller that needs a pending
+// state renders <Spinner /> inside the slotted child itself.
+type ButtonComponentProps =
+  | (ButtonProps & { asChild?: false })
+  | (ButtonBaseProps & {
+      asChild: true;
+      pending?: never;
+      pendingLabel?: never;
+    });
+
 function Button({
   className,
   variant = "default",
   size = "default",
   asChild = false,
+  pending,
+  pendingLabel,
+  disabled,
+  type,
+  children,
   ...props
-}: React.ComponentProps<"button"> &
-  VariantProps<typeof buttonVariants> & {
-    asChild?: boolean;
-  }) {
-  const Comp = asChild ? Slot.Root : "button";
+}: ButtonComponentProps) {
+  const classes = cn(buttonVariants({ variant, size, className }));
+
+  if (asChild) {
+    // No `type` in this branch: it would land on the slotted <a>, where it means
+    // something else entirely.
+    return (
+      <Slot.Root
+        data-slot="button"
+        data-variant={variant}
+        data-size={size}
+        className={classes}
+        {...props}
+      >
+        {children}
+      </Slot.Root>
+    );
+  }
 
   return (
-    <Comp
+    <button
       data-slot="button"
       data-variant={variant}
       data-size={size}
-      className={cn(buttonVariants({ variant, size, className }))}
+      data-pending={pending ? "" : undefined}
+      className={classes}
+      // Buttons default to submit in HTML, which silently turns any in-form
+      // button into a submit button. Use SubmitButton to submit a form.
+      type={type ?? "button"}
       {...props}
-    />
+      // After the spread on purpose: `pending` owns these two. `disabled` is
+      // destructured above so a caller's own value is OR'd rather than clobbered.
+      disabled={disabled || pending}
+      aria-busy={pending || undefined}
+    >
+      {pending && <Spinner />}
+      {pending && pendingLabel !== undefined ? pendingLabel : children}
+    </button>
   );
 }
 

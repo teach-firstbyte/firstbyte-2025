@@ -2,8 +2,9 @@
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { Button, type ButtonProps } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/spinner";
 
 // Shared styling for the native <select> below. It stays a native control rather
 // than the Radix Select primitive because callers pass native onChange handlers
@@ -89,11 +90,16 @@ function ModalForm({ newUser, onChange, onSubmit, children }: ModalFormProps) {
   );
 }
 
+// Its own `variant` union shadows Button's, so that one is omitted rather than
+// widened. Everything else -- including `pending` and `pendingLabel` -- passes
+// straight through.
 function ModalButton({
   variant = "primary",
   className,
   ...props
-}: React.ComponentProps<"button"> & { variant?: "primary" | "cancel" }) {
+}: Omit<ButtonProps, "variant" | "asChild"> & {
+  variant?: "primary" | "cancel";
+}) {
   return (
     <Button
       variant={variant === "primary" ? "brand" : "secondary"}
@@ -104,6 +110,23 @@ function ModalButton({
   );
 }
 
+// Shown beside a control's label while its options are still being fetched. Keeps
+// the label itself stable, rather than overwriting it with "Loading…".
+function ControlLabel({
+  label,
+  loading,
+}: {
+  label: string;
+  loading?: boolean;
+}) {
+  return (
+    <label className="mb-1 flex items-center gap-2 text-sm font-medium">
+      {label}
+      {loading && <Spinner className="size-3" />}
+    </label>
+  );
+}
+
 interface ModalDropdownProps {
   label?: string;
   value: string | number | null;
@@ -111,6 +134,7 @@ interface ModalDropdownProps {
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   required?: boolean;
   disabled?: boolean;
+  loading?: boolean;
   className?: string;
 }
 
@@ -121,13 +145,12 @@ function ModalDropdown({
   onChange,
   required,
   disabled,
+  loading,
   className,
 }: ModalDropdownProps) {
   return (
     <div className={cn("flex flex-col gap-1", className)}>
-      {label && (
-        <label className="block text-sm font-medium mb-1">{label}</label>
-      )}
+      {label && <ControlLabel label={label} loading={loading} />}
       <select
         className={nativeControl}
         value={value ?? ""}
@@ -154,6 +177,7 @@ interface ModalCheckboxesProps {
   selected: Array<string | number>;
   onToggle: (value: string | number) => void;
   disabled?: boolean;
+  loading?: boolean;
   className?: string;
 }
 
@@ -163,13 +187,12 @@ function ModalCheckboxes({
   selected,
   onToggle,
   disabled,
+  loading,
   className,
 }: ModalCheckboxesProps) {
   return (
     <div className={cn("flex flex-col gap-2", className)}>
-      {label && (
-        <label className="block text-sm font-medium mb-1">{label}</label>
-      )}
+      {label && <ControlLabel label={label} loading={loading} />}
       {options.map((opt) => (
         <label key={opt.value} className="flex items-center gap-2">
           <input

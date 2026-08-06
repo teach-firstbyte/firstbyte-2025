@@ -73,12 +73,18 @@ export function CheckInForm({
                 placeholder="Enter code"
               />
             </div>
+            {/* The Status union stays: it also encodes "success", which swaps the
+                whole card above. Only the pending slice moves onto the button --
+                and because Button ORs `disabled` with `pending` rather than
+                overwriting it, the empty-code check is now its own prop. */}
             <Button
               onClick={handleCheckIn}
-              disabled={status === "submitting" || code.trim() === ""}
+              pending={status === "submitting"}
+              pendingLabel="Checking in…"
+              disabled={code.trim() === ""}
               className="w-full"
             >
-              {status === "submitting" ? "Checking in…" : "Confirm check-in"}
+              Confirm check-in
             </Button>
             {status === "error" && (
               <p className="text-center text-sm text-destructive">{message}</p>
