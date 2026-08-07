@@ -8,6 +8,27 @@
  *
  * Falls back to DASHBOARD_URL, then to the local dev port.
  */
+
+/**
+ * Reduce a configured URL to a bare origin.
+ *
+ * DASHBOARD_URL must be an origin only, because the rewrites below append
+ * `/dashboard/:path*` themselves. Setting it to the URL you actually visit
+ * (…vercel.app/dashboard) is the natural mistake and produces a destination of
+ * /dashboard/dashboard/*, which the dashboard zone 404s — the page still comes
+ * from the dashboard app, so it looks like a broken rewrite rather than a bad
+ * env var. Normalizing here makes both forms work.
+ */
+function toOrigin(value) {
+  try {
+    return new URL(value).origin
+  } catch {
+    // Not a parseable absolute URL: strip a trailing /dashboard and any trailing
+    // slash so a host:port style value still behaves.
+    return value.replace(/\/+$/, '').replace(/\/dashboard$/, '')
+  }
+}
+
 function dashboardOrigin() {
   const related = process.env.VERCEL_RELATED_PROJECTS
   if (related) {
@@ -29,7 +50,8 @@ function dashboardOrigin() {
     }
   }
 
-  return process.env.DASHBOARD_URL ?? 'http://localhost:3001'
+  const configured = process.env.DASHBOARD_URL
+  return configured ? toOrigin(configured) : 'http://localhost:3001'
 }
 
 /** @type {import('next').NextConfig} */
