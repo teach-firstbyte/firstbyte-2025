@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { withBasePath } from "@/lib/paths";
 
 const COPY: Record<
   string,
@@ -76,7 +77,11 @@ export default async function ConfirmPage({
 
   const params = new URLSearchParams({ token_hash, type });
   if (next) params.set("next", next);
-  const confirmHref = `/auth/callback?${params.toString()}`;
+  // withBasePath is required here because this is a raw <a>, not next/link.
+  // basePath is applied by the Next router, so <Link> gets it automatically and a
+  // plain anchor gets nothing. The <a> is deliberate: /auth/callback is a route
+  // handler, and <Link>'s client-side navigation cannot hand off to one.
+  const confirmHref = withBasePath(`/auth/callback?${params.toString()}`);
   const copy = COPY[type] ?? FALLBACK;
 
   return (

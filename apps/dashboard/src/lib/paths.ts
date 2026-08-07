@@ -14,9 +14,15 @@
  *
  *   NOT automatic — these helpers are required:
  *     fetch("/api/...")             a raw browser API, no Next router involved
+ *     <a href="/...">               plain anchor; only next/link is prefixed
  *     NextResponse.redirect(url)    you build the absolute URL yourself
  *     absolute URLs built by hand   e.g. `${window.location.origin}${path}`
  *     URLs sent to third parties    Supabase redirectTo, OAuth callbacks, QR codes
+ *
+ * The rule underneath all of these: basePath is applied by the Next ROUTER. If a
+ * URL is handed to the router (Link, router.push, redirect) it is prefixed for
+ * you. If it goes anywhere else — the network stack, the browser's own
+ * navigation, an email, a QR code — you must prefix it.
  *
  * Both halves verified empirically against a running server:
  *   - fetch: /api/teams -> 404, /dashboard/api/teams -> 401 (needs the prefix)
