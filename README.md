@@ -86,8 +86,37 @@ Two settings are load-bearing and easy to get wrong:
   or every form submission fails with "Invalid Server Actions request" while
   pages still render normally.
 
-Auth redirect URLs (`/dashboard/auth/callback`) must be registered in both the
-Supabase and Google Cloud OAuth consoles.
+### Auth configuration
+
+Everything auth-related is configured in **Supabase**, not Google. With
+Supabase-hosted OAuth, Google redirects to Supabase's own callback
+(`https://<project-ref>.supabase.co/auth/v1/callback`) and never to this app, so
+**the Google Cloud console needs no change** when app URLs move. Only Supabase
+sees your app's URLs.
+
+**Authentication → URL Configuration**
+
+- Site URL: `https://teachfirstbyte.com`
+- Redirect URLs (all on the *web* origin — users always arrive through the proxy):
+  ```
+  https://teachfirstbyte.com/dashboard/**
+  http://localhost:3000/dashboard/**
+  ```
+  `**` crosses `/` separators; `*` does not.
+
+**Authentication → Email Templates**
+
+These are customized to point at this app's `/auth/confirm` page rather than
+Supabase's default verify endpoint, so each one needs the `/dashboard` prefix:
+
+```
+{{ .SiteURL }}/dashboard/auth/confirm?token_hash={{ .TokenHash }}&type=signup
+```
+
+Applies to Confirm signup, Reset password, Magic link, and Change email —
+`src/app/auth/confirm/page.tsx` handles all four types. Getting this wrong sends
+new members a confirmation link that 404s, and it will not show up in ordinary
+testing because existing accounts never see these emails.
 
 ## CI
 
