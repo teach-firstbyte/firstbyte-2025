@@ -8,17 +8,6 @@ import { Code } from "lucide-react"
 import { useTheme } from "next-themes"
 
 const MODEL_URL = "/models/FirstByteBitex4.glb"
-try {
-  // Preload the model
-  new GLTFLoader().load(
-    MODEL_URL,
-    () => console.log("Model preloaded"),
-    () => {},
-    (error) => console.error("Error preloading model:", error)
-  )
-} catch (error) {
-  console.error("Error preloading model:", error)
-}
 
 interface ThreeModelProps {
   isMobile?: boolean; // Make prop optional for now
@@ -26,7 +15,6 @@ interface ThreeModelProps {
 
 export function ThreeModel({ isMobile = false }: ThreeModelProps) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const [isRotating, setIsRotating] = useState(true)
   const [isLoaded, setIsLoaded] = useState(false)
   const [hasError, setHasError] = useState(false)
   const [showPrompt, setShowPrompt] = useState(true)
@@ -154,29 +142,43 @@ export function ThreeModel({ isMobile = false }: ThreeModelProps) {
     const cube = new THREE.Mesh(geometry, material);
     scene.add(cube);
     
+    // Handle for whichever render loop is currently running. Both the
+    // placeholder-cube loop and the post-load model loop write here, so there is
+    // always exactly one scheduled frame to cancel -- on unmount, and when the
+    // model arrives and supersedes the cube.
+    let frameId: number | null = null
+    // The GLTF load is async and can resolve after unmount. Without this guard
+    // its callback would start a fresh loop against a disposed renderer.
+    let disposed = false
+
     // Animate the cube
     const animateCube = () => {
-      requestAnimationFrame(animateCube);
+      frameId = requestAnimationFrame(animateCube);
       cube.rotation.x += 0.01;
       cube.rotation.y += 0.01;
       renderer.render(scene, camera);
     };
     animateCube();
-    
+
     // Load the model with improved visibility settings
     const loader = new GLTFLoader()
-    console.log("Loading model from:", MODEL_URL)
     try {
       loader.load(
         MODEL_URL,
         (gltf) => {
-          console.log("Model loaded successfully:", gltf)
+          if (disposed) return
           const model = gltf.scene
           modelRef.current = model
           
-          // Remove placeholder cube
+          // Remove placeholder cube, and stop the loop that was driving it.
+          // The model loop started below takes over rendering from here; without
+          // this cancel both loops would render every frame for the life of the
+          // page.
+          if (frameId !== null) cancelAnimationFrame(frameId)
           scene.remove(cube);
-          
+          geometry.dispose();
+          material.dispose();
+
           // Make model smaller and adjust position
           const scale = isMobile ? 0.25 : 0.2; // Slightly larger on mobile
           model.scale.set(scale, scale, scale)
@@ -221,8 +223,8 @@ export function ThreeModel({ isMobile = false }: ThreeModelProps) {
                   
           // Animation loop
           const animate = () => {
-            requestAnimationFrame(animate)
-            
+            frameId = requestAnimationFrame(animate)
+
             // Gentle floating animation with slight horizontal movement
             time += 0.03
             const floatOffsetY = Math.sin(time * speed) * amplitude;
@@ -360,9 +362,7 @@ export function ThreeModel({ isMobile = false }: ThreeModelProps) {
             rotationOffset = {x: 0, y: 0};
           });
         },
-        (xhr) => {
-          console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
-        },
+        undefined,
         (error) => {
           console.error('An error happened', error)
           setHasError(true)
@@ -383,24 +383,39 @@ export function ThreeModel({ isMobile = false }: ThreeModelProps) {
     }
     
     window.addEventListener('resize', handleResize)
-    
-    // Toggle rotation on click
-    const handleClick = () => {
-      setIsRotating(prev => !prev)
-    }
-    
-    container.addEventListener('click', handleClick)
-    
+
     // Cleanup
     return () => {
+      disposed = true
+      // Without this the render loop outlives the component and keeps drawing
+      // into a disposed renderer on every frame.
+      if (frameId !== null) cancelAnimationFrame(frameId)
+
       window.removeEventListener('resize', handleResize)
-      container.removeEventListener('click', handleClick)
-      
+
       // Check if container still has the renderer's DOM element before removing
       if (container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement)
       }
-      
+
+      // renderer.dispose() frees the WebGL context but not the geometries,
+      // materials, or textures uploaded to the GPU -- those have to be released
+      // per-object or they leak for the life of the tab.
+      scene.traverse((object) => {
+        if (!(object instanceof THREE.Mesh)) return
+        object.geometry?.dispose()
+        const materials = Array.isArray(object.material)
+          ? object.material
+          : [object.material]
+        for (const mat of materials) {
+          if (!mat) continue
+          for (const value of Object.values(mat)) {
+            if (value instanceof THREE.Texture) value.dispose()
+          }
+          mat.dispose()
+        }
+      })
+
       renderer.dispose()
       controls.dispose()
     }
