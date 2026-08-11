@@ -398,24 +398,6 @@ export function ThreeModel({ isMobile = false }: ThreeModelProps) {
         container.removeChild(renderer.domElement)
       }
 
-      // renderer.dispose() frees the WebGL context but not the geometries,
-      // materials, or textures uploaded to the GPU -- those have to be released
-      // per-object or they leak for the life of the tab.
-      scene.traverse((object) => {
-        if (!(object instanceof THREE.Mesh)) return
-        object.geometry?.dispose()
-        const materials = Array.isArray(object.material)
-          ? object.material
-          : [object.material]
-        for (const mat of materials) {
-          if (!mat) continue
-          for (const value of Object.values(mat)) {
-            if (value instanceof THREE.Texture) value.dispose()
-          }
-          mat.dispose()
-        }
-      })
-
       renderer.dispose()
       controls.dispose()
     }
