@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { AuthForm } from "./AuthForm";
+import { BackLink } from "@/components/BackLink";
 
 export default async function LoginPage({
   searchParams,
@@ -10,6 +11,11 @@ export default async function LoginPage({
 
   return (
     <div className="container mx-auto flex min-h-screen max-w-sm flex-col justify-center p-6">
+      {/* Escape hatch for anyone who hit "Dashboard" in the marketing navbar and
+          just wants to get back to the site. */}
+      <div className="mb-4 self-start">
+        <BackLink href="/" label="Back to main site" exitsZone />
+      </div>
       <div className="text-center mb-8">
         <Image
           src="/FirstByteBitex4.png"
