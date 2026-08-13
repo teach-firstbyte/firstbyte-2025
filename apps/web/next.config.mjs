@@ -57,7 +57,7 @@ function dashboardOrigin() {
 /**
  * Baseline security headers applied to every response from this origin.
  *
- * Next applies headers before rewrites, so these also land on /dashboard/*
+ * These do NOT apply to /dashboard/* - that zone is rewritten to a separate server, which supplies it's own headers via its own config.
  */
 const securityHeaders = [
   // Anti-clickjacking: nothing should ever embed this site in an iframe. 
