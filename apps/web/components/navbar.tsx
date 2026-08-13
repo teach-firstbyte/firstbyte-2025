@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { motion, AnimatePresence, useScroll } from "framer-motion"
+import { motion, AnimatePresence, useScroll, type Variants } from "framer-motion"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Menu, Search, X, Linkedin, Instagram, ArrowUpRight } from "lucide-react"
 import { LinktreeIcon } from "@/components/ui/icons"
@@ -108,7 +108,7 @@ export function Navbar({ activeSection }: NavbarProps) {
   ]
 
   // Animation variants
-  const pillVariants = {
+  const pillVariants: Variants = {
     initial: { 
       borderRadius: "9999px",
       background: "rgba(var(--background-rgb), 0.9)",
@@ -129,7 +129,7 @@ export function Navbar({ activeSection }: NavbarProps) {
     }
   }
 
-  const logoVariants = {
+  const logoVariants: Variants = {
     initial: {
       opacity: 0,
       y: -10,
@@ -164,7 +164,7 @@ export function Navbar({ activeSection }: NavbarProps) {
     }
   }
 
-  const linkVariants = {
+  const linkVariants: Variants = {
     hover: { 
       scale: 1.05,
       transition: { duration: 0.2, ease: "easeOut" } 
@@ -176,7 +176,7 @@ export function Navbar({ activeSection }: NavbarProps) {
   }
 
   // Updated animation variants for the mobile menu
-  const mobileMenuVariants = {
+  const mobileMenuVariants: Variants = {
     open: {
       opacity: 1,
       height: "auto",
@@ -199,7 +199,7 @@ export function Navbar({ activeSection }: NavbarProps) {
     }
   }
 
-  const mobileMenuItemVariants = {
+  const mobileMenuItemVariants: Variants = {
     open: {
       opacity: 1,
       y: 0,
