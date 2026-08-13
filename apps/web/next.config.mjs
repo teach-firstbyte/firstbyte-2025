@@ -54,6 +54,26 @@ function dashboardOrigin() {
   return configured ? toOrigin(configured) : 'http://localhost:3001'
 }
 
+/**
+ * Baseline security headers applied to every response from this origin.
+ *
+ * These do NOT apply to /dashboard/* - that zone is rewritten to a separate server, which supplies it's own headers via its own config.
+ */
+const securityHeaders = [
+  // Anti-clickjacking: nothing should ever embed this site in an iframe. 
+  { key: 'Content-Security-Policy', value: "frame-ancestors 'none'" },
+  { key: 'X-Frame-Options', value: 'DENY' },
+  // Basic security: prevent MIME-sniffing
+  { key: 'X-Content-Type-Options', value: 'nosniff' },
+  // Protect path data when requests leave origin (teachfirstbyte.com)
+  { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+  // Deny camera, microphone, geolocation
+  {
+    key: 'Permissions-Policy',
+    value: 'camera=(), microphone=(), geolocation=()',
+  },
+]
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
@@ -63,6 +83,10 @@ const nextConfig = {
     webpackBuildWorker: true,
     parallelServerBuildTraces: true,
     parallelServerCompiles: true,
+  },
+
+  async headers() {
+    return [{ source: '/:path*', headers: securityHeaders }]
   },
 
   /**
