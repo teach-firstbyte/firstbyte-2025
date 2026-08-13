@@ -151,6 +151,27 @@ export function ThreeModel({ isMobile = false }: ThreeModelProps) {
     // its callback would start a fresh loop against a disposed renderer.
     let disposed = false
 
+    let tick: (() => void) | null = null
+    let onScreen = true
+    
+    const start = (fn: (() => void) | null) => {
+      if (!fn || disposed) return
+      tick = fn
+      // Off-screen or backgrounded: remember the loop, let sync() resume it
+      if (!onScreen || document.hidden) return
+      if (frameId === null) frameId = requestAnimationFrame(fn)
+    }
+
+    const pause = () => {
+      if (frameId !== null) {
+        cancelAnimationFrame(frameId)
+        frameId = null
+      }
+    }
+
+    // Render only while the hero is visible and the tab is focused
+    const sync = () => (onScreen && !document.hidden ? start(tick) : pause())
+
     // Animate the cube
     const animateCube = () => {
       frameId = requestAnimationFrame(animateCube);
@@ -158,7 +179,7 @@ export function ThreeModel({ isMobile = false }: ThreeModelProps) {
       cube.rotation.y += 0.01;
       renderer.render(scene, camera);
     };
-    animateCube();
+    start(animateCube);
 
     // Load the model with improved visibility settings
     const loader = new GLTFLoader()
@@ -174,7 +195,7 @@ export function ThreeModel({ isMobile = false }: ThreeModelProps) {
           // The model loop started below takes over rendering from here; without
           // this cancel both loops would render every frame for the life of the
           // page.
-          if (frameId !== null) cancelAnimationFrame(frameId)
+          pause()
           scene.remove(cube);
           geometry.dispose();
           material.dispose();
@@ -247,7 +268,7 @@ export function ThreeModel({ isMobile = false }: ThreeModelProps) {
             renderer.render(scene, camera)
           }
           
-          animate()
+          start(animate)
           
           // Set up mouse interaction
           let isDragging = false;
@@ -383,6 +404,15 @@ export function ThreeModel({ isMobile = false }: ThreeModelProps) {
     }
     
     window.addEventListener('resize', handleResize)
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        onScreen = entry.isIntersecting
+        sync()
+      },
+      { threshold: 0 },
+    )
+    io.observe(container)
+    document.addEventListener('visibilitychange', sync)
 
     // Cleanup
     return () => {
@@ -400,6 +430,8 @@ export function ThreeModel({ isMobile = false }: ThreeModelProps) {
 
       renderer.dispose()
       controls.dispose()
+      io.disconnect()
+      document.removeEventListener('visibilitychange', sync)
     }
   }, []) // Main initialization runs once
   
