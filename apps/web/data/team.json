@@ -9,15 +9,15 @@
   "allTeamMembers": [
     {
       "name": "Landyn Sparacino",
-      "role": "President", 
+      "role": "President",
       "image": "/teamMemberPhotos/Landyn Sparacino.png",
       "bio": "Hi everyone! My name is Landyn Sparacino and I am a fourth year studying Cybersecurity and Criminal Justice. Once I graduate in May 2025, I will be joining Blackstone as a Cybersecurity Analyst. I have loved being a part of FirstByte and growing the club.",
       "linkedin": "https://www.linkedin.com/in/landynsparacino",
       "years": ["2022", "2023", "2024", "2025"],
       "previousRoles": [
-        {"role": "Software Website Lead", "year": "2022"},
-        {"role": "Software Website Lead", "year": "2023"},
-        {"role": "President", "year": "2024"}
+        { "role": "Software Website Lead", "year": "2022" },
+        { "role": "Software Website Lead", "year": "2023" },
+        { "role": "President", "year": "2024" }
       ]
     },
     {
@@ -29,9 +29,9 @@
       "github": "https://github.com/caleblee12694",
       "years": ["2022", "2023", "2024", "2025"],
       "previousRoles": [
-        {"role": "CS Curricula Lead", "year": "2022"},
-        {"role": "CS Curricula Lead", "year": "2023"},
-        {"role": "Vice President", "year": "2024"}
+        { "role": "CS Curricula Lead", "year": "2022" },
+        { "role": "CS Curricula Lead", "year": "2023" },
+        { "role": "Vice President", "year": "2024" }
       ]
     },
     {
@@ -45,9 +45,9 @@
       "website": "https://www.wintongtawee.com",
       "years": ["2022", "2023", "2024", "2025"],
       "previousRoles": [
-        {"role": "Brand & Marketing Lead", "year": "2022"},
-        {"role": "CS Curricula Lead, Brand & Marketing Lead", "year": "2023"},
-        {"role": "CS Curricula Lead, Brand & Marketing Lead", "year": "2024"}
+        { "role": "Brand & Marketing Lead", "year": "2022" },
+        { "role": "CS Curricula Lead, Brand & Marketing Lead", "year": "2023" },
+        { "role": "CS Curricula Lead, Brand & Marketing Lead", "year": "2024" }
       ]
     },
     {
@@ -59,8 +59,8 @@
       "github": "https://github.com/cynthiachenn",
       "years": ["2023", "2024", "2025"],
       "previousRoles": [
-        {"role": "CS Curricula Lead", "year": "2023"},
-        {"role": "CS Curricula Lead", "year": "2024"}
+        { "role": "CS Curricula Lead", "year": "2023" },
+        { "role": "CS Curricula Lead", "year": "2024" }
       ]
     },
     {
@@ -71,9 +71,7 @@
       "linkedin": "https://www.linkedin.com/in/alastaire-balin",
       "github": "https://github.com/al4stur",
       "years": ["2024", "2025"],
-      "previousRoles": [
-        {"role": "Brand & Marketing Lead", "year": "2024"}
-      ]
+      "previousRoles": [{ "role": "Brand & Marketing Lead", "year": "2024" }]
     },
     {
       "name": "Shreesh Dassarkar",
@@ -84,8 +82,8 @@
       "github": "https://github.com/sdassarkar",
       "years": ["2023", "2024", "2025"],
       "previousRoles": [
-        {"role": "Software Events Lead", "year": "2023"},
-        {"role": "Software Events Lead", "year": "2024"}
+        { "role": "Software Events Lead", "year": "2023" },
+        { "role": "Software Events Lead", "year": "2024" }
       ]
     },
     {
@@ -96,8 +94,8 @@
       "linkedin": "https://www.linkedin.com/in/andy-ge-codeman/",
       "years": ["2022", "2023"],
       "previousRoles": [
-        {"role": "President", "year": "2022"},
-        {"role": "President", "year": "2023"}
+        { "role": "President", "year": "2022" },
+        { "role": "President", "year": "2023" }
       ]
     },
     {
@@ -108,9 +106,9 @@
       "linkedin": "https://www.linkedin.com/in/jesfahany/",
       "years": ["2022", "2023", "2024"],
       "previousRoles": [
-        {"role": "Logistics Coordinator", "year": "2022"},
-        {"role": "Logistics Coordinator", "year": "2023"},
-        {"role": "Logistics Coordinator", "year": "2024"}
+        { "role": "Logistics Coordinator", "year": "2022" },
+        { "role": "Logistics Coordinator", "year": "2023" },
+        { "role": "Logistics Coordinator", "year": "2024" }
       ]
     },
     {
@@ -121,8 +119,8 @@
       "linkedin": "https://linkedin.com/in/srikar-ananthoju",
       "years": ["2022", "2023"],
       "previousRoles": [
-        {"role": "CS Curricula Lead", "year": "2022"},
-        {"role": "CS Curricula Lead", "year": "2023"}
+        { "role": "CS Curricula Lead", "year": "2022" },
+        { "role": "CS Curricula Lead", "year": "2023" }
       ]
     },
     {
@@ -133,8 +131,8 @@
       "linkedin": "https://www.linkedin.com/in/darrenqchen",
       "years": ["2022", "2023"],
       "previousRoles": [
-        {"role": "Treasurer", "year": "2022"},
-        {"role": "Treasurer", "year": "2023"}
+        { "role": "Treasurer", "year": "2022" },
+        { "role": "Treasurer", "year": "2023" }
       ]
     },
     {
@@ -146,8 +144,8 @@
       "github": "https://www.github.com/JadenZhou",
       "years": ["2023", "2024", "2025"],
       "previousRoles": [
-        {"role": "Treasurer", "year": "2023"},
-        {"role": "Treasurer", "year": "2024"}
+        { "role": "Treasurer", "year": "2023" },
+        { "role": "Treasurer", "year": "2024" }
       ]
     },
     {
@@ -158,8 +156,8 @@
       "linkedin": "https://www.linkedin.com/in/ireh-hong-441b2b243",
       "years": ["2024", "2025"],
       "previousRoles": [
-        {"role": "Software Events Lead", "year": "2024"},
-        {"role": "Software Events Lead", "year": "2025"}
+        { "role": "Software Events Lead", "year": "2024" },
+        { "role": "Software Events Lead", "year": "2025" }
       ]
     },
     {
@@ -170,8 +168,8 @@
       "linkedin": "https://www.linkedin.com/in/anna-higgins1/",
       "years": ["2024", "2025"],
       "previousRoles": [
-        {"role": "Software Events Lead", "year": "2024"},
-        {"role": "Software Events Lead", "year": "2025"}
+        { "role": "Software Events Lead", "year": "2024" },
+        { "role": "Software Events Lead", "year": "2025" }
       ]
     },
     {
@@ -183,9 +181,9 @@
       "github": "https://github.com/amolipatel05",
       "years": ["2024", "2025"],
       "previousRoles": [
-        {"role": "CS Curricula Team Member", "year": "2024"},
-        {"role": "Software Team Member", "year": "2024"},
-        {"role": "CS Curricula Lead", "year": "2025"}
+        { "role": "CS Curricula Team Member", "year": "2024" },
+        { "role": "Software Team Member", "year": "2024" },
+        { "role": "CS Curricula Lead", "year": "2025" }
       ]
     },
     {
@@ -197,9 +195,9 @@
       "github": "https://github.com/ameeka-patel",
       "years": ["2024", "2025"],
       "previousRoles": [
-        {"role": "CS Curricula Team Member", "year": "2024"},
-        {"role": "Software Team Member", "year": "2024"},
-        {"role": "Software Website Lead", "year": "2025"}
+        { "role": "CS Curricula Team Member", "year": "2024" },
+        { "role": "Software Team Member", "year": "2024" },
+        { "role": "Software Website Lead", "year": "2025" }
       ]
     },
     {
@@ -211,9 +209,9 @@
       "github": "https://github.com/alexw2326",
       "years": ["2024", "2025"],
       "previousRoles": [
-        {"role": "CS Curricula Team Member", "year": "2024"},
-        {"role": "Software Team Member", "year": "2024"},
-        {"role": "Vice President", "year": "2025"}
+        { "role": "CS Curricula Team Member", "year": "2024" },
+        { "role": "Software Team Member", "year": "2024" },
+        { "role": "Vice President", "year": "2025" }
       ]
     },
     {
@@ -225,8 +223,8 @@
       "github": "https://github.com/gavinnormand",
       "years": ["2024", "2025"],
       "previousRoles": [
-        {"role": "CS Curricula Team Member", "year": "2024"},
-        {"role": "CS Curricula Lead", "year": "2025"}
+        { "role": "CS Curricula Team Member", "year": "2024" },
+        { "role": "CS Curricula Lead", "year": "2025" }
       ]
     },
     {
@@ -239,9 +237,10 @@
       "website": "https://nckchen.dev/",
       "years": ["2024", "2025", "2026"],
       "previousRoles": [
-        {"role": "CS Curricula Team Member", "year": "2024"},
-        {"role": "Software Team Member", "year": "2024"},
-        {"role": "President", "year": "2025"}]
+        { "role": "CS Curricula Team Member", "year": "2024" },
+        { "role": "Software Team Member", "year": "2024" },
+        { "role": "President", "year": "2025" }
+      ]
     },
     {
       "name": "Gina Hong",
@@ -251,8 +250,8 @@
       "linkedin": "https://www.linkedin.com/in/ginahong2006",
       "years": ["2024", "2025", "2026"],
       "previousRoles": [
-        {"role": "Brand & Marketing Team Member", "year": "2024"},
-        {"role": "Software Events Lead", "year": "2025"}
+        { "role": "Brand & Marketing Team Member", "year": "2024" },
+        { "role": "Software Events Lead", "year": "2025" }
       ]
     },
     {
@@ -263,8 +262,8 @@
       "linkedin": "https://www.linkedin.com/in/inesh-parikh/",
       "years": ["2024", "2025", "2026"],
       "previousRoles": [
-        {"role": "STEM Curricula Lead", "year": "2024"},
-        {"role": "STEM Curricula Lead", "year": "2025"}
+        { "role": "STEM Curricula Lead", "year": "2024" },
+        { "role": "STEM Curricula Lead", "year": "2025" }
       ]
     },
     {
@@ -275,9 +274,9 @@
       "linkedin": "https://www.linkedin.com/in/shreyashi-kalakuntla",
       "years": ["2023", "2024", "2025", "2026"],
       "previousRoles": [
-        {"role": "STEM Curricula Lead", "year": "2023"},
-        {"role": "STEM Curricula Lead", "year": "2024"},
-        {"role": "STEM Curricula Lead", "year": "2025"}
+        { "role": "STEM Curricula Lead", "year": "2023" },
+        { "role": "STEM Curricula Lead", "year": "2024" },
+        { "role": "STEM Curricula Lead", "year": "2025" }
       ]
     },
     {
@@ -288,8 +287,8 @@
       "linkedin": "https://www.linkedin.com/in/amy-tran-1a7196273",
       "years": ["2025", "2026"],
       "previousRoles": [
-        {"role": "CS Curricula Team Member", "year": "2025"},
-        {"role": "Brand & Marketing Team Member", "year": "2025"}
+        { "role": "CS Curricula Team Member", "year": "2025" },
+        { "role": "Brand & Marketing Team Member", "year": "2025" }
       ]
     },
     {
@@ -300,8 +299,8 @@
       "linkedin": "https://www.linkedin.com/in/ananya-pochinapeddi/",
       "years": ["2025", "2026"],
       "previousRoles": [
-        {"role": "CS Curricula Team Member", "year": "2025"},
-        {"role": "Brand & Marketing Team Member", "year": "2025"}
+        { "role": "CS Curricula Team Member", "year": "2025" },
+        { "role": "Brand & Marketing Team Member", "year": "2025" }
       ]
     },
     {
@@ -311,7 +310,7 @@
       "bio": "I don't have a bio yet!",
       "years": ["2025", "2026"],
       "previousRoles": [
-        {"role": "Software Events Team Member", "year": "2025"}
+        { "role": "Software Events Team Member", "year": "2025" }
       ]
     },
     {
@@ -322,7 +321,7 @@
       "linkedin": "https://www.linkedin.com/in/hectorbatistajr",
       "years": ["2025", "2026"],
       "previousRoles": [
-        {"role": "Software Website Team Member", "year": "2025"}
+        { "role": "Software Website Team Member", "year": "2025" }
       ]
     },
     {
@@ -332,7 +331,7 @@
       "bio": "Hey! My name is Himasri Cheerla and I am a fourth year studying Behavioral Neuroscience.",
       "years": ["2025", "2026"],
       "previousRoles": [
-        {"role": "STEM Curricula Team Member", "year": "2025"}
+        { "role": "STEM Curricula Team Member", "year": "2025" }
       ]
     },
     {
@@ -343,9 +342,7 @@
       "linkedin": "https://www.linkedin.com/in/jason-chao-neu",
       "github": "https://github.com/jsonano",
       "years": ["2025", "2026"],
-      "previousRoles": [
-        {"role": "CS Curricula Team Member", "year": "2025"}
-      ]
+      "previousRoles": [{ "role": "CS Curricula Team Member", "year": "2025" }]
     },
     {
       "name": "Koena Gupta",
@@ -362,9 +359,8 @@
       "bio": "Hi! My name is Meera, and I am a Chemical Engineering and Biochemistry major. I am going into my fourth year, and have been a part of FirstByte since the Spring semester.",
       "years": ["2025", "2026"],
       "previousRoles": [
-        {"role": "STEM Curricula Team Member", "year": "2025"}
+        { "role": "STEM Curricula Team Member", "year": "2025" }
       ]
     }
   ]
-  
-} 
+}

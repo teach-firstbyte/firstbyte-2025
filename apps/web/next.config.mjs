@@ -21,37 +21,37 @@
  */
 function toOrigin(value) {
   try {
-    return new URL(value).origin
+    return new URL(value).origin;
   } catch {
     // Not a parseable absolute URL: strip a trailing /dashboard and any trailing
     // slash so a host:port style value still behaves.
-    return value.replace(/\/+$/, '').replace(/\/dashboard$/, '')
+    return value.replace(/\/+$/, "").replace(/\/dashboard$/, "");
   }
 }
 
 function dashboardOrigin() {
-  const related = process.env.VERCEL_RELATED_PROJECTS
+  const related = process.env.VERCEL_RELATED_PROJECTS;
   if (related) {
     try {
       // Shape: [{ "project": { "name": ... }, "production": { "host": ... },
       //           "preview": { "branch": ..., "host": ... } }, ...]
-      const projects = JSON.parse(related)
+      const projects = JSON.parse(related);
       const dashboard = projects.find((p) =>
-        p?.project?.name?.includes('dashboard'),
-      )
+        p?.project?.name?.includes("dashboard"),
+      );
       const host =
-        process.env.VERCEL_ENV === 'production'
+        process.env.VERCEL_ENV === "production"
           ? dashboard?.production?.host
-          : (dashboard?.preview?.host ?? dashboard?.production?.host)
-      if (host) return `https://${host}`
+          : (dashboard?.preview?.host ?? dashboard?.production?.host);
+      if (host) return `https://${host}`;
     } catch {
       // Malformed value: fall through to the explicit env var below rather than
       // failing the build.
     }
   }
 
-  const configured = process.env.DASHBOARD_URL
-  return configured ? toOrigin(configured) : 'http://localhost:3001'
+  const configured = process.env.DASHBOARD_URL;
+  return configured ? toOrigin(configured) : "http://localhost:3001";
 }
 
 /**
@@ -60,19 +60,19 @@ function dashboardOrigin() {
  * These do NOT apply to /dashboard/* - that zone is rewritten to a separate server, which supplies it's own headers via its own config.
  */
 const securityHeaders = [
-  // Anti-clickjacking: nothing should ever embed this site in an iframe. 
-  { key: 'Content-Security-Policy', value: "frame-ancestors 'none'" },
-  { key: 'X-Frame-Options', value: 'DENY' },
+  // Anti-clickjacking: nothing should ever embed this site in an iframe.
+  { key: "Content-Security-Policy", value: "frame-ancestors 'none'" },
+  { key: "X-Frame-Options", value: "DENY" },
   // Basic security: prevent MIME-sniffing
-  { key: 'X-Content-Type-Options', value: 'nosniff' },
+  { key: "X-Content-Type-Options", value: "nosniff" },
   // Protect path data when requests leave origin (teachfirstbyte.com)
-  { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   // Deny camera, microphone, geolocation
   {
-    key: 'Permissions-Policy',
-    value: 'camera=(), microphone=(), geolocation=()',
+    key: "Permissions-Policy",
+    value: "camera=(), microphone=(), geolocation=()",
   },
-]
+];
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -83,7 +83,7 @@ const nextConfig = {
   },
 
   async headers() {
-    return [{ source: '/:path*', headers: securityHeaders }]
+    return [{ source: "/:path*", headers: securityHeaders }];
   },
 
   /**
@@ -95,18 +95,18 @@ const nextConfig = {
    * /dashboard/_next/* static files.
    */
   async rewrites() {
-    const origin = dashboardOrigin()
+    const origin = dashboardOrigin();
     return [
       {
-        source: '/dashboard',
+        source: "/dashboard",
         destination: `${origin}/dashboard`,
       },
       {
-        source: '/dashboard/:path*',
+        source: "/dashboard/:path*",
         destination: `${origin}/dashboard/:path*`,
       },
-    ]
+    ];
   },
-}
+};
 
-export default nextConfig
+export default nextConfig;

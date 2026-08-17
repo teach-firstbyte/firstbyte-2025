@@ -88,8 +88,10 @@ jobs:
 
       - run: npm ci
 
-      # No lint or typecheck yet: apps/web has no ESLint config, and
-      # next.config.mjs sets typescript.ignoreBuildErrors while ~56 pre-existing
-      # errors from the unused three.js components remain. Both are tracked
-      # follow-ups; build is the real signal here.
+      - run: npm run format:check:web
+
+      - run: npm run lint:web
+
+      - run: npm run typecheck:web
+
       - run: npm run build:web

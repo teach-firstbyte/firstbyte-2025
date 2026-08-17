@@ -7,14 +7,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  ArrowRight,
-  Linkedin,
-  Twitter,
-  Github,
-  X,
-  Globe,
-} from "lucide-react";
+import { ArrowRight, Linkedin, Twitter, Github, X, Globe } from "lucide-react";
 import { AnimatedGlowButton } from "@/components/ui/animated-glow-button";
 import { BlurTooltip, TooltipPosition } from "@/components/ui/blur-tooltip";
 import {
@@ -207,20 +200,6 @@ function TeamMemberCard({
   // Open modal when card is clicked
   const handleCardClick = () => {
     setIsModalOpen(true);
-  };
-
-  // Navigate to profile when clicking on the avatar
-  const navigateToProfile = () => {
-    // Navigate to member's profile - assuming linkedin as default profile link
-    if (member.linkedin) {
-      window.open(member.linkedin, "_blank");
-    } else if (member.github) {
-      window.open(member.github, "_blank");
-    } else if (member.website) {
-      window.open(member.website, "_blank");
-    } else if (member.twitter) {
-      window.open(member.twitter, "_blank");
-    }
   };
 
   // Determine if the member has role history
@@ -573,19 +552,7 @@ function TeamMemberCard({
 
 export const TeamSection = forwardRef<HTMLElement, TeamSectionProps>(
   ({ className }, ref) => {
-    const [visibleCount, setVisibleCount] = useState(8);
-    const [showingMore, setShowingMore] = useState(false);
-    const isMobile = useIsMobile();
-
-    const handleShowMore = () => {
-      setShowingMore(true);
-      setVisibleCount(currentExecutiveBoard.length);
-    };
-
-    const handleShowLess = () => {
-      setShowingMore(false);
-      setVisibleCount(8);
-    };
+    const [showingMore] = useState(false);
 
     // const currentVisible = currentExecutiveBoard.slice(0, visibleCount)
 

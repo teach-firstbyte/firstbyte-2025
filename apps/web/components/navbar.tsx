@@ -1,15 +1,22 @@
-"use client"
+"use client";
 
-import { useState, useEffect, useRef } from "react"
-import Link from "next/link"
-import Image from "next/image"
-import { motion, AnimatePresence, useScroll, type Variants } from "framer-motion"
-import { ThemeToggle } from "@/components/theme-toggle"
-import { Menu, Search, X, Linkedin, Instagram, ArrowUpRight } from "lucide-react"
-import { LinktreeIcon } from "@/components/ui/icons"
-import { HighlightGroup, HighlighterItem } from "@/hooks/use-mouse-position"
-import { AnimatedGlowButton } from "@/components/ui/animated-glow-button"
-import { useTooltip, BlurTooltip } from "@/components/ui/blur-tooltip"
+import { useState, useEffect, useRef, type CSSProperties } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { motion, AnimatePresence, type Variants } from "framer-motion";
+import { ThemeToggle } from "@/components/theme-toggle";
+import {
+  Menu,
+  Search,
+  X,
+  Linkedin,
+  Instagram,
+  ArrowUpRight,
+} from "lucide-react";
+import { LinktreeIcon } from "@/components/ui/icons";
+import { HighlightGroup, HighlighterItem } from "@/hooks/use-mouse-position";
+import { AnimatedGlowButton } from "@/components/ui/animated-glow-button";
+import { useTooltip, BlurTooltip } from "@/components/ui/blur-tooltip";
 
 // Define TypeScript interface for props
 interface NavbarProps {
@@ -19,7 +26,7 @@ interface NavbarProps {
 // More robust scrollToSection function with direct approach
 const scrollToSection = (id: string) => {
   // Close any mobile menu first
-  const element = document.getElementById(id)
+  const element = document.getElementById(id);
   if (element) {
     // Use a timeout to ensure the menu close animation completes
     setTimeout(() => {
@@ -28,93 +35,82 @@ const scrollToSection = (id: string) => {
         if (id === "home") {
           window.scrollTo({
             top: 0,
-            behavior: 'smooth'
-          })
+            behavior: "smooth",
+          });
         } else {
           // For other sections, use scrollIntoView
-          element.scrollIntoView({ 
-            behavior: 'smooth',
-            block: 'start'
-          })
+          element.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
         }
-      } catch (error) {
+      } catch {
         // Ultimate fallback - direct jump
-        window.location.hash = id
+        window.location.hash = id;
       }
-    }, 10)
+    }, 10);
   }
-}
+};
 
 export function Navbar({ activeSection }: NavbarProps) {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
-  const [pastHero, setPastHero] = useState(false)
-  const [menuOpen, setMenuOpen] = useState(true)
-  const navRef = useRef<HTMLDivElement>(null)
-  const { scrollY } = useScroll()
-  const [openCommandMenu, setOpenCommandMenu] = useState(false)
-  
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [pastHero, setPastHero] = useState(false);
+  const [menuOpen] = useState(true);
+  const navRef = useRef<HTMLDivElement>(null);
+  const [, setOpenCommandMenu] = useState(false);
+
   // Use our tooltip hook instead
   const {
     tooltipRect,
     tooltipContent,
     tooltipVisible,
     handleTooltipShow,
-    handleTooltipHide
-  } = useTooltip()
+    handleTooltipHide,
+  } = useTooltip();
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setScrolled(true)
-      } else {
-        setScrolled(false)
-      }
-
       // Assuming the hero section is approximately 100vh tall
       if (window.scrollY > window.innerHeight * 0.7) {
-        setPastHero(true)
+        setPastHero(true);
       } else {
-        setPastHero(false)
+        setPastHero(false);
       }
-    }
+    };
 
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Handle CMD+K shortcut
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault()
-        setOpenCommandMenu(true)
+        e.preventDefault();
+        setOpenCommandMenu(true);
       }
-    }
+    };
 
-    document.addEventListener("keydown", down)
-    return () => document.removeEventListener("keydown", down)
-  }, [])
+    document.addEventListener("keydown", down);
+    return () => document.removeEventListener("keydown", down);
+  }, []);
 
-  // `isRoute` marks a real navigation target rather than an on-page anchor.
-  // Anchor entries are intercepted and smooth-scrolled; route entries must be
-  // left alone so the browser actually follows them.
   const navLinks = [
     { name: "About", href: "/#about", section: "about" },
     { name: "Programs", href: "/#programs", section: "programs" },
     { name: "Team", href: "/#team", section: "team" },
-  ]
+  ];
 
   // Animation variants
   const pillVariants: Variants = {
-    initial: { 
+    initial: {
       borderRadius: "9999px",
       background: "rgba(var(--background-rgb), 0.9)",
       width: "auto",
       x: 0,
-      boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)"
+      boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
     },
-    scrolled: { 
+    scrolled: {
       borderRadius: "9999px",
       background: "rgba(var(--background-rgb), 0.95)",
       width: "auto",
@@ -122,56 +118,21 @@ export function Navbar({ activeSection }: NavbarProps) {
       boxShadow: "0 4px 14px rgba(0, 0, 0, 0.15)",
       transition: {
         duration: 0.6,
-        ease: [0.19, 1, 0.22, 1]
-      }
-    }
-  }
-
-  const logoVariants: Variants = {
-    initial: {
-      opacity: 0,
-      y: -10,
-      scale: 0.95
+        ease: [0.19, 1, 0.22, 1],
+      },
     },
-    visible: {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: {
-        duration: 0.6,
-        ease: [0.19, 1, 0.22, 1]
-      }
-    },
-    scrolled: {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: {
-        duration: 0.6,
-        ease: [0.19, 1, 0.22, 1]
-      }
-    },
-    exit: {
-      opacity: 0,
-      y: -10,
-      scale: 0.95,
-      transition: {
-        duration: 0.3,
-        ease: [0.19, 1, 0.22, 1]
-      }
-    }
-  }
+  };
 
   const linkVariants: Variants = {
-    hover: { 
+    hover: {
       scale: 1.05,
-      transition: { duration: 0.2, ease: "easeOut" } 
+      transition: { duration: 0.2, ease: "easeOut" },
     },
-    tap: { 
+    tap: {
       scale: 0.95,
-      transition: { duration: 0.1, ease: "easeIn" } 
-    }
-  }
+      transition: { duration: 0.1, ease: "easeIn" },
+    },
+  };
 
   // Updated animation variants for the mobile menu
   const mobileMenuVariants: Variants = {
@@ -182,8 +143,8 @@ export function Navbar({ activeSection }: NavbarProps) {
         duration: 0.4,
         ease: [0.04, 0.62, 0.23, 0.98],
         staggerChildren: 0.05,
-        delayChildren: 0.1
-      }
+        delayChildren: 0.1,
+      },
     },
     closed: {
       opacity: 0,
@@ -192,23 +153,23 @@ export function Navbar({ activeSection }: NavbarProps) {
         duration: 0.3,
         ease: [0.04, 0.62, 0.23, 0.98],
         staggerChildren: 0.05,
-        staggerDirection: -1
-      }
-    }
-  }
+        staggerDirection: -1,
+      },
+    },
+  };
 
   const mobileMenuItemVariants: Variants = {
     open: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.4, ease: [0.04, 0.62, 0.23, 0.98] }
+      transition: { duration: 0.4, ease: [0.04, 0.62, 0.23, 0.98] },
     },
     closed: {
       opacity: 0,
       y: 20,
-      transition: { duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] }
-    }
-  }
+      transition: { duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] },
+    },
+  };
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50 pointer-events-none overflow-x-hidden w-full">
@@ -221,9 +182,11 @@ export function Navbar({ activeSection }: NavbarProps) {
             initial="initial"
             animate={pastHero ? "scrolled" : "initial"}
             variants={pillVariants}
-            style={{
-              '--background-rgb': 'var(--background)',
-            } as any}
+            style={
+              {
+                "--background-rgb": "var(--background)",
+              } as CSSProperties
+            }
           >
             {/* Logo container that grows/shrinks */}
             <AnimatePresence mode="wait">
@@ -234,31 +197,35 @@ export function Navbar({ activeSection }: NavbarProps) {
                   initial={{ width: 0, opacity: 0 }}
                   animate={{ width: "auto", opacity: 1 }}
                   exit={{ width: 0, opacity: 0 }}
-                  transition={{ 
+                  transition={{
                     duration: 0.4,
-                    ease: [0.19, 1, 0.22, 1] 
+                    ease: [0.19, 1, 0.22, 1],
                   }}
                 >
-                  <Link 
-                    href="/" 
+                  <Link
+                    href="/"
                     className="flex items-center pl-4"
                     onClick={(e) => {
                       e.preventDefault();
                       scrollToSection("home");
                     }}
                   >
-                    <Image src="/FirstByteBitex4.png" alt="FirstByte Logo" width={24} height={24} className="w-6 h-6" />
+                    <Image
+                      src="/FirstByteBitex4.png"
+                      alt="FirstByte Logo"
+                      width={24}
+                      height={24}
+                      className="w-6 h-6"
+                    />
                   </Link>
                 </motion.div>
               ) : null}
             </AnimatePresence>
 
             {/* Main content container - stable size */}
-            <motion.div 
-              className="flex h-12 md:h-14 items-center justify-end px-3 md:px-4"
-            >
+            <motion.div className="flex h-12 md:h-14 items-center justify-end px-3 md:px-4">
               <HighlightGroup className="hidden md:flex items-center gap-2">
-                {navLinks.map((link, index) => (
+                {navLinks.map((link) => (
                   <HighlighterItem key={link.name} className="group">
                     <motion.div
                       whileHover="hover"
@@ -268,22 +235,21 @@ export function Navbar({ activeSection }: NavbarProps) {
                       <Link
                         href={link.href}
                         className={`px-3 py-2 text-sm font-medium transition-all duration-300 relative ${
-                          activeSection === link.section 
-                            ? "text-primary" 
+                          activeSection === link.section
+                            ? "text-primary"
                             : "text-foreground/80 hover:text-primary"
                         }`}
                         onClick={(e) => {
-                          if (link.isRoute) return;
                           e.preventDefault();
                           scrollToSection(link.section);
                         }}
                       >
                         {link.name}
                         {activeSection === link.section && (
-                          <motion.div 
-                            className="absolute bottom-0 left-0 right-0 h-[2px] bg-primary" 
+                          <motion.div
+                            className="absolute bottom-0 left-0 right-0 h-[2px] bg-primary"
                             layoutId="activeSection"
-                            style={{ width: '100%' }}
+                            style={{ width: "100%" }}
                             transition={{ duration: 0.3, ease: "easeInOut" }}
                           />
                         )}
@@ -291,62 +257,76 @@ export function Navbar({ activeSection }: NavbarProps) {
                     </motion.div>
                   </HighlighterItem>
                 ))}
-                
+
                 <div className="flex items-center gap-2 px-1">
-                  <div className="flex items-center overflow-hidden" style={{ transition: 'width 0.3s ease-in-out' }}>
+                  <div
+                    className="flex items-center overflow-hidden"
+                    style={{ transition: "width 0.3s ease-in-out" }}
+                  >
                     <div className="flex items-cetner gap-1">
                       <div className="flex items-center gap-2">
-                      <a
-                        href="https://www.instagram.com/teachfirstbyte"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-foreground/80 hover:text-primary transition-colors"
-                        style={{ opacity: menuOpen ? 1 : 0, transition: 'opacity 0.3s ease-in-out' }}
-                        onMouseEnter={(e) => handleTooltipShow("Instagram", e)}
-                        onMouseLeave={handleTooltipHide}
-                      >
-                        <motion.div
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
-                          transition={{ duration: 0.2 }}
+                        <a
+                          href="https://www.instagram.com/teachfirstbyte"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-foreground/80 hover:text-primary transition-colors"
+                          style={{
+                            opacity: menuOpen ? 1 : 0,
+                            transition: "opacity 0.3s ease-in-out",
+                          }}
+                          onMouseEnter={(e) =>
+                            handleTooltipShow("Instagram", e)
+                          }
+                          onMouseLeave={handleTooltipHide}
                         >
-                          <Instagram className="h-5 w-5" />
-                        </motion.div>
-                      </a>
-                      <a
-                        href="https://www.linkedin.com/company/firstbyte"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-foreground/80 hover:text-primary transition-colors"
-                        style={{ opacity: 1, transition: 'opacity 0.3s ease-in-out' }}
-                        onMouseEnter={(e) => handleTooltipShow("LinkedIn", e)}
-                        onMouseLeave={handleTooltipHide}
-                      >
-                        <motion.div
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
-                          transition={{ duration: 0.2 }}
+                          <motion.div
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            <Instagram className="h-5 w-5" />
+                          </motion.div>
+                        </a>
+                        <a
+                          href="https://www.linkedin.com/company/firstbyte"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-foreground/80 hover:text-primary transition-colors"
+                          style={{
+                            opacity: 1,
+                            transition: "opacity 0.3s ease-in-out",
+                          }}
+                          onMouseEnter={(e) => handleTooltipShow("LinkedIn", e)}
+                          onMouseLeave={handleTooltipHide}
                         >
-                          <Linkedin className="h-5 w-5" />
-                        </motion.div>
-                      </a>
-                      <a
-                        href="https://linktr.ee/firstbyte"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-foreground/80 hover:text-primary transition-colors"
-                        style={{ opacity: 1, transition: 'opacity 0.3s ease-in-out' }}
-                        onMouseEnter={(e) => handleTooltipShow("Linktree", e)}
-                        onMouseLeave={handleTooltipHide}
-                      >
-                        <motion.div
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
-                          transition={{ duration: 0.2 }}
+                          <motion.div
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            <Linkedin className="h-5 w-5" />
+                          </motion.div>
+                        </a>
+                        <a
+                          href="https://linktr.ee/firstbyte"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-foreground/80 hover:text-primary transition-colors"
+                          style={{
+                            opacity: 1,
+                            transition: "opacity 0.3s ease-in-out",
+                          }}
+                          onMouseEnter={(e) => handleTooltipShow("Linktree", e)}
+                          onMouseLeave={handleTooltipHide}
                         >
-                          <LinktreeIcon className="h-5 w-5" />
-                        </motion.div>
-                      </a>
+                          <motion.div
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            <LinktreeIcon className="h-5 w-5" />
+                          </motion.div>
+                        </a>
                       </div>
                     </div>
                   </div>
@@ -359,10 +339,10 @@ export function Navbar({ activeSection }: NavbarProps) {
                       className="flex items-center gap-1.5 px-2.5 py-1.5 text-sm text-muted-foreground hover:text-foreground border border-border/50 rounded-md"
                       onClick={() => {
                         // This will trigger the actual command menu through the global keyboard shortcut
-                        const event = new KeyboardEvent('keydown', {
-                          key: 'k',
+                        const event = new KeyboardEvent("keydown", {
+                          key: "k",
                           metaKey: true,
-                          bubbles: true
+                          bubbles: true,
                         });
                         document.dispatchEvent(event);
                       }}
@@ -376,7 +356,7 @@ export function Navbar({ activeSection }: NavbarProps) {
                   </HighlighterItem>
 
                   <HighlighterItem>
-                    <AnimatedGlowButton 
+                    <AnimatedGlowButton
                       color="green"
                       href="/dashboard"
                       className="py-1.5 px-3 text-sm"
@@ -441,17 +421,17 @@ export function Navbar({ activeSection }: NavbarProps) {
             {/* Mobile menu header with logo - aligned with navbar */}
             <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-full">
               <div className="flex justify-between items-center py-6">
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3 }}
                   className="flex items-center gap-3 pointer-events-auto"
                 >
-                  <Image 
-                    src="/FirstByteBitex4.png" 
-                    alt="FirstByte Logo" 
-                    width={28} 
-                    height={28} 
+                  <Image
+                    src="/FirstByteBitex4.png"
+                    alt="FirstByte Logo"
+                    width={28}
+                    height={28}
                     className="w-7 h-7"
                   />
                   <span className="font-semibold text-lg">FirstByte</span>
@@ -467,15 +447,11 @@ export function Navbar({ activeSection }: NavbarProps) {
                   <Link
                     href={link.href}
                     className={`block px-4 py-3 text-sm font-medium rounded-md transition-all duration-300 relative text-right ${
-                      activeSection === link.section 
-                        ? "text-primary" 
+                      activeSection === link.section
+                        ? "text-primary"
                         : "text-foreground/80 hover:text-primary"
                     }`}
                     onClick={(e) => {
-                      if (link.isRoute) {
-                        setIsMenuOpen(false);
-                        return;
-                      }
                       e.preventDefault();
                       scrollToSection(link.section);
                       setIsMenuOpen(false);
@@ -484,8 +460,8 @@ export function Navbar({ activeSection }: NavbarProps) {
                     <div className="relative inline-block">
                       {link.name}
                       {activeSection === link.section && (
-                        <motion.div 
-                          className="absolute -bottom-1 left-0 right-0 h-[2px] bg-primary" 
+                        <motion.div
+                          className="absolute -bottom-1 left-0 right-0 h-[2px] bg-primary"
                           layoutId="mobileActiveSection"
                           transition={{ duration: 0.3, ease: "easeInOut" }}
                         />
@@ -494,7 +470,7 @@ export function Navbar({ activeSection }: NavbarProps) {
                   </Link>
                 </motion.div>
               ))}
-              <motion.div 
+              <motion.div
                 className="mt-3 flex items-center justify-between"
                 variants={mobileMenuItemVariants}
               >
@@ -503,11 +479,11 @@ export function Navbar({ activeSection }: NavbarProps) {
                   whileTap={{ scale: 0.97 }}
                   className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground border border-border/50 rounded-full"
                   onClick={() => {
-                    setIsMenuOpen(false)
-                    const event = new KeyboardEvent('keydown', {
-                      key: 'k',
+                    setIsMenuOpen(false);
+                    const event = new KeyboardEvent("keydown", {
+                      key: "k",
                       metaKey: true,
-                      bubbles: true
+                      bubbles: true,
                     });
                     document.dispatchEvent(event);
                   }}
@@ -515,7 +491,7 @@ export function Navbar({ activeSection }: NavbarProps) {
                   <Search className="h-4 w-4" />
                   <span className="ml-1">Search</span>
                 </motion.button>
-                
+
                 <div className="flex items-center gap-3">
                   <a
                     href="https://www.instagram.com/teachfirstbyte"
@@ -565,7 +541,7 @@ export function Navbar({ activeSection }: NavbarProps) {
                       <LinktreeIcon className="h-4 w-4" />
                     </motion.div>
                   </a>
-                  <AnimatedGlowButton 
+                  <AnimatedGlowButton
                     color="green"
                     href="/dashboard"
                     className="py-1 px-2 text-xs"
@@ -591,5 +567,5 @@ export function Navbar({ activeSection }: NavbarProps) {
         />
       )}
     </div>
-  )
+  );
 }

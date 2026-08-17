@@ -1,8 +1,8 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 /* v4 replacement for the tailwindcss-animate plugin. Supplies animate-in/out,
    fade-*, zoom-*, and slide-in-from-* used by the shadcn dialog/sheet/select/
    tooltip/command primitives. */
-@import 'tw-animate-css';
+@import "tw-animate-css";
 
 @source '../*.{js,ts,jsx,tsx,mdx}';
 
@@ -194,4 +194,3 @@
 .max-w-container {
   max-width: 1280px;
 }
-

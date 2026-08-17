@@ -1,13 +1,13 @@
-import type React from "react"
-import { cn } from "@/lib/utils"
-import type { ElementType, ComponentPropsWithoutRef } from "react"
+import type React from "react";
+import { cn } from "@/lib/utils";
+import type { ElementType, ComponentPropsWithoutRef } from "react";
 
 interface StarBorderProps<T extends ElementType> {
-  as?: T
-  color?: string
-  speed?: string
-  className?: string
-  children: React.ReactNode
+  as?: T;
+  color?: string;
+  speed?: string;
+  className?: string;
+  children: React.ReactNode;
 }
 
 export function StarBorder<T extends ElementType = "button">({
@@ -17,14 +17,18 @@ export function StarBorder<T extends ElementType = "button">({
   speed = "6s",
   children,
   ...props
-}: StarBorderProps<T> & Omit<ComponentPropsWithoutRef<T>, keyof StarBorderProps<T>>) {
-  const Component = as || "button"
-  const defaultColor = color || "hsl(var(--foreground))"
+}: StarBorderProps<T> &
+  Omit<ComponentPropsWithoutRef<T>, keyof StarBorderProps<T>>) {
+  const Component = as || "button";
+  const defaultColor = color || "hsl(var(--foreground))";
 
   return (
     <Component
-      className={cn("relative inline-block py-px overflow-hidden rounded-[20px]", className)}
-      {...props as any}
+      className={cn(
+        "relative inline-block py-px overflow-hidden rounded-[20px]",
+        className,
+      )}
+      {...(props as Record<string, unknown>)}
     >
       <div
         className={cn(
@@ -56,6 +60,5 @@ export function StarBorder<T extends ElementType = "button">({
         {children}
       </div>
     </Component>
-  )
+  );
 }
-

@@ -300,9 +300,11 @@ function RoleProgression({
                 {item.role}
               </span>
               <span className="text-xs text-muted-foreground">
-                {item.startYear === item.endYear
-                  ? item.startYear // Single year
-                  : `${item.startYear} - ${item.endYear}` /* Year range */}
+                {
+                  item.startYear === item.endYear
+                    ? item.startYear // Single year
+                    : `${item.startYear} - ${item.endYear}` /* Year range */
+                }
                 {item.isHighlighted && " • Currently viewing"}
                 {item.isCurrent && " • Current"}
                 {item.isLastRole && " • Final role"}
@@ -760,7 +762,10 @@ export function CardStack({
           </AnimatePresence>
 
           {/* Main stack card */}
-          <motion.div layout transition={{ layout: { duration: 0.5, type: "spring" } }}>
+          <motion.div
+            layout
+            transition={{ layout: { duration: 0.5, type: "spring" } }}
+          >
             <Card
               className={cn(
                 "relative z-10 transition-shadow duration-300 shadow-md border-2 border-transparent hover:border-primary/20",

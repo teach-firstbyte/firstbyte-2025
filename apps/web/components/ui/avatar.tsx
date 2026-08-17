@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import Image from "next/image"
+import * as React from "react";
+import Image from "next/image";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 /**
  * Avatar renders through next/image rather than Radix's Avatar primitive.
@@ -15,19 +15,19 @@ import { cn } from "@/lib/utils"
  * assets on the site, so the loaded/error coordination is reimplemented here
  * with a small context and the primitive is dropped entirely.
  */
-type AvatarStatus = "idle" | "loaded" | "error"
+type AvatarStatus = "idle" | "loaded" | "error";
 
 const AvatarContext = React.createContext<{
-  status: AvatarStatus
-  setStatus: React.Dispatch<React.SetStateAction<AvatarStatus>>
-}>({ status: "idle", setStatus: () => {} })
+  status: AvatarStatus;
+  setStatus: React.Dispatch<React.SetStateAction<AvatarStatus>>;
+}>({ status: "idle", setStatus: () => {} });
 
 const Avatar = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => {
-  const [status, setStatus] = React.useState<AvatarStatus>("idle")
-  const value = React.useMemo(() => ({ status, setStatus }), [status])
+  const [status, setStatus] = React.useState<AvatarStatus>("idle");
+  const value = React.useMemo(() => ({ status, setStatus }), [status]);
 
   return (
     <AvatarContext.Provider value={value}>
@@ -35,21 +35,21 @@ const Avatar = React.forwardRef<
         ref={ref}
         className={cn(
           "relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full",
-          className
+          className,
         )}
         {...props}
       />
     </AvatarContext.Provider>
-  )
-})
-Avatar.displayName = "Avatar"
+  );
+});
+Avatar.displayName = "Avatar";
 
 type AvatarImageProps = Omit<
   React.ComponentPropsWithoutRef<typeof Image>,
   "src" | "alt" | "width" | "height"
 > & {
-  src?: string | null
-  alt?: string
+  src?: string | null;
+  alt?: string;
   /**
    * Pixels to request from the optimizer, not the rendered size -- CSS still
    * controls display.
@@ -60,21 +60,21 @@ type AvatarImageProps = Omit<
    * ~172px, so 192 keeps 2x displays sharp (384 >= 172*2) without shipping a
    * 640px image for a thumbnail.
    */
-  width?: number
-  height?: number
-}
+  width?: number;
+  height?: number;
+};
 
 const AvatarImage = React.forwardRef<HTMLImageElement, AvatarImageProps>(
   ({ className, src, alt, width = 192, height = 192, ...props }, ref) => {
-    const { status, setStatus } = React.useContext(AvatarContext)
+    const { status, setStatus } = React.useContext(AvatarContext);
 
     // A new src deserves a fresh attempt, otherwise one broken photo would
     // suppress every later image in the same Avatar.
     React.useEffect(() => {
-      setStatus("idle")
-    }, [src, setStatus])
+      setStatus("idle");
+    }, [src, setStatus]);
 
-    if (!src || status === "error") return null
+    if (!src || status === "error") return null;
 
     return (
       <Image
@@ -88,18 +88,18 @@ const AvatarImage = React.forwardRef<HTMLImageElement, AvatarImageProps>(
         className={cn("aspect-square h-full w-full object-cover", className)}
         {...props}
       />
-    )
-  }
-)
-AvatarImage.displayName = "AvatarImage"
+    );
+  },
+);
+AvatarImage.displayName = "AvatarImage";
 
 const AvatarFallback = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => {
-  const { status } = React.useContext(AvatarContext)
+  const { status } = React.useContext(AvatarContext);
 
-  if (status === "loaded") return null
+  if (status === "loaded") return null;
 
   return (
     <div
@@ -108,12 +108,12 @@ const AvatarFallback = React.forwardRef<
       // with it in flow and doubling the Avatar's height.
       className={cn(
         "absolute inset-0 flex h-full w-full items-center justify-center rounded-full bg-muted",
-        className
+        className,
       )}
       {...props}
     />
-  )
-})
-AvatarFallback.displayName = "AvatarFallback"
+  );
+});
+AvatarFallback.displayName = "AvatarFallback";
 
-export { Avatar, AvatarImage, AvatarFallback }
+export { Avatar, AvatarImage, AvatarFallback };
