@@ -167,13 +167,17 @@ export function AnimatedGlowButton<T extends ElementType = "button">({
   
   // Determine which element type to use
   const Component = as || (href ? 'a' : 'button');
-  
+
+  // Only open external links in a new tab; internal routes navigate normally.
+  const isExternal = Boolean(href) && /^https?:\/\//.test(href!);
+
   // Common props for all component types
   const componentProps = {
     className: cn("relative", className),
     onMouseEnter: handleHoverStart,
     onMouseLeave: handleHoverEnd,
-    ...(href && { href, target: "_blank", rel: "noopener noreferrer" }),
+    ...(href && { href }),
+    ...(isExternal && { target: "_blank", rel: "noopener noreferrer" }),
     ...(Component === 'button' && { disabled: isDisabled }),
     ...props
   } as any;

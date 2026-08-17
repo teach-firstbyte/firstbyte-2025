@@ -103,8 +103,6 @@ export function Navbar({ activeSection }: NavbarProps) {
     { name: "About", href: "/#about", section: "about" },
     { name: "Programs", href: "/#programs", section: "programs" },
     { name: "Team", href: "/#team", section: "team" },
-    // Served by the dashboard zone via the rewrite in next.config.mjs.
-    { name: "Dashboard", href: "/dashboard", section: "dashboard", isRoute: true },
   ]
 
   // Animation variants
@@ -380,7 +378,7 @@ export function Navbar({ activeSection }: NavbarProps) {
                   <HighlighterItem>
                     <AnimatedGlowButton 
                       color="green"
-                    href="https://forms.gle/irVdK37HQa6gGHZM9"
+                      href="/dashboard"
                       className="py-1.5 px-3 text-sm"
                     >
                       Get Involved
@@ -569,7 +567,7 @@ export function Navbar({ activeSection }: NavbarProps) {
                   </a>
                   <AnimatedGlowButton 
                     color="green"
-                    href="https://forms.gle/irVdK37HQa6gGHZM9"
+                    href="/dashboard"
                     className="py-1 px-2 text-xs"
                     onClick={() => setIsMenuOpen(false)}
                   >
