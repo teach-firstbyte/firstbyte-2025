@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
+import { motion } from "framer-motion";
 
 const timelineItems = [
   {
@@ -45,7 +45,7 @@ const timelineItems = [
     description:
       "We launched our first international programs, bringing FirstByte's curriculum to students in underserved communities worldwide.",
   },
-]
+];
 
 export function Timeline() {
   return (
@@ -67,19 +67,31 @@ export function Timeline() {
             <div className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-primary" />
 
             {/* Content for left side (even index) */}
-            <div className={`w-5/12 md:w-5/12 ${index % 2 === 0 ? "pr-8 text-right" : "hidden md:block"}`}>
+            <div
+              className={`w-5/12 md:w-5/12 ${index % 2 === 0 ? "pr-8 text-right" : "hidden md:block"}`}
+            >
               {index % 2 === 0 && (
                 <>
                   <h3 className="text-xl font-bold">{item.title}</h3>
                   <p className="text-muted-foreground">{item.description}</p>
                 </>
               )}
-              {index % 2 === 0 && <div className="mt-2 text-sm font-semibold text-primary">{item.year}</div>}
+              {index % 2 === 0 && (
+                <div className="mt-2 text-sm font-semibold text-primary">
+                  {item.year}
+                </div>
+              )}
             </div>
 
             {/* Content for right side (odd index) */}
-            <div className={`w-5/12 md:w-5/12 ${index % 2 === 1 ? "pl-8 text-left" : "hidden md:block"}`}>
-              {index % 2 === 1 && <div className="mb-2 text-sm font-semibold text-primary">{item.year}</div>}
+            <div
+              className={`w-5/12 md:w-5/12 ${index % 2 === 1 ? "pl-8 text-left" : "hidden md:block"}`}
+            >
+              {index % 2 === 1 && (
+                <div className="mb-2 text-sm font-semibold text-primary">
+                  {item.year}
+                </div>
+              )}
               {index % 2 === 1 && (
                 <>
                   <h3 className="text-xl font-bold">{item.title}</h3>
@@ -89,10 +101,14 @@ export function Timeline() {
             </div>
 
             {/* Mobile view (single column) */}
-            <div className={`md:hidden w-5/6 ${index % 2 === 0 ? "hidden" : "pl-8"}`}>
+            <div
+              className={`md:hidden w-5/6 ${index % 2 === 0 ? "hidden" : "pl-8"}`}
+            >
               {index % 2 === 1 && (
                 <>
-                  <div className="mb-2 text-sm font-semibold text-primary">{item.year}</div>
+                  <div className="mb-2 text-sm font-semibold text-primary">
+                    {item.year}
+                  </div>
                   <h3 className="text-xl font-bold">{item.title}</h3>
                   <p className="text-muted-foreground">{item.description}</p>
                 </>
@@ -102,6 +118,5 @@ export function Timeline() {
         ))}
       </div>
     </div>
-  )
+  );
 }
-

@@ -1,131 +1,126 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { useEffect, useState } from "react"
-import { 
-  CommandDialog, 
-  CommandEmpty, 
-  CommandGroup, 
-  CommandInput, 
-  CommandItem, 
+import * as React from "react";
+import { useEffect, useState } from "react";
+import {
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
   CommandList,
-  CommandSeparator
-} from "@/components/ui/command"
-import { 
-  Book, 
-  Contact, 
-  FileCode, 
-  HelpCircle, 
-  Home, 
-  Mail, 
-  Moon, 
-  Search, 
-  Sun, 
+  CommandSeparator,
+} from "@/components/ui/command";
+import {
+  Book,
+  Contact,
+  FileCode,
+  HelpCircle,
+  Home,
+  Mail,
+  Moon,
+  Sun,
   Users,
   User,
   Linkedin,
   Github,
-  Globe
-} from "lucide-react"
-import { useTheme } from "next-themes"
-import { useRouter } from "next/navigation"
-import { DialogTitle } from "@/components/ui/dialog"
-import teamData from "@/data/team.json"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { cn } from "@/lib/utils"
-
-// Define type for team members
-interface TeamMember {
-  name: string
-  role: string
-  image?: string
-  circularImage?: string
-  bio?: string
-  linkedin?: string
-  github?: string
-  website?: string
-  years?: string[]
-  previousRoles?: { role: string; year: string }[]
-}
+  Globe,
+} from "lucide-react";
+import { useTheme } from "next-themes";
+import { useRouter } from "next/navigation";
+import { DialogTitle } from "@/components/ui/dialog";
+import teamData from "@/data/team.json";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export function CommandMenu() {
-  const [open, setOpen] = useState(false)
-  const [search, setSearch] = useState("")
-  const { setTheme, theme } = useTheme()
-  const router = useRouter()
+  const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const { setTheme, theme } = useTheme();
+  const router = useRouter();
 
   // Get current team members (has 2026 in their years array)
-  const currentTeamMembers = teamData.allTeamMembers.filter(
-    (member) => member.years?.includes("2026")
-  )
+  const currentTeamMembers = teamData.allTeamMembers.filter((member) =>
+    member.years?.includes("2026"),
+  );
 
   // Extract unique team roles for searching
   const teamRoles = new Set<string>();
-  currentTeamMembers.forEach(member => {
+  currentTeamMembers.forEach((member) => {
     const roleWords = member.role.split(/,|\s+/);
-    roleWords.forEach(word => {
-      if (word.includes("Team") || word.includes("Lead") || word === "President" || word === "Vice" || word === "Treasurer") {
+    roleWords.forEach((word) => {
+      if (
+        word.includes("Team") ||
+        word.includes("Lead") ||
+        word === "President" ||
+        word === "Vice" ||
+        word === "Treasurer"
+      ) {
         teamRoles.add(word);
       }
     });
   });
 
   // Filter team members based on search query
-  const filteredTeamMembers = currentTeamMembers.filter(member => {
+  const filteredTeamMembers = currentTeamMembers.filter((member) => {
     if (!search) return true;
     const searchLower = search.toLowerCase();
-    
+
     // Search by name
     if (member.name.toLowerCase().includes(searchLower)) return true;
-    
+
     // Search by role
     if (member.role.toLowerCase().includes(searchLower)) return true;
-    
+
     // Search by year
-    if (member.years?.some(year => year.includes(searchLower))) return true;
-    
+    if (member.years?.some((year) => year.includes(searchLower))) return true;
+
     // Search by team (extracted from role)
-    const memberTeams = member.role.split(/,|\s+/).filter(word => 
-      word.includes("Team") || word.includes("Lead") || word === "President" || word === "Vice" || word === "Treasurer"
-    );
-    
-    if (memberTeams.some(team => team.toLowerCase().includes(searchLower))) return true;
-    
+    const memberTeams = member.role
+      .split(/,|\s+/)
+      .filter(
+        (word) =>
+          word.includes("Team") ||
+          word.includes("Lead") ||
+          word === "President" ||
+          word === "Vice" ||
+          word === "Treasurer",
+      );
+
+    if (memberTeams.some((team) => team.toLowerCase().includes(searchLower)))
+      return true;
+
     return false;
   });
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault()
-        setOpen((open) => !open)
+        e.preventDefault();
+        setOpen((open) => !open);
       }
-    }
+    };
 
-    document.addEventListener("keydown", down)
-    return () => document.removeEventListener("keydown", down)
-  }, [])
+    document.addEventListener("keydown", down);
+    return () => document.removeEventListener("keydown", down);
+  }, []);
 
   const runCommand = React.useCallback((command: () => unknown) => {
-    setOpen(false)
-    command()
-  }, [])
+    setOpen(false);
+    command();
+  }, []);
 
   return (
-    <CommandDialog 
-      open={open} 
-      onOpenChange={setOpen}
-    >
+    <CommandDialog open={open} onOpenChange={setOpen}>
       <DialogTitle className="sr-only">Command Menu</DialogTitle>
-      <CommandInput 
-        placeholder="Type a command or search for team members, roles, or years..." 
+      <CommandInput
+        placeholder="Type a command or search for team members, roles, or years..."
         value={search}
         onValueChange={setSearch}
         className="h-14"
       />
       <CommandList className="max-h-[400px]">
         <CommandEmpty>No results found.</CommandEmpty>
-        
+
         {!search && (
           <>
             <CommandGroup heading="Navigation">
@@ -163,21 +158,23 @@ export function CommandMenu() {
             <CommandSeparator />
           </>
         )}
-        
+
         {/* Team Members Group */}
         <CommandGroup heading={search ? "Team Members" : "Current Team"}>
           {filteredTeamMembers.map((member) => (
             <CommandItem
               key={member.name}
-              onSelect={() => runCommand(() => {
-                // If member has a LinkedIn profile, open it in a new tab
-                if (member.linkedin) {
-                  window.open(member.linkedin, "_blank");
-                } else {
-                  // Otherwise navigate to team section
-                  router.push("/#team");
-                }
-              })}
+              onSelect={() =>
+                runCommand(() => {
+                  // If member has a LinkedIn profile, open it in a new tab
+                  if (member.linkedin) {
+                    window.open(member.linkedin, "_blank");
+                  } else {
+                    // Otherwise navigate to team section
+                    router.push("/#team");
+                  }
+                })
+              }
               className="flex items-center gap-3 py-3"
             >
               <div className="flex items-center gap-3 flex-1">
@@ -199,11 +196,11 @@ export function CommandMenu() {
                   </span>
                 </div>
               </div>
-              
+
               {/* Social icons */}
               <div className="flex gap-2 justify-end">
                 {member.linkedin && (
-                  <button 
+                  <button
                     onClick={(e) => {
                       e.stopPropagation();
                       window.open(member.linkedin, "_blank");
@@ -214,7 +211,7 @@ export function CommandMenu() {
                   </button>
                 )}
                 {member.github && (
-                  <button 
+                  <button
                     onClick={(e) => {
                       e.stopPropagation();
                       window.open(member.github, "_blank");
@@ -225,7 +222,7 @@ export function CommandMenu() {
                   </button>
                 )}
                 {member.website && (
-                  <button 
+                  <button
                     onClick={(e) => {
                       e.stopPropagation();
                       window.open(member.website, "_blank");
@@ -239,13 +236,17 @@ export function CommandMenu() {
             </CommandItem>
           ))}
         </CommandGroup>
-        
+
         {!search && (
           <>
             <CommandSeparator />
             <CommandGroup heading="Actions">
               <CommandItem
-                onSelect={() => runCommand(() => setTheme(theme === "dark" ? "light" : "dark"))}
+                onSelect={() =>
+                  runCommand(() =>
+                    setTheme(theme === "dark" ? "light" : "dark"),
+                  )
+                }
               >
                 {theme === "dark" ? (
                   <Sun className="mr-2 h-4 w-4" />
@@ -255,7 +256,11 @@ export function CommandMenu() {
                 <span>Toggle Theme</span>
               </CommandItem>
               <CommandItem
-                onSelect={() => runCommand(() => window.open("mailto:info@firstbyte.org", "_blank"))}
+                onSelect={() =>
+                  runCommand(() =>
+                    window.open("mailto:info@firstbyte.org", "_blank"),
+                  )
+                }
               >
                 <Mail className="mr-2 h-4 w-4" />
                 <span>Email us</span>
@@ -271,5 +276,5 @@ export function CommandMenu() {
         )}
       </CommandList>
     </CommandDialog>
-  )
-} 
+  );
+}

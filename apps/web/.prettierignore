@@ -1,0 +1,7 @@
+package-lock.json
+*.md
+
+# Build output and dependencies. Without these, `format:check` fails on
+# generated files whenever it runs after a build.
+.next/
+node_modules/

@@ -1,15 +1,18 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { ChevronRight, Users, GraduationCap, Lightbulb } from "lucide-react"
-import { StarBorder } from "@/components/ui/star-border"
-import { Button } from "@/components/ui/button"
-import { forwardRef } from "react"
-import { AnimatedGlowButton } from "@/components/ui/animated-glow-button"
+import { motion } from "framer-motion";
+import { ChevronRight, Users, GraduationCap, Lightbulb } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { forwardRef } from "react";
+import { AnimatedGlowButton } from "@/components/ui/animated-glow-button";
 
 export const ContactSection = forwardRef<HTMLElement>((props, ref) => {
   return (
-    <section ref={ref} id="contact" className="py-20 px-4 md:px-6 lg:px-8 bg-[hsl(var(--gray-100))] bg-grid-light">
+    <section
+      ref={ref}
+      id="contact"
+      className="py-20 px-4 md:px-6 lg:px-8 bg-[hsl(var(--gray-100))] bg-grid-light"
+    >
       <div className="max-w-7xl mx-auto">
         <div className="grid md:grid-cols-3 gap-8 mb-16">
           <motion.div
@@ -19,9 +22,12 @@ export const ContactSection = forwardRef<HTMLElement>((props, ref) => {
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Join Our Mission</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Join Our Mission
+            </h2>
             <p className="text-xl text-muted-foreground max-w-2xl">
-              Whether you're a student, educator, volunteer, or supporter, there are many ways to get involved.
+              Whether you&apos;re a student, educator, volunteer, or supporter,
+              there are many ways to get involved.
             </p>
           </motion.div>
         </div>
@@ -80,7 +86,12 @@ export const ContactSection = forwardRef<HTMLElement>((props, ref) => {
                   placeholder="How can we help?"
                 />
               </div>
-              <AnimatedGlowButton as="button" type="submit" color="purple" className="w-full">
+              <AnimatedGlowButton
+                as="button"
+                type="submit"
+                color="purple"
+                className="w-full"
+              >
                 Send Message
               </AnimatedGlowButton>
             </form>
@@ -99,9 +110,12 @@ export const ContactSection = forwardRef<HTMLElement>((props, ref) => {
                   <Users size={24} />
                 </div>
                 <div>
-                  <h4 className="text-lg font-semibold mb-2">Become a Student</h4>
+                  <h4 className="text-lg font-semibold mb-2">
+                    Become a Student
+                  </h4>
                   <p className="text-muted-foreground mb-2">
-                    Join our programs and start your journey in computer science and STEM.
+                    Join our programs and start your journey in computer science
+                    and STEM.
                   </p>
                   <Button variant="link" className="p-0 h-auto font-semibold">
                     Apply Now <ChevronRight className="ml-1 h-4 w-4" />
@@ -114,9 +128,12 @@ export const ContactSection = forwardRef<HTMLElement>((props, ref) => {
                   <GraduationCap size={24} />
                 </div>
                 <div>
-                  <h4 className="text-lg font-semibold mb-2">Volunteer as a Mentor</h4>
+                  <h4 className="text-lg font-semibold mb-2">
+                    Volunteer as a Mentor
+                  </h4>
                   <p className="text-muted-foreground mb-2">
-                    Share your knowledge and experience with the next generation of tech leaders.
+                    Share your knowledge and experience with the next generation
+                    of tech leaders.
                   </p>
                   <Button variant="link" className="p-0 h-auto font-semibold">
                     Become a Mentor <ChevronRight className="ml-1 h-4 w-4" />
@@ -129,12 +146,16 @@ export const ContactSection = forwardRef<HTMLElement>((props, ref) => {
                   <Lightbulb size={24} />
                 </div>
                 <div>
-                  <h4 className="text-lg font-semibold mb-2">Partner With Us</h4>
+                  <h4 className="text-lg font-semibold mb-2">
+                    Partner With Us
+                  </h4>
                   <p className="text-muted-foreground mb-2">
-                    Collaborate with FirstByte to expand our impact and reach more students.
+                    Collaborate with FirstByte to expand our impact and reach
+                    more students.
                   </p>
                   <Button variant="link" className="p-0 h-auto font-semibold">
-                    Explore Partnerships <ChevronRight className="ml-1 h-4 w-4" />
+                    Explore Partnerships{" "}
+                    <ChevronRight className="ml-1 h-4 w-4" />
                   </Button>
                 </div>
               </div>
@@ -143,5 +164,6 @@ export const ContactSection = forwardRef<HTMLElement>((props, ref) => {
         </div>
       </div>
     </section>
-  )
-}) 
+  );
+});
+ContactSection.displayName = "ContactSection";

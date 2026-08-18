@@ -1,7 +1,7 @@
-import type React from "react"
-import "@/app/globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
-import { CommandMenu } from "@/components/command-menu"
+import type React from "react";
+import "@/app/globals.css";
+import { ThemeProvider } from "@/components/theme-provider";
+import { CommandMenu } from "@/components/command-menu";
 
 export const metadata = {
   title: "FirstByte - CS & STEM Education",
@@ -9,24 +9,28 @@ export const metadata = {
   icons: {
     icon: {
       url: "/FirstByteBitex4.png",
-      type: "image/png"
-    }
-  }
-}
+      type: "image/png",
+    },
+  },
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <ThemeProvider attribute="class" defaultTheme="light" disableTransitionOnChange>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          disableTransitionOnChange
+        >
           <CommandMenu />
           {children}
         </ThemeProvider>
       </body>
     </html>
-  )
+  );
 }
