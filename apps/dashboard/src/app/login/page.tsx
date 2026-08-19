@@ -1,13 +1,19 @@
 import Image from "next/image";
 import { AuthForm } from "./AuthForm";
 import { BackLink } from "@/components/BackLink";
+import { safeInternalPath } from "@/lib/paths";
 
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: string; redirect?: string }>;
 }) {
-  const { error } = await searchParams;
+  const { error, redirect } = await searchParams;
+
+  // Set by requireSignedInUser when a signed-out visitor hits a deep link --
+  // the QR flows (/feedback/:id, /check-in/:id) are the reason this exists.
+  // Sanitized here, at the edge, so everything downstream can trust it.
+  const returnTo = safeInternalPath(redirect);
 
   return (
     <div className="container mx-auto flex min-h-screen max-w-sm flex-col justify-center p-6">
@@ -27,7 +33,7 @@ export default async function LoginPage({
         <h1 className="text-3xl font-bold">FirstByte Dashboard</h1>
         <p className="text-muted-foreground">Sign in to continue</p>
       </div>
-      <AuthForm error={error} />
+      <AuthForm error={error} returnTo={returnTo} />
     </div>
   );
 }
