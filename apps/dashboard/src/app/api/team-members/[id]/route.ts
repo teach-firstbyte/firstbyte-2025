@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
-import { TeamRole } from "@prisma/client";
+import { TeamRole, TeamMemberStatus } from "@prisma/client";
 import { requireOfficerApi } from "@/lib/auth/requireOfficerApi";
 
 /**
@@ -47,14 +47,17 @@ export async function GET(
 }
 
 /**
- * Updates a team member's role (e.g. promote MEMBER to LEAD).
+ * Updates a team membership: its role (promote MEMBER to LEAD) and/or its
+ * status (decide a join request from onboarding). Both are optional, but at
+ * least one must be present -- one endpoint rather than two so approving,
+ * rejecting, and reversing a decision all go through the same place.
  */
 export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const { error } = await requireOfficerApi();
+    const { user: officer, error } = await requireOfficerApi();
     if (error) return error;
 
     const { id } = await params;
@@ -67,16 +70,32 @@ export async function PATCH(
       );
     }
 
-    const { role } = await request.json();
+    const { role, status } = await request.json();
 
-    if (!role) {
-      return NextResponse.json({ error: "role is required" }, { status: 400 });
+    if (role === undefined && status === undefined) {
+      return NextResponse.json(
+        { error: "role or status is required" },
+        { status: 400 },
+      );
     }
 
     const validRoles = Object.values(TeamRole);
-    if (!validRoles.includes(role as TeamRole)) {
+    if (role !== undefined && !validRoles.includes(role as TeamRole)) {
       return NextResponse.json(
         { error: `Invalid role. Must be one of: ${validRoles.join(", ")}` },
+        { status: 400 },
+      );
+    }
+
+    const validStatuses = Object.values(TeamMemberStatus);
+    if (
+      status !== undefined &&
+      !validStatuses.includes(status as TeamMemberStatus)
+    ) {
+      return NextResponse.json(
+        {
+          error: `Invalid status. Must be one of: ${validStatuses.join(", ")}`,
+        },
         { status: 400 },
       );
     }
@@ -91,9 +110,22 @@ export async function PATCH(
       );
     }
 
+    const decided = status !== undefined && status !== TeamMemberStatus.PENDING;
+
     const updated = await prisma.teamMember.update({
       where: { id: teamMemberId },
-      data: { role: role as TeamRole },
+      data: {
+        ...(role !== undefined ? { role: role as TeamRole } : {}),
+        ...(status !== undefined
+          ? {
+              status: status as TeamMemberStatus,
+              // Back to PENDING clears the decision rather than leaving a
+              // stale officer and timestamp on the row.
+              decidedAt: decided ? new Date() : null,
+              decidedById: decided ? officer.id : null,
+            }
+          : {}),
+      },
     });
 
     return NextResponse.json(updated, { status: 200 });

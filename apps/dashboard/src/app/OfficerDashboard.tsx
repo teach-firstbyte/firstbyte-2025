@@ -4,11 +4,22 @@ import { TeamsTable } from "@/components/TeamsTable";
 import { MeetingsTable } from "@/components/MeetingsTable";
 import { FeedbackTable } from "@/components/FeedbackTable";
 import { prisma } from "@/lib/prisma";
-import type { Feedback, Meeting, Team, User } from "@/types/dashboard";
+import type {
+  Feedback,
+  Meeting,
+  PendingUser,
+  Team,
+  User,
+} from "@/types/dashboard";
 import { logOut } from "./login/actions";
 import { SubmitButton } from "@/components/SubmitButton";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { AttendanceStatus } from "@prisma/client";
+import {
+  AccountStatus,
+  AttendanceStatus,
+  TeamMemberStatus,
+} from "@prisma/client";
+import { ApprovalQueue } from "@/components/ApprovalQueue";
 import {
   Card,
   CardContent,
@@ -25,6 +36,7 @@ import { SuggestionBoxLink } from "@/components/SuggestionBoxLink";
 export async function OfficerDashboard() {
   const emptyData = {
     users: [] as User[],
+    pending: [] as PendingUser[],
     teams: [] as Team[],
     meetings: [] as Meeting[],
     attendance: {
@@ -40,9 +52,28 @@ export async function OfficerDashboard() {
 
   try {
     // Fetch all data from Prisma. If this fails, render the dashboard with empty state data.
-    const [users, teams, meetings, attendanceGrouped, feedback] =
+    const [users, pending, teams, meetings, attendanceGrouped, feedback] =
       await Promise.all([
         prisma.user.findMany({
+          // The roster is approved members only. Without this, accounts still
+          // in onboarding or waiting on review show up as if they were members.
+          where: { status: AccountStatus.APPROVED },
+          include: {
+            teamMemberships: {
+              where: { status: TeamMemberStatus.APPROVED },
+              include: {
+                team: true,
+              },
+            },
+          },
+        }),
+        // The review queue keys off account status, never off the existence of
+        // pending TeamMember rows -- a half-finished onboarding writes those
+        // rows but never reaches PENDING, and must stay invisible here.
+        prisma.user.findMany({
+          where: {
+            status: { in: [AccountStatus.PENDING, AccountStatus.DENIED] },
+          },
           include: {
             teamMemberships: {
               include: {
@@ -50,6 +81,7 @@ export async function OfficerDashboard() {
               },
             },
           },
+          orderBy: { submittedAt: "asc" },
         }),
         prisma.team.findMany({
           include: {
@@ -95,6 +127,7 @@ export async function OfficerDashboard() {
 
     data = {
       users,
+      pending,
       teams,
       meetings,
       attendance: {
@@ -155,6 +188,9 @@ export async function OfficerDashboard() {
       )}
 
       <div className="grid gap-6 [*&>*]:min-w-0">
+        {/* First in the grid: it is the action item, everything below is
+            reference data. */}
+        <ApprovalQueue users={data.pending} />
         <UsersTable users={data.users} />
         <TeamsTable teams={data.teams} />
         <MeetingsTable meetings={data.meetings} />

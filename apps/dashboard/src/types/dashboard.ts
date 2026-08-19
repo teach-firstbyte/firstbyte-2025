@@ -4,6 +4,8 @@ export interface User {
   id: number;
   email: string;
   name: string | null;
+  role: string;
+  status: string;
   createdAt: Date;
   updatedAt: Date;
   teamMemberships: Array<{
@@ -13,6 +15,32 @@ export interface User {
       name: string;
     };
     role: string;
+    status: string;
+  }>;
+}
+
+/**
+ * A user in the officer review queue. Carries the onboarding answers the
+ * officer needs to make a decision, which the plain User shape doesn't.
+ */
+export interface PendingUser {
+  id: number;
+  email: string;
+  name: string | null;
+  status: string;
+  preferredName: string | null;
+  pronouns: string | null;
+  gradYear: number | null;
+  major: string | null;
+  submittedAt: Date | null;
+  createdAt: Date;
+  teamMemberships: Array<{
+    id: number;
+    status: string;
+    team: {
+      id: number;
+      name: string;
+    };
   }>;
 }
 
