@@ -1,10 +1,9 @@
 "use server";
 
 import { assertAttended } from "@/lib/attendance/assertAttended";
-import { getCurrentUser } from "@/lib/auth/getCurrentUser";
+import { requireApprovedUser } from "@/lib/auth/requireApprovedUser";
 import { validateFeedbackInput } from "@/lib/feedback/validateFeedbackInput";
 import { prisma } from "@/lib/prisma";
-import { redirect } from "next/navigation";
 
 type ActionResult = { success?: boolean; error?: string };
 
@@ -12,8 +11,7 @@ export async function submitFeedback(
   prevState: ActionResult,
   formData: FormData,
 ): Promise<ActionResult> {
-  const user = await getCurrentUser();
-  if (!user) redirect("/login");
+  const user = await requireApprovedUser();
 
   const raw = Object.fromEntries(formData);
   const result = validateFeedbackInput(raw);

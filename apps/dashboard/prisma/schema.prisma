@@ -6,31 +6,54 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
 model User {
   //fields
-  id        Int   @id @default(autoincrement())
-  email     String   @unique
-  name      String?
-  role      Role  @default(NORTHEASTERN_STUDENT)
+  id    Int     @id @default(autoincrement())
+  email String  @unique
+  name  String?
+  role  Role    @default(NORTHEASTERN_STUDENT)
+
+  // Approval lifecycle: ONBOARDING -> PENDING -> APPROVED | DENIED.
+  // A row enters the officer review queue only once it reaches PENDING, so an
+  // abandoned onboarding stays invisible to officers.
+  status      AccountStatus @default(ONBOARDING)
+  submittedAt DateTime?     @map("submitted_at")
+  decidedAt   DateTime?     @map("decided_at")
+  decidedById Int?          @map("decided_by_id")
+
+  // Collected during onboarding. All optional -- only the team selection is
+  // required to submit.
+  preferredName String? @map("preferred_name")
+  pronouns      String?
+  gradYear      Int?    @map("grad_year")
+  major         String?
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   //relationships
-  teamMemberships TeamMember[]
+  teamMemberships   TeamMember[]
   attendanceRecords Attendance[]
-  feedbackGiven   Feedback[] @relation("FeedbackAuthor")
-  
+  feedbackGiven     Feedback[]   @relation("FeedbackAuthor")
+
+  // Officer who decided this account. SetNull so removing an officer does not
+  // cascade away the members they approved.
+  decidedBy               User?        @relation("UserDecisions", fields: [decidedById], references: [id], onDelete: SetNull)
+  accountDecisions        User[]       @relation("UserDecisions")
+  teamMembershipDecisions TeamMember[] @relation("TeamMemberDecisions")
+
+  @@index([status, submittedAt])
   @@map("users")
 }
 
 model Team {
   //fields
-  id          Int   @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   name        String
   description String?
   isActive    Boolean  @default(true) @map("is_active")
@@ -38,63 +61,73 @@ model Team {
   updatedAt   DateTime @updatedAt @map("updated_at")
 
   //relationships
-  members   TeamMember[]
-  meetings  Meeting[]
-  
+  members  TeamMember[]
+  meetings Meeting[]
+
   @@map("teams")
 }
 
 model TeamMember {
   //fields
-  id     Int @id @default(autoincrement())
-  userId Int @map("user_id")
-  teamId Int @map("team_id")
+  id     Int      @id @default(autoincrement())
+  userId Int      @map("user_id")
+  teamId Int      @map("team_id")
   role   TeamRole @default(MEMBER)
+
+  // Defaults to APPROVED so officer-initiated writes (the Assign Teams modal)
+  // keep working unchanged. Only the onboarding action creates PENDING rows.
+  status      TeamMemberStatus @default(APPROVED)
+  decidedAt   DateTime?        @map("decided_at")
+  decidedById Int?             @map("decided_by_id")
+
+  // Reads as "requested at" while status is PENDING.
   joinedAt DateTime @default(now()) @map("joined_at")
 
   //relationships
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  user      User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  team      Team  @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  decidedBy User? @relation("TeamMemberDecisions", fields: [decidedById], references: [id], onDelete: SetNull)
 
   @@unique([userId, teamId])
+  @@index([status])
   @@map("team_members")
 }
 
 model Meeting {
   //fields
-  id          Int      @id @default(autoincrement())
+  id          Int         @id @default(autoincrement())
   title       String
   description String?
   type        MeetingType
-  teamId      Int? @map("team_id")
-  scheduledAt DateTime @map("scheduled_at")
-  startedAt   DateTime? @map("started_at")
-  endedAt     DateTime? @map("ended_at")
+  teamId      Int?        @map("team_id")
+  scheduledAt DateTime    @map("scheduled_at")
+  startedAt   DateTime?   @map("started_at")
+  endedAt     DateTime?   @map("ended_at")
   location    String?
   isRequired  Boolean     @default(false) @map("is_required")
-  maxCapacity Int? @map("max_capacity")
+  maxCapacity Int?        @map("max_capacity")
   createdAt   DateTime    @default(now()) @map("created_at")
   updatedAt   DateTime    @updatedAt @map("updated_at")
 
   //relationships
-  team        Team?        @relation(fields: [teamId], references: [id])
-  attendance  Attendance[]
-  feedback    Feedback[]
-  
+  team       Team?        @relation(fields: [teamId], references: [id])
+  attendance Attendance[]
+  feedback   Feedback[]
+
   @@map("meetings")
 }
 
 model Attendance {
   //fields
-  id        Int           @id @default(autoincrement())
-  userId    Int @map("user_id")
-  meetingId Int @map("meeting_id")
-  status    AttendanceStatus
-  checkedInAt DateTime? @map("checked_in_at")
-  checkedOutAt DateTime? @map("checked_out_at")
-  notes     String?
-  createdAt DateTime         @default(now()) @map("created_at")
-  updatedAt DateTime         @updatedAt @map("updated_at")
+  id           Int              @id @default(autoincrement())
+  userId       Int              @map("user_id")
+  meetingId    Int              @map("meeting_id")
+  status       AttendanceStatus
+  checkedInAt  DateTime?        @map("checked_in_at")
+  checkedOutAt DateTime?        @map("checked_out_at")
+  notes        String?
+  createdAt    DateTime         @default(now()) @map("created_at")
+  updatedAt    DateTime         @updatedAt @map("updated_at")
 
   //relationships
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -106,23 +139,22 @@ model Attendance {
 
 model Feedback {
   //fields 
-  id        Int      @id @default(autoincrement())
-  meetingId Int @map("meeting_id")
-  authorId  Int @map("author_id")
-  rating    Int?        @db.SmallInt // 1-5 scale
-  comment   String?
-  category  FeedbackCategory?
-  isAnonymous Boolean   @default(false) @map("is_anonymous")
-  createdAt DateTime    @default(now()) @map("created_at")
-  updatedAt DateTime    @updatedAt @map("updated_at")
+  id          Int               @id @default(autoincrement())
+  meetingId   Int               @map("meeting_id")
+  authorId    Int               @map("author_id")
+  rating      Int?              @db.SmallInt // 1-5 scale
+  comment     String?
+  category    FeedbackCategory?
+  isAnonymous Boolean           @default(false) @map("is_anonymous")
+  createdAt   DateTime          @default(now()) @map("created_at")
+  updatedAt   DateTime          @updatedAt @map("updated_at")
 
   //relationships
   meeting Meeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
   author  User    @relation("FeedbackAuthor", fields: [authorId], references: [id], onDelete: Cascade)
-  
+
   @@map("feedback")
 }
-
 
 //ENUMS 
 enum TeamRole {
@@ -136,7 +168,7 @@ enum MeetingType {
   GENERAL_MEETING
   BOARD_MEETING
   SOCIAL_EVENT
-  FIRSTBITES 
+  FIRSTBITES
   //for CS Cirricula team
   CHV_WORKSHOP
 
@@ -169,4 +201,21 @@ enum Role {
   SUPER_ADMIN
 
   @@map("user_role")
+}
+
+enum AccountStatus {
+  ONBOARDING
+  PENDING
+  APPROVED
+  DENIED
+
+  @@map("account_status")
+}
+
+enum TeamMemberStatus {
+  PENDING
+  APPROVED
+  REJECTED
+
+  @@map("team_member_status")
 }

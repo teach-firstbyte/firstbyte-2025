@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "./getCurrentUser";
 import { isOfficer } from "./roles";
+import { isApproved } from "./accountGate";
 import { User } from "@prisma/client";
 
 type OfficerApiResult =
@@ -13,6 +14,17 @@ export async function requireOfficerApi(): Promise<OfficerApiResult> {
     return {
       user: null,
       error: NextResponse.json({ error: "Not authenticated" }, { status: 401 }),
+    };
+  }
+  // An unapproved officer should not exist, but role and status are independent
+  // so the check is worth its two lines.
+  if (!isApproved(user)) {
+    return {
+      user: null,
+      error: NextResponse.json(
+        { error: "Account is not approved", status: user.status },
+        { status: 403 },
+      ),
     };
   }
   if (!isOfficer(user)) {

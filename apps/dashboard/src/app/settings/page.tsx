@@ -1,13 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getCurrentUser } from "@/lib/auth/getCurrentUser";
-import { redirect } from "next/navigation";
+import { requireApprovedUser } from "@/lib/auth/requireApprovedUser";
 import { NameForm } from "./NameForm";
 import { PasswordForm } from "./PasswordForm";
 import { BackLink } from "@/components/BackLink";
 
 export default async function UserSettingsPage() {
-  const user = await getCurrentUser();
-  if (!user) redirect("/login");
+  const user = await requireApprovedUser("/settings");
 
   return (
     <div className="container mx-auto p-6 space-y-6">
