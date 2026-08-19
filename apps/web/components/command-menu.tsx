@@ -35,7 +35,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 export function CommandMenu() {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const { setTheme, theme } = useTheme();
+  const { setTheme, resolvedTheme } = useTheme();
   const router = useRouter();
 
   // Get current team members (has 2026 in their years array)
@@ -244,11 +244,11 @@ export function CommandMenu() {
               <CommandItem
                 onSelect={() =>
                   runCommand(() =>
-                    setTheme(theme === "dark" ? "light" : "dark"),
+                    setTheme(resolvedTheme === "dark" ? "light" : "dark"),
                   )
                 }
               >
-                {theme === "dark" ? (
+                {resolvedTheme === "dark" ? (
                   <Sun className="mr-2 h-4 w-4" />
                 ) : (
                   <Moon className="mr-2 h-4 w-4" />

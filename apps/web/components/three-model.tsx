@@ -18,8 +18,10 @@ export function ThreeModel({ isMobile = false }: ThreeModelProps) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [showPrompt, setShowPrompt] = useState(true);
-  const { theme } = useTheme();
-  const isDarkMode = theme === "dark";
+  // resolvedTheme, not theme: in system mode `theme` is the string "system",
+  // which matches neither "light" nor "dark".
+  const { resolvedTheme } = useTheme();
+  const isDarkMode = resolvedTheme === "dark";
 
   // Create refs to store scene elements
   const sceneRef = useRef<THREE.Scene | null>(null);

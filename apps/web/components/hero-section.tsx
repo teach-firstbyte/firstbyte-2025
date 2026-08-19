@@ -134,7 +134,7 @@ export const HeroSection = forwardRef<HTMLElement, HeroSectionProps>(
   ({ mousePosition }, ref) => {
     // Client-side only rendering for the interactive parts
     const [isClient, setIsClient] = useState(false);
-    const { theme } = useTheme();
+    const { resolvedTheme } = useTheme();
     const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
@@ -168,7 +168,7 @@ export const HeroSection = forwardRef<HTMLElement, HeroSectionProps>(
               className="z-20 relative"
             >
               <div className="max-w-2xl">
-                <GreenLampContainer className="mb-0" key={theme}>
+                <GreenLampContainer className="mb-0" key={resolvedTheme}>
                   <div className="text-left">
                     <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight">
                       FirstByte
