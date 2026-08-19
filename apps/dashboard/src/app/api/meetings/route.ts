@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
-import { MeetingType } from "@prisma/client";
+import { AccountStatus, MeetingType, TeamMemberStatus } from "@prisma/client";
 import { requireOfficerApi } from "@/lib/auth/requireOfficerApi";
 import { requireUserApi } from "@/lib/auth/requireUserApi";
 import { isOfficer } from "@/lib/auth/roles";
@@ -28,8 +28,10 @@ export async function GET(): Promise<NextResponse> {
       return NextResponse.json(meetings, { status: 200 });
     }
 
+    // APPROVED only: an un-approved join request must not make that team's
+    // meetings visible.
     const memberships = await prisma.teamMember.findMany({
-      where: { userId: user.id },
+      where: { userId: user.id, status: TeamMemberStatus.APPROVED },
       select: { teamId: true },
     });
 
@@ -146,13 +148,22 @@ export async function POST(request: Request): Promise<NextResponse> {
     let expectedUserIds: number[];
 
     if (meeting.teamId != null) {
+      // Approved memberships of approved accounts. A pending request is not a
+      // membership, and a pending account is not a member.
       const teamMembers = await prisma.teamMember.findMany({
-        where: { teamId: meeting.teamId },
+        where: {
+          teamId: meeting.teamId,
+          status: TeamMemberStatus.APPROVED,
+          user: { status: AccountStatus.APPROVED },
+        },
         select: { userId: true },
       });
       expectedUserIds = teamMembers.map((m) => m.userId);
     } else {
+      // "All club members" means approved accounts only -- without the filter
+      // this registers everyone still onboarding, waiting on review, or denied.
       const allUsers = await prisma.user.findMany({
+        where: { status: AccountStatus.APPROVED },
         select: { id: true },
       });
       expectedUserIds = allUsers.map((u) => u.id);

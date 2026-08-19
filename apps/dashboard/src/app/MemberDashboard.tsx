@@ -1,4 +1,4 @@
-import { AttendanceStatus, User } from "@prisma/client";
+import { AttendanceStatus, TeamMemberStatus, User } from "@prisma/client";
 import { logOut } from "./login/actions";
 import Image from "next/image";
 import { prisma } from "@/lib/prisma";
@@ -20,9 +20,12 @@ import { SuggestionBoxLink } from "@/components/SuggestionBoxLink";
 import { TWO_HOURS_MS } from "@/lib/attendance/cutoff";
 
 export async function MemberDashboard({ user }: { user: User }) {
-  // Gets the users own memberships to display.
+  // Gets the users own memberships to display. APPROVED only: a join request
+  // an officer hasn't decided yet is not a membership, and teamIds below feeds
+  // the meeting query -- so an un-approved request would otherwise expose that
+  // team's meetings.
   const memberships = await prisma.teamMember.findMany({
-    where: { userId: user.id },
+    where: { userId: user.id, status: TeamMemberStatus.APPROVED },
     include: { team: true },
   });
   const teamIds = memberships.map((m) => m.teamId);

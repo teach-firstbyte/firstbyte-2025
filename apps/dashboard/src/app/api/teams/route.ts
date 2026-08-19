@@ -1,5 +1,6 @@
 import { requireOfficerApi } from "@/lib/auth/requireOfficerApi";
 import { prisma } from "@/lib/prisma";
+import { TeamMemberStatus } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 export async function GET(): Promise<NextResponse> {
@@ -7,9 +8,12 @@ export async function GET(): Promise<NextResponse> {
     const { error } = await requireOfficerApi();
     if (error) return error;
 
+    // A team's roster is its approved memberships. Un-approved join requests
+    // belong to the review queue, not to the team.
     const teams = await prisma.team.findMany({
       include: {
         members: {
+          where: { status: TeamMemberStatus.APPROVED },
           include: {
             user: true,
           },

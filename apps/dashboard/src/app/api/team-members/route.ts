@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
-import { TeamRole } from "@prisma/client";
+import { TeamRole, TeamMemberStatus } from "@prisma/client";
 import { requireOfficerApi } from "@/lib/auth/requireOfficerApi";
 
 /**
@@ -35,7 +35,7 @@ export async function GET(): Promise<NextResponse> {
  */
 export async function POST(request: Request): Promise<NextResponse> {
   try {
-    const { error } = await requireOfficerApi();
+    const { user: officer, error } = await requireOfficerApi();
     if (error) return error;
 
     // Validate the request body
@@ -74,19 +74,42 @@ export async function POST(request: Request): Promise<NextResponse> {
     const existing = await prisma.teamMember.findUnique({
       where: { userId_teamId: { userId: parsedUserId, teamId: parsedTeamId } },
     });
-    if (existing) {
+
+    // Only an APPROVED row is really "already a member". A PENDING request
+    // means the user asked to join and an officer is now assigning them, which
+    // is an approval, not a conflict -- rejecting it with a 409 would block the
+    // officer from acting on exactly the request they are responding to. A
+    // REJECTED row is reversed the same way.
+    if (existing && existing.status === TeamMemberStatus.APPROVED) {
       return NextResponse.json(
         { error: "This user is already a member of this team" },
         { status: 409 },
       );
     }
 
-    // Create the team member
+    if (existing) {
+      const approved = await prisma.teamMember.update({
+        where: { id: existing.id },
+        data: {
+          role: role as TeamRole,
+          status: TeamMemberStatus.APPROVED,
+          decidedAt: new Date(),
+          decidedById: officer.id,
+        },
+      });
+      return NextResponse.json(approved, { status: 200 });
+    }
+
+    // Status set explicitly rather than leaning on the schema default, so this
+    // path does not silently change if that default is ever flipped.
     const teamMember = await prisma.teamMember.create({
       data: {
         userId: parsedUserId,
         teamId: parsedTeamId,
         role: role as TeamRole,
+        status: TeamMemberStatus.APPROVED,
+        decidedAt: new Date(),
+        decidedById: officer.id,
       },
     });
 

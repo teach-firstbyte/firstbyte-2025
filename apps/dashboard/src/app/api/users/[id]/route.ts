@@ -2,6 +2,7 @@ import { requireOfficerApi } from "@/lib/auth/requireOfficerApi";
 import { requireUserApi } from "@/lib/auth/requireUserApi";
 import { isOfficer } from "@/lib/auth/roles";
 import { prisma } from "@/lib/prisma";
+import { TeamMemberStatus } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 /**
@@ -27,7 +28,10 @@ export async function GET(
     const found = await prisma.user.findUnique({
       where: { id: targetId },
       include: {
+        // APPROVED only -- a join request an officer has not decided is not a
+        // membership. The review queue reads requests through its own query.
         teamMemberships: {
+          where: { status: TeamMemberStatus.APPROVED },
           include: { team: true },
         },
       },
