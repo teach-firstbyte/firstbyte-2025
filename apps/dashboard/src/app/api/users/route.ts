@@ -1,5 +1,6 @@
 import { requireOfficerApi } from "@/lib/auth/requireOfficerApi";
 import { prisma } from "@/lib/prisma";
+import { TeamMemberStatus } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 /**
@@ -11,9 +12,14 @@ export async function GET(): Promise<NextResponse> {
     const { error } = await requireOfficerApi();
     if (error) return error;
 
+    // Every user, including those in the review queue -- this is the officer
+    // roster and a denied account must stay reachable to be reversed. Callers
+    // can tell them apart by `status`. Memberships are APPROVED only, so
+    // "teams" means teams they are actually on, not ones they asked about.
     const users = await prisma.user.findMany({
       include: {
         teamMemberships: {
+          where: { status: TeamMemberStatus.APPROVED },
           include: {
             team: true,
           },

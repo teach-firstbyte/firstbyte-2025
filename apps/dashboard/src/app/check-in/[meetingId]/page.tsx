@@ -1,5 +1,4 @@
-import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { requireApprovedUser } from "@/lib/auth/requireApprovedUser";
 import { prisma } from "@/lib/prisma";
 import { CheckInForm } from "./CheckInForm";
 import { BackLink } from "@/components/BackLink";
@@ -14,15 +13,11 @@ export default async function CheckInPage({
   const { meetingId } = await params;
   const { code } = await searchParams;
 
-  // Server-only: session gate
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) {
-    const returnPath = `/check-in/${meetingId}${code ? `?code=${code}` : ""}`;
-    redirect(`/login?redirect=${encodeURIComponent(returnPath)}`);
-  }
+  // Server-only: session + account-status gate. A QR deep link is the most
+  // likely way an un-approved account reaches a dashboard route, so this needs
+  // the same gate as everything else rather than a bare session check.
+  const returnPath = `/check-in/${meetingId}${code ? `?code=${code}` : ""}`;
+  await requireApprovedUser(returnPath);
 
   const parsedMeetingId = parseInt(meetingId);
   if (isNaN(parsedMeetingId)) {

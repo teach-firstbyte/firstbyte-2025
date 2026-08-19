@@ -1,8 +1,8 @@
 import { BackLink } from "@/components/BackLink";
 import { assertAttended } from "@/lib/attendance/assertAttended";
-import { getCurrentUser } from "@/lib/auth/getCurrentUser";
+import { requireApprovedUser } from "@/lib/auth/requireApprovedUser";
 import { prisma } from "@/lib/prisma";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { FeedbackForm } from "@/components/FeedbackForm";
 
 export default async function FeedbackPage({
@@ -16,8 +16,7 @@ export default async function FeedbackPage({
   if (isNaN(meetingId))
     return <p className="p-6 text-center">Invalid meeting.</p>;
 
-  const user = await getCurrentUser();
-  if (!user) redirect("/login");
+  const user = await requireApprovedUser(`/feedback/${id}`);
 
   const meeting = await prisma.meeting.findUnique({
     where: { id: meetingId },

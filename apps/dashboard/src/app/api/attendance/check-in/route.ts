@@ -1,5 +1,6 @@
 import { verifyCheckInCode } from "@/lib/attendance/check-in-code";
 import { syncUserToDb } from "@/lib/auth/sync-user";
+import { isApproved } from "@/lib/auth/accountGate";
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
 import { AttendanceStatus } from "@prisma/client";
@@ -46,6 +47,17 @@ export async function POST(request: Request): Promise<NextResponse> {
     return NextResponse.json(
       { error: "User record not found" },
       { status: 404 },
+    );
+  }
+
+  // This route builds its own auth rather than going through requireUserApi, so
+  // it is the one place the account-status gate is not inherited. Without this,
+  // an un-approved account scanning a meeting QR would create an attendance
+  // record.
+  if (!isApproved(dbUser)) {
+    return NextResponse.json(
+      { error: "Account is not approved", status: dbUser.status },
+      { status: 403 },
     );
   }
 

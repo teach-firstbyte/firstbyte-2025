@@ -1,5 +1,6 @@
 import { requireOfficerApi } from "@/lib/auth/requireOfficerApi";
 import { prisma } from "@/lib/prisma";
+import { TeamMemberStatus } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 /**
@@ -23,7 +24,10 @@ export async function GET(
     const team = await prisma.team.findUnique({
       where: { id: teamId },
       include: {
+        // Approved memberships only -- an un-decided join request is not part
+        // of the team roster.
         members: {
+          where: { status: TeamMemberStatus.APPROVED },
           include: { user: true },
         },
       },
