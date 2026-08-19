@@ -99,8 +99,8 @@ export function CodeAnimation() {
   const [screenMediumPlus, setMediumPlus] = useState(true);
   const [text, setText] = useState("");
   const [cursorPosition, setCursorPosition] = useState(0);
-  const { theme } = useTheme();
-  const isLightTheme = theme === "light";
+  const { resolvedTheme } = useTheme();
+  const isLightTheme = resolvedTheme === "light";
 
   // Detect screen size
   useEffect(() => {
