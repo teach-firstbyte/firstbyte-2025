@@ -1,7 +1,9 @@
 "use client";
 
 import { useActionState } from "react";
-import { TeamMemberStatus } from "@prisma/client";
+// Values and type both from @/lib/enums -- @prisma/client does not belong in a
+// client component. See the note in that file.
+import { TEAM_MEMBER_STATUS, type TeamMemberStatusValue } from "@/lib/enums";
 import { saveOnboarding } from "./actions";
 import { SubmitButton } from "@/components/SubmitButton";
 import { Input } from "@/components/ui/input";
@@ -15,7 +17,7 @@ export type OnboardingTeam = {
 
 export type OnboardingRequest = {
   teamId: number;
-  status: TeamMemberStatus;
+  status: TeamMemberStatusValue;
 };
 
 export type OnboardingDefaults = {
@@ -45,9 +47,9 @@ export function OnboardingForm({
   // A team an officer has already approved or rejected renders as a read-only
   // badge, because the action refuses to change those rows -- the UI should not
   // offer what the server will ignore.
-  const decided = (status: TeamMemberStatus | undefined) =>
-    status === TeamMemberStatus.APPROVED ||
-    status === TeamMemberStatus.REJECTED;
+  const decided = (status: TeamMemberStatusValue | undefined) =>
+    status === TEAM_MEMBER_STATUS.APPROVED ||
+    status === TEAM_MEMBER_STATUS.REJECTED;
 
   return (
     <form action={formAction} className="space-y-6">
@@ -78,17 +80,17 @@ export function OnboardingForm({
                     type="checkbox"
                     name="teams"
                     value={team.id}
-                    defaultChecked={status === TeamMemberStatus.PENDING}
+                    defaultChecked={status === TEAM_MEMBER_STATUS.PENDING}
                     className="mt-0.5 h-4 w-4"
                   />
                 )}
                 <span className="min-w-0 space-y-0.5">
                   <span className="flex items-center gap-2 text-sm font-medium">
                     {team.name}
-                    {status === TeamMemberStatus.APPROVED && (
+                    {status === TEAM_MEMBER_STATUS.APPROVED && (
                       <Badge>Approved</Badge>
                     )}
-                    {status === TeamMemberStatus.REJECTED && (
+                    {status === TEAM_MEMBER_STATUS.REJECTED && (
                       <Badge variant="destructive">Not approved</Badge>
                     )}
                   </span>
