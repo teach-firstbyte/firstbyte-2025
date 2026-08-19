@@ -55,7 +55,12 @@ export interface Team {
     user: {
       name: string | null;
       email: string;
+      // The club-wide Role, not the team role below -- it drives the officer
+      // badge on the roster. Already selected by the dashboard's team query,
+      // which includes the whole user row.
+      role: string;
     };
+    // The TeamRole (LEAD / MEMBER) for this membership.
     role: string;
   }>;
 }

@@ -15,7 +15,14 @@ import { GoogleButton } from "./GoogleButton";
 import { SubmitButton } from "@/components/SubmitButton";
 import Link from "next/link";
 
-export function AuthForm({ error }: { error?: string }) {
+export function AuthForm({
+  error,
+  returnTo,
+}: {
+  error?: string;
+  /** Already sanitized by the page; app-internal path or null. */
+  returnTo?: string | null;
+}) {
   const [mode, setMode] = useState<"login" | "signup">("login");
 
   const copy = {
@@ -44,9 +51,13 @@ export function AuthForm({ error }: { error?: string }) {
           label={
             mode === "signup" ? "Sign up with Google" : "Sign in with Google"
           }
+          returnTo={returnTo}
         />
         <div className="my-4 text-center text-sm text-muted-foreground">or</div>
         <form className="space-y-3">
+          {/* Carries the deep link through the password action, which has no
+              other view of the URL it was submitted from. */}
+          {returnTo && <input type="hidden" name="returnTo" value={returnTo} />}
           <Input name="email" type="email" placeholder="Email" required />
           <Input
             name="password"

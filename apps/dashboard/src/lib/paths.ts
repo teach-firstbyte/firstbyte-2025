@@ -78,3 +78,25 @@ export function withBasePath(path: string): string {
 export function absoluteUrl(path: string): string {
   return `${window.location.origin}${withBasePath(path)}`;
 }
+
+/**
+ * Narrow an untrusted post-login destination down to a path inside this app.
+ *
+ * The `?redirect=` and `?next=` params travel through the URL bar and an
+ * external OAuth provider, so treat them as attacker-controlled: anything that
+ * is not rooted at a single "/" is discarded rather than repaired. "//evil.com"
+ * and "/\evil.com" are both protocol-relative URLs that browsers will follow
+ * off-site, which would turn every login link into an open redirect.
+ *
+ * Do NOT pass the result through withBasePath here — these paths are fed to
+ * redirect() and to the callback's own zone-relative redirect, both of which
+ * apply the prefix themselves.
+ *
+ * @returns The path, or null if it is missing or not app-internal.
+ */
+export function safeInternalPath(
+  value: string | null | undefined,
+): string | null {
+  if (!value) return null;
+  return /^\/(?![/\\])/.test(value) ? value : null;
+}

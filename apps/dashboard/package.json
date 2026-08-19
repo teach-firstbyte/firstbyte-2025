@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint --max-warnings=0",
     "typecheck": "tsc --noEmit",
+    "verify:no-prisma-client": "node scripts/assert-no-prisma-client-bundle.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "fix": "npm run format && next lint --fix",

@@ -5,7 +5,14 @@ import { Button } from "@/components/ui/button";
 import { absoluteUrl } from "@/lib/paths";
 import { useState } from "react";
 
-export function GoogleButton({ label }: { label: string }) {
+export function GoogleButton({
+  label,
+  returnTo,
+}: {
+  label: string;
+  /** Already sanitized by the login page; app-internal path or null. */
+  returnTo?: string | null;
+}) {
   // A plain boolean rather than useAsyncAction: on success the browser navigates
   // away, so pending must stay true for the rest of the redirect. Only a failure
   // returns us to an interactive button.
@@ -13,12 +20,21 @@ export function GoogleButton({ label }: { label: string }) {
 
   const handleGoogleLogin = async () => {
     setPending(true);
+    // Google round-trips the whole redirectTo URL, so the deep link has to ride
+    // along as a query param -- it is the only way /auth/callback learns where
+    // the user was headed. Without it every QR scan lands on the dashboard root
+    // and the user has to rescan.
+    const callback = returnTo
+      ? `/auth/callback?next=${encodeURIComponent(returnTo)}`
+      : "/auth/callback";
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        // Must include the /dashboard base path, and this exact URL has to be
-        // registered in both the Supabase and Google Cloud OAuth consoles.
-        redirectTo: absoluteUrl("/auth/callback"),
+        // Must include the /dashboard base path, and this URL has to be covered
+        // by the Supabase and Google Cloud OAuth consoles. Supabase matches
+        // redirect URLs by glob, so the wildcard entries cover the ?next= form;
+        // Google only validates up to the path, so the query is not its concern.
+        redirectTo: absoluteUrl(callback),
         queryParams: {
           prompt: "select_account",
         },

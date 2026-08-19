@@ -7,7 +7,7 @@ export default async function Home() {
   const user = await requireApprovedUser();
 
   return isOfficer(user) ? (
-    <OfficerDashboard />
+    <OfficerDashboard user={user} />
   ) : (
     <MemberDashboard user={user} />
   );

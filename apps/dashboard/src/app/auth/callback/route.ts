@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { syncUserToDb } from "@/lib/auth/sync-user";
 import { NextResponse } from "next/server";
 import { EmailOtpType } from "@supabase/supabase-js";
-import { withBasePath } from "@/lib/paths";
+import { safeInternalPath, withBasePath } from "@/lib/paths";
 
 /**
  * Redirect to a path within this zone.
@@ -34,9 +34,7 @@ export async function GET(request: Request) {
   const token_hash = searchParams.get("token_hash");
   const type = searchParams.get("type") as EmailOtpType | null;
 
-  const nextParam = searchParams.get("next") ?? "/";
-  const next =
-    nextParam.startsWith("/") && !nextParam.startsWith("//") ? nextParam : "/";
+  const next = safeInternalPath(searchParams.get("next")) ?? "/";
 
   const supabase = await createClient();
 

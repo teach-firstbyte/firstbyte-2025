@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { AttendanceStatus } from "@prisma/client";
+import { ATTENDANCE_STATUS } from "@/lib/enums";
 
 export function StatusFilter() {
   const router = useRouter();
@@ -37,7 +37,7 @@ export function StatusFilter() {
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="ALL">All statuses</SelectItem>
-        {Object.values(AttendanceStatus).map((status) => (
+        {Object.values(ATTENDANCE_STATUS).map((status) => (
           <SelectItem key={status} value={status}>
             {status}
           </SelectItem>
