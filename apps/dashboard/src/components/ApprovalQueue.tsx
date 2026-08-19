@@ -25,6 +25,16 @@ import type { PendingUser } from "@/types/dashboard";
 export function ApprovalQueue({ users }: { users: PendingUser[] }) {
   const detail = useDetailRow<PendingUser>();
 
+  // useDetailRow holds the row object it was opened with. Once the server data
+  // is refetched, `users` is a fresh array of fresh objects and that held
+  // reference is a snapshot -- so the open panel would keep showing the state of
+  // the record at the moment it was clicked. Re-resolve it by id so the panel
+  // tracks the live row, falling back to the snapshot if the row has left the
+  // queue (an approved account, whose panel is closing anyway).
+  const selected = detail.selected
+    ? (users.find((u) => u.id === detail.selected!.id) ?? detail.selected)
+    : null;
+
   const waiting = users.filter((u) => u.status === "PENDING").length;
 
   return (
@@ -103,7 +113,7 @@ export function ApprovalQueue({ users }: { users: PendingUser[] }) {
           </TableBody>
         </Table>
         <ApprovalDetailSheet
-          user={detail.selected}
+          user={selected}
           onOpenChange={detail.onOpenChange}
           onCloseAutoFocus={detail.onCloseAutoFocus}
         />
