@@ -10,6 +10,8 @@ import {
 } from "@/components/ui/detail";
 import { formatDateTime } from "@/lib/format";
 import type { Team } from "@/types/dashboard";
+import { OfficerBadge } from "./OfficerBadge";
+import { isOfficerRole } from "@/lib/auth/roles";
 
 interface TeamDetailSheetProps {
   team: Team | null;
@@ -76,7 +78,13 @@ export function TeamDetailSheet({
                         </div>
                       )}
                     </div>
-                    <Badge variant="outline">{member.role}</Badge>
+                    {/* The panel has room for the word, unlike the table chips.
+                        Officer status and team role are separate facts, so they
+                        stay in separate badges. */}
+                    <div className="flex shrink-0 items-center gap-2">
+                      {isOfficerRole(member.user.role) && <OfficerBadge />}
+                      <Badge variant="outline">{member.role}</Badge>
+                    </div>
                   </li>
                 ))}
               </ul>

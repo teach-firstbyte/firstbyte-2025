@@ -10,6 +10,8 @@ import {
 } from "@/components/ui/detail";
 import { formatDateTime } from "@/lib/format";
 import type { User } from "@/types/dashboard";
+import { OfficerBadge } from "./OfficerBadge";
+import { isOfficerRole } from "@/lib/auth/roles";
 
 interface UserDetailSheetProps {
   user: User | null;
@@ -42,6 +44,13 @@ export function UserDetailSheet({
                 >
                   {u.email}
                 </a>
+              </DetailField>
+              <DetailField label="Role">
+                {isOfficerRole(u.role) ? (
+                  <OfficerBadge />
+                ) : (
+                  <Badge variant="secondary">Member</Badge>
+                )}
               </DetailField>
               <DetailField label="User ID" value={u.id} />
               <DetailField label="Joined" value={formatDateTime(u.createdAt)} />

@@ -20,6 +20,8 @@ import { Team } from "@/types/dashboard";
 import { TableEmptyState } from "./ui/TableEmptyState";
 import { useDetailRow } from "@/hooks/useDetailRow";
 import { TeamDetailSheet } from "./TeamDetailSheet";
+import { OfficerStar } from "./OfficerBadge";
+import { isOfficerRole } from "@/lib/auth/roles";
 
 interface TeamsTableProps {
   teams: Team[];
@@ -65,6 +67,10 @@ export function TeamsTable({ teams }: TeamsTableProps) {
                     <div className="flex flex-wrap gap-1">
                       {team.members.map((member, index) => (
                         <Badge key={index} variant="outline">
+                          {/* Icon-only: the chip already carries a name and a
+                              team role, so a second worded badge would crowd
+                              rows on teams with more than a few members. */}
+                          {isOfficerRole(member.user.role) && <OfficerStar />}
                           {member.user.name || member.user.email} ({member.role}
                           )
                         </Badge>

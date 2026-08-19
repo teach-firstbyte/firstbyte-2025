@@ -33,6 +33,8 @@ import { TableEmptyState } from "./ui/TableEmptyState";
 import { useDetailRow } from "@/hooks/useDetailRow";
 import { useAsyncAction } from "@/hooks/useAsyncAction";
 import { UserDetailSheet } from "./UserDetailSheet";
+import { OfficerBadge } from "./OfficerBadge";
+import { isOfficerRole } from "@/lib/auth/roles";
 
 interface UsersTableProps {
   users: User[];
@@ -190,7 +192,14 @@ export function UsersTable({ users }: UsersTableProps) {
             ) : (
               users.map((user) => (
                 <TableRow key={user.id} {...detail.getRowProps(user)}>
-                  <TableCell>{user.name || "N/A"}</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <span className="min-w-0 truncate">
+                        {user.name || "N/A"}
+                      </span>
+                      {isOfficerRole(user.role) && <OfficerBadge />}
+                    </div>
+                  </TableCell>
                   <TableCell>
                     <a
                       href={`mailto:${user.email}`}

@@ -18,7 +18,11 @@ import {
   AccountStatus,
   AttendanceStatus,
   TeamMemberStatus,
+  // Aliased: `User` in this file is already the denormalized roster shape from
+  // types/dashboard, which is a different thing from the Prisma row.
+  type User as PrismaUser,
 } from "@prisma/client";
+import { OfficerBadge } from "@/components/OfficerBadge";
 import { ApprovalQueue } from "@/components/ApprovalQueue";
 import {
   Card,
@@ -33,7 +37,7 @@ import { Banner } from "@/components/ui/banner";
 import { redactAnonymous } from "@/lib/feedback/redactAnonymous";
 import { SuggestionBoxLink } from "@/components/SuggestionBoxLink";
 
-export async function OfficerDashboard() {
+export async function OfficerDashboard({ user }: { user: PrismaUser }) {
   const emptyData = {
     users: [] as User[],
     pending: [] as PendingUser[],
@@ -159,6 +163,14 @@ export async function OfficerDashboard() {
         <p className="text-muted-foreground">
           Participation and engagement tracking
         </p>
+        {/* Unconditional: this component only renders behind isOfficer() in
+            page.tsx, so anyone reading it is an officer by definition. */}
+        <div className="mt-3 flex items-center justify-center gap-2">
+          <span className="text-sm text-muted-foreground">
+            Signed in as {user.name ?? user.email}
+          </span>
+          <OfficerBadge />
+        </div>
       </div>
       <div className="flex items-center gap-2">
         <ThemeToggle />
